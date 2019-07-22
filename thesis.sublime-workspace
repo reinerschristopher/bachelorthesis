@@ -76,7 +76,7 @@
 			"file": "Chapters/Experimente.tex",
 			"settings":
 			{
-				"buffer_size": 5181,
+				"buffer_size": 5204,
 				"encoding": "Western (ISO 8859-1)",
 				"line_ending": "Unix"
 			}
@@ -450,15 +450,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 5181,
+						"buffer_size": 5204,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								5176,
-								5176
+								5200,
+								5200
 							]
 						],
 						"settings":
