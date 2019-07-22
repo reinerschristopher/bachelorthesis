@@ -1,0 +1,462 @@
+%!TEX root = ../main.tex
+
+\chapter{Grundlagen} 
+
+\label{Grundlagen}
+
+%----------------------------------------------------------------------------------------
+
+% Struktur Posada:
+% Kategorientheorie (Kategorien, Funktoren, natürliche Transformationen)
+% Dieses allgemeine Gerüst lässt einen leicht simpliziale Komplexe zu simplizialen Mengen
+% veralgemeinern, unischere Mengen einführen und die für UMAP verwendete Theorie erläutern.
+% discrete, free and monoid category
+% category Set, Top, duale Kategorie kurz (morphismen umkehren)
+
+% Topologischer Raum und Homeomorphismen
+
+% Simplex, simplizialer Komplex, abstrakter simplizialer Komplex
+
+
+% Zusammenfassen der bisherigen Konstruktion und das man einen Schritt weiter geht
+% Ausblicke auf das was man später mit einer Definition macht
+% Wofür war die gerade gemachte Definition sinnvoll
+% Die Definition einer Adjunktion ist dafür wichtig einen zwischen metrischen Räumen und 
+% unsicheren simplizialen Mengen zu übersetzen.
+% Typische Verwendungen für die Definition
+ 
+%----------------------------------------------------------------------------------------
+
+% TEXTBAUSTEINE
+
+% Adjoint functor theorems are theorems stating that under certain conditions a functor that preserves limits is a right adjoint, and that a functor that preserves colimits is a left adjoint.
+
+% In der Einleitung bereits erwähnt nehmen wir an, dass die zu untersuchenden Daten $X \subset \R^D$
+% auf einer $d$-dimensionalen Mannigfaltigkeit $(d \ll D)$ liegen. Ein passendes $d$ zu finden ist nicht offensichtlich.
+% Wir verweisen den Leser auf... %TODO: Quellen für Schätzung abgeben.
+
+
+%----------------------------------------------------------------------------------------
+
+%Define math commands used just in this chapter
+\renewcommand{\C}{\mathscr{C}}  % Symbol for a category C
+\newcommand{\D}{\mathscr{D}}  % Symbol for a category D
+\renewcommand{\N}{\mathbb{N}}  % Symbol for natural numbers
+\newcommand{\M}{\mathcal{M}}  % Symbol for Manifold M
+\newcommand{\cech}{\u{C}ech}  % Symbol for Cech complex
+\newcommand{\Set}{\mathbf{Set}}  % Symbol for category of sets
+\newcommand{\Top}{\mathbf{Top}}  % Symbol for category of sets
+\renewcommand{\hom}{\mathsf{Hom}}  % Symbol for morphisms
+
+%----------------------------------------------------------------------------------------
+%----------------------------------------------------------------------------------------
+
+% \section{Einleitung}
+% TODO: Satzbau verbessern
+Um die Geometrie \enquote{mathematischer Räume} zu beschreiben, ist es aus topologischer Sicht ausreichend,
+die \enquote{Löcher} der Räume zu charakterisieren. 
+Um diese Aussage zu formalisieren, und damit die Grundlage für das UMAP-Verfahren zu legen, 
+werden wir einige Begriffe aus der (algebraischen) Topologie benötigen. 
+
+Die grundlegenden Definitionen \textit{topologischer und metrischer Räume} werden uns helfen \textit{(riemannsche) Mannigfaltigkeiten} einzuführen. Der Begriff der Mannigfaltigkeit formalisiert den niedrigdimensionalen Raum auf welchem unsere Daten liegen.
+
+Die geometrische Struktur dieser Räume werden wir mit Hilfe der \textit{Homologie} einführen
+und sehen wie diese visuelle Eigenschaften beschreibt. Um diese strukturelle Darstellung auf eine endliche
+Punktwolke anwenden zu können, werden wir den Begriff der \textit{persistenten Homologie} einführen müssen.
+
+Die Begriffe und benötigten Aussagen werden vollständig und anschaulich eingeführt. 
+An einigen Stellen werden wir den Leser auf geeignete ergänzende Literatur verweisen. 
+
+%---X---X-----------/---/---/-----------------------------------------\---\---\---------X---X---%
+%---X---X----------/---/---/-------------------------------------------\---\---\--------X---X---%
+%---X---X---------/---/---/--------------T O P O L O G I E--------------\---\---\-------X---X---%
+%---X---X--------/---/---/-----------------------------------------------\---\---\------X---X---%
+%---X---X-------/---/---/-------------------------------------------------\---\---\-----X---X---%
+
+% TODO: bessere Überschrift
+\section{Topologische Räume}
+
+Der Grundlegende Begriff der Topologie ist der des topologischen Raumes.
+
+% TODO: Definition topologischer Raum
+\begin{defn}[Topologischer Raum]
+	Eine Topologie ist ein Mengensystem $T$ ... 
+\end{defn}
+% TODO: Brauchen wir Beispiele?
+
+Man kann den Begriff erweitern indem man einen Abstandsbegriff auf der Menge $X$ definiert. Dies führt uns 
+zum metrischen Raum.
+
+% TODO: Definition metrischer Raum
+\begin{defn}[Metrischer Raum]
+	Eine Metrik ist eine Abbildung,...
+\end{defn}
+% TODO: Brauchen wir Beispiele?
+
+In der Einleitung bereits erwähnt, werden wir Annehmen, dass unsere Daten $X=\{x_i\}_{i=1}^N, (x_i \in \R^D)$ mit $D$ gemessenen Eigenschaften mittels $d, (d \ll D)$ Eigenschaften dargestellt werden können. Dies werden 
+wir formalisieren indem wir Mannigfaltigkeiten einführen. Anschaulich ist eine $d$-dimensionale Mannigfaltigkeit
+ein topologischer Raum welcher lokal dem euklidischen Raum $\R^d$ gleicht.
+
+% TODO: Definition Mannigfaltigkeit
+\begin{defn}[Mannigfaltigkeit]
+	Sei $\M$ ein topologischer Raum,...
+\end{defn}
+
+\begin{rem}
+	Eine \textit{differenzierbare} Mannigfaltigkeit ist eine...
+\end{rem}
+
+\begin{ex}
+	$S^n$ ist eine $n$-dimensionale Manngifaltigkeit im $\R^{n+1}$.
+\end{ex}
+
+Unter der Annahme, dass wir nur $d$ Eigenschaften benötigen um unsere Daten $X$ darzustellen, 
+können wir sagen, das $X$ eine $d$-dimensionale Mannigfaltigkeit im $\R^D$ ist.
+Wir können eine Mannigfaltigkeit $\M$ mit einem Abstandbegriff erweitern. Diese zusätzliche 
+Regularitätseigenschaft ermöglicht es uns von Distanzen, Winkeln und Kurven auf $\M$ zu sprechen. 
+Diesen Abstandsbegriff nennen wir \textit{riemannsche Metrik} und er ist wie folgt definiert:
+
+% TODO: Definition riemannsche Mannigfaltigkeit
+\begin{defn}[Riemannsche Mannigfaltigkeit]
+	Sei $g$,...
+	Ein Tupel $(\M, g)$, wobei $\M$ eine Mannigfaltigkeit und $g$ eine riemannsche Metrik ist heißt
+	\textit{riemannsche Mannigfaltigkeit}.
+\end{defn} 
+
+% TODO: Metrisierbarkeit riemannsche Mannigfaltigkeit
+\begin{rem}
+	Eine riemannsche Mannigfaltigkeit ist stets metrisierbar im Sinne, das ...
+\end{rem}
+
+% TODO: Bemerkung prüfun und besser formulieren
+\begin{rem}
+	Es ist sinnvoll in unserem Fall $X$ als riemannsche Mannigfaltigkeit zu betrachten, da wir erwarten, 
+	wenn $x_i$ Nahe bei $x_j$ und $x_k$ liegt, dass $x_j$ auch Nahe bei $x_j$ liegt. 
+	Wenn $X$ einen Bilddatensatz beschreibt, nehmen wir an, dass eine kleine Veränderung im Bild 
+	den Inhalt nicht wesentlich ändert. 
+\end{rem}
+
+% TODO: Beispiele riemannsche Mannigfaltigkeit
+
+Die Riemannmetrik beschreibt eine Distanz auf der Mannigfaltigkeit. Die Länge eines kürzesten Weges auf $\M$ 
+zwischen zwei Punkten $p, q \in \M$ wird als Geodäte bezeichnet und ist definiert als 
+
+\begin{defn}[Geodäte]
+	Seien $p, q \in \M$ ...
+\end{defn}
+
+Der Begriff der riemannschen Mannigfaltigkeit ermöglicht es uns unsere zentrale Annahme, das $X \subseteq \R^D$ 
+einer niedirgdimensionalen Struktur entnommen ist, zu formalisieren.
+Wir möchten nun diese niedrigdimensionale Struktur genauer beschreiben.
+
+%---------------------------------H O M O L O G I E--------------------------------------
+
+% \subsection*{Homologie}
+% Homöomorphismus, Homologie (Gruppen), homologie Equivalenz,
+Eine bekannte Aussage, welche der Topologie enstammt, ist, dass eine Kaffeetasse das Gleiche topologische 
+Objekt wie ein Donout ist. Dies ist dadurch begründet, dass man eine Kaffeetasse durch strecken und stauchen 
+(ohne reißen) in einen Donout transormieren kann. Diese \enquote{Gleichheit} lässt sich wie folgt mathematisch 
+darstellen:
+
+\begin{defn}[Stetige Abbildung]
+	Sei ...
+\end{defn}
+
+\begin{defn}[Homöomorphismus]
+	Sei ...
+\end{defn}
+
+Nun werden wir den Begriff der Homologie einführen. Dafür werden wir den Begriff der simplizialen Komplexe 
+benötigen um zuerst die simpliziale Homologie einzuführen.
+
+\begin{defn}[Simplizialer Komplex]
+	Sei ...
+\end{defn}
+
+\begin{defn}[Abstrakter simplizialer Komplex]
+	Sei ...
+\end{defn}
+
+\begin{defn}[Homologie]
+	Sei ...
+\end{defn}
+
+\begin{defn}[Homologiegruppe]
+	Sei ...
+\end{defn}
+
+\begin{ex}
+	Die Homologiegruppen eines Balls, Dounuts, Graphen, ...
+\end{ex}
+
+\begin{defn}[Filtration]
+	Sei $T \subseteq \R$, eine \textit{Filtration} $\mathcal{X}$ über $T$ ist eine Familie von 
+	topologischen Räumen $\{X_i\}_{i \in T}$, so dass $X_i \subseteq X_j$ 
+	für $i \leq j \in T$.  % (Oudot s.29)
+\end{defn}
+
+\begin{rem}
+	Eine Filtration $\mathcal{X}$ wird meist nicht als Familie verschiedener topologischer 
+	Räume $X_i$ angesehen, sondern als ein einziger Raum, welcher sich im Laufe der Zeit 
+	\enquote{transformiert}. Siehe dazu \cite{Oudot}.  % (Oudot s.30)
+	Dies stimmt mit unserem Bild überein, den $\epsilon$-Parameter eines \cech-Komplexes 
+	immer größer werden zu lassen. Wir werden \textit{persistente Homologie} nutzen um 
+	die homologischen Eigenschaften zu beschreiben, welche für alle $i \in T$ erhalten 
+	(bzw. persistent) bleiben.
+\end{rem}
+
+% TODO: Oudot Kap. 4,5 für Anwendungen von persistenter Homologie
+
+% TODO: Bemerkung, dass \mathcal{X} eine Repräsentation eines Poset ist (siehe Oudot s.29)
+
+\begin{ex}
+	% TODO: warum?
+	Insbesondere ist somit der \cech-Komplex eine Filtration, da ...
+\end{ex}
+
+\begin{ex}
+	% TODO: warum?
+	Eine weitere Filtration ist der Vietoris-Rips-Komplex
+\end{ex}
+
+\begin{rem}
+	Der VR-Komplex ist ein Beispiel eines Clique-Komplexes und wird als solcher 
+	eindeutig durch sein 1-Skelet identifiziert. Sei $V$ ein VR-Komplex und $V^1$ das 
+	zugehörige 1-Skelet. Dann erhällt man $V$ aus $V^1$, indem man alle Cliquen im 
+	$V^1$ zugrundeliegenden Graphen bestimmt. Eine k-Clique ist ein vollständiger Subgraph 
+	mit k Knoten. 
+\end{rem}
+
+Es gibt weitere Formen von Komplexen, die bekanntesten sind die CW-Komplexe und Zellkomplexe. 
+Ziel ist es stets mit Hilfe einfacher Konstrukte die topologie eines Raums zu beschreiben.
+
+Die vom \cech-Komplex und vom Vietoris-Rips-Komplex beschriebene Homologie kann sich unterscheiden.
+
+\begin{figure}
+	%\centering
+	\includegraphics[width=400px, height=274px]{Figures/Cech_VR_complex}  % width=1\textwidth
+	%\decoRule
+	\captionsetup{justification=RaggedRight}  % centerfirst
+	\caption[Versch. Komplexe]{Eine Punktwolke [oben links] kann zu einem \cech-Komplex [unten links] 
+							   oder einem VR-Komplex [unten rechts] basierend auf dem Parameter $\epsilon$ 
+							   konstruiert werden. Die Homotopietypen der $\epsilon/2$ Überdeckung vom 
+							   \cech-Komplex ($S^1 \vee S^1 \vee S^1$), während das VR-Komplex die Homotopietypen 
+							   ($S^1 \vee S^2$) besitzt. (\textit{Quelle:} \cite{Barcodes})}
+
+	\label{fig:Cech_VR}
+\end{figure}
+
+\begin{NT}  % Nerv Theorem
+	% Ein top. Raum ist homotopy equivalent zu einer endlichen guten Überdeckung. 
+	Sei ...
+\end{NT}
+
+Wie wir sehen ist die Konstruktion stark abhängig vom $\epsilon$-Parameter. Um dem 
+entgegenzuwirken führt man die Idee der \textit{persistenten Homologie} ein. Dabei 
+betrachtet man wie sich die Homologie eines Raumes für eine monoton wachsende Folge 
+$(\epsilon_i)_{i \in \N}$ verhält.
+
+%_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ ________________________________________ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+%---X---X---------/\---/\---/\-----------------------------------------/\---/\---/\---------X---X---%
+%---X---X--------/\---/\---/\-------------------------------------------/\---/\---/\--------X---X---%
+%---X---X-------/\---/\---/\------K A T E G O R I E N T H E O R I E------/\---/\---/\-------X---X---%
+%---X---X------/\---/\---/\-----------------------------------------------/\---/\---/\------X---X---%
+%---X---X-----/\---/\---/\-------------------------------------------------/\---/\---/\-----X---X---%
+%¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+\section{Kategorientheorie}
+Die für die mathematischen Grundlagen des UMAP Verfahren benötigten Definitionen 
+werde ich mithilfe der Kategorientheorie einführen. 
+Diese sehr abstrakte Form mathematische Objekte und Zusammenhänge zu formalisieren 
+wurde erstmals in den 1940ern von Samuel Eilenberg und Saunders Mac Lane eingeführt. \\
+Die Definitionen sind dem Buch von Brandenberg \cite{Brandenburg} entnommen. 
+ 
+\begin{defn}[Kategorie]
+ Eine Kategorie $\C$ besteht aus folgenden Daten:
+ 	\begin{enumerate}
+ 		\item Eine Klasse $Ob(\C)$, deren Elemente wir \textit{Objekte} nennen
+		\item zu je zwei Objekten $\mathit{A, B \in Ob(\C)}$ einer Menge $\mathit{\hom_\C(A, B)}$, 
+			deren Elemente wir mit $f: A \to B$ notieren und \textit{Morphismen} von $A$ nach $B$
+			nennen,
+		\item zu je drei Objekten $A, B, C \in Ob(\C)$ einer Abbildung
+			\begin{equation*}
+				\hom_\C(A, B) \times \hom_\C(B, C) \to \hom_\C(A, C)
+			\end{equation*}
+			die wir mit $(f, g) \mapsto g \circ f$ notieren und \textit{Komposition von Morphismen} nennen,
+		\item zu jedem Objekt $A \in Ob(\C)$ einen ausgezeichneten Morphismus
+			\begin{equation*}
+				id_A \in \hom_\mathcal{C}(A,A),
+			\end{equation*}
+			welchen wir die \textit{Identität} von $A$ nennen.
+	\end{enumerate}
+ Diese Daten müssen den folgenden Regeln genügen:
+	\begin{enumerate}
+		\item Die Komposition von Morphismen ist \textit{assoziativ}: Für drei Morphismen 
+			der Form $f:A \to B, \ g:  B \to C, \ h:C \to D$ in $\C$ gilt
+			\begin{equation*}
+				h \circ (g \circ f) = (h \circ g) \circ f
+			\end{equation*}
+			als Morphismen $A \to D$.
+		\item Die Identität sind \textit{beidseitig neutral} bezüglich der Komposition:
+			Für jeden Morphismus $f: A \to B$ in $\C$ gilt
+			\begin{equation*}
+				f \circ id_A =  f = id_A \circ f
+			\end{equation*}
+	\end{enumerate}
+\end{defn}
+
+\begin{rem}
+	Anstelle von $A \in Ob(\C)$ schreibt man meistens $A \in \C$. 
+	Falls die Kategorie $\C$ aus dem Kontext bekannt ist, werden wir $\hom_\C(A, B)$
+	mit $\hom(A, B)$ abkürzen.
+\end{rem}
+
+\begin{rem}
+	% TODO: Besser formulieren
+	Eine Klasse ist eine Menge, welche zu groß ist um eine Menge zu sein. 
+	Für eine Definition einer Klasse verweisen wir auf \cite{Levy}. 
+	In unseren Beispielen genügt die Vorstellung einer Menge.
+	Meist ist $Ob(\C)$ sogar eine Menge. Dann spricht man formal von einer strikten kleinen Kategorie.
+\end{rem}
+
+Insbesondere kann man für eine Kategorie $\C$ und Objekte $A, B, C \in \C$ den \textit{Hom-Funktor} 
+definieren, indem man 
+\begin{equation}
+	\label{Hom-Funktor}
+	\hom(-,B): \C \to \Set
+\end{equation}
+betrachtet. Der Hom-Funktor bildet ein Objekt $A \in \C$ auf die Menge der Morphismen $\hom(A, B)$ ab, 
+und einen Morphismus $h: A \to C$ auf die Funktion 
+\begin{equation}
+	\hom(h, B): \hom(C, B) \to \hom(A, B), \text{wobei } g \mapsto g \circ h \text{ für } g \in \hom(C, B)	
+\end{equation}
+
+
+
+\begin{ex}
+	\textit{Passende Beispiele von Kategorien, welche später wieder genutzt werden. $\Top, \Set$}
+\end{ex}
+
+Ein weiterer für die folgenden Definitionen wichtiger Begriff ist der der dualen Kategorie.
+
+\begin{defn}[Duale Kategorie]
+	Es sei $\C$ eine Kategorie. Dann können wir eine neue Kategorie $\C^{op}$	 konstruieren: 
+	Sie besitzt dieselben Objekte wie $\C$, allerdings werden die Morphismen \enquote{umgedreht}:
+	Für $A,B \in \C$ sei
+	\begin{equation*}
+		\hom_{\C^{op}}(A, B) \coloneqq \hom_\C(B, A).
+	\end{equation*}
+	Die Identitäten verändern sich nicht. Die Komposition
+	\begin{equation*}
+		\circ^{op} : \hom_{\C^{op}}(A, B) \times \hom_{\C^{op}}(B, C) \to \hom_{\C^{op}}(A, C) 
+	\end{equation*}
+	ist durch
+	\begin{equation*}
+		\hom_\C(B, A) \times \hom_\C(C, B) \cong \hom_\C(C, B) \times \hom_\C(C, B) \times \hom_\C(B, A) \mathring{\longrightarrow} \hom_\C(C, A)
+	\end{equation*}
+	definiert, d.h. $f \circ^{op} g \coloneqq g \circ f$. Auf diese Weise ist  $\C^{op}$ tatsächlich 
+	eine Kategorie und heißt die \textit{zu} $\C$ \textit{duale Kategorie}.
+\end{defn}
+
+\begin{rem}
+	Eine Eigenschaft der dualen Kategorie ist, dass Aussagen, 
+	welche für alle Kategorien bewiesen wurden, auch für alle dualen Kategorien gelten. 
+\end{rem}
+
+Wir möchten nun den Begriff des Funktors zwischen zwei Kategorien einführen. Ein Funktor ordnet Objekte einer 
+Kategorie $\C$ Objekten einer Kategorie $\D$ zu, und entsprechend für Morphismen. Insbesondere bleibt 
+die Eigenschaft der Isomorphie zwischen zwei Objekten erhalten. 
+%TODO: Was ist ein isomorpher Funktor?
+
+\begin{defn}[Funktor]
+	Es seien $\C$ und $\D$ zwei Kategorien. Ein \textit{Funktor}
+	\begin{equation*}
+		F : \C \to \D
+	\end{equation*}
+	von $\C$ nach $\D$ besteht aus folgenden Daten:
+	\begin{enumerate}
+		\item für jedes Objekt $A \in \C$ ein Objekt $F(A) \in \D$,
+		\item für jeden Morphismus $f: A \to B$ in $\C$ einen Morphismus
+					\begin{equation*}
+						F(f) : F(A) \to F(B)
+					\end{equation*}
+					in $\D$.
+		\end{enumerate}
+	Dabei soll gelten:
+	\begin{enumerate}
+		\item Für jedes Objekt $A \in \C$ ist $F(id_A) = id_{F(A)}$.
+		\item Für je zwei Morphismen $f: A \to B,\ g: B \to C$ in $\C$ gilt in $\D$:
+					\begin{equation*}
+						F(g \circ_{\C} f) = F(g) \circ_{\D} F(f)
+					\end{equation*}
+	\end{enumerate}
+\end{defn}
+
+\begin{rem}
+	Bezüglich der Kategorie $\C$ ist ein Funktor $F : \C \to \D$ kovariant, während 
+	$F : \C^{op} \to \D$ kontravariant (bzgl. $\C$) ist.
+\end{rem}
+Eine häufig verwendete Form eines kontravarianten Funktors ist die Prägarbe 
+(\textit{engl.: presheaf}). Wir werden diesen Funktor später verwenden um 
+\textit{simpliziale Mengen} einzuführen. % TODO: weglassen oder genauer beschreiben?
+
+\begin{defn}[Prägarbe]
+	Eine Prägarbe auf einer kleinen Kategorie $\C$ ist ein Funktor
+	\begin{equation*}
+		F: \C^{op} \to \Set
+	\end{equation*}
+	von der dualen Kategorie $\C^{op}$ von $\C$ in die Kategorie $\Set$ von Mengen.
+\end{defn}
+
+\begin{defn}[Prägarbenkategorie]
+	Sei $\widehat{\C}$ die Prägarbenkategorie einer Kategorie $\C$ : Objekte sind die 
+	Funktoren $F: \C^{op} \to \Set$, und Morphismen sind natürliche 
+	Transformationen der Funktoren.
+\end{defn}
+
+% TODO: wird dies benötigt?
+\begin{rem}
+	Allgemeiner kann man auch die Kategorie $[\C, \D]$ einführen, deren Objekte 
+	Funktoren $F: \C \to \D$ sind und deren Morphismen ebenfalls natürliche 
+	Transformationen der Funktoren sind.
+\end{rem}
+
+
+% TODO: Definiere natürliche Transformationen. 
+% https://ncatlab.org/nlab/show/natural+transformation
+
+%----------------------------------------------------------------------------------------
+
+\section{Simpliziale Mengen}
+Simpliziale Mengen,\dots
+\begin{defn}[Simplexkategorie]
+	Die Objekte der \textit{Simplexkategorie} $\Delta$ sind die Mengen 
+	$[n] \coloneqq \{0,1,\dotsc,n\}$ für $n \in \mathbb{N}$, 
+	und Morphismen sind monoton wachsende Abbildungen. 
+\end{defn}
+
+Wir können die $n$-elementigen Mengen in $\Delta$ als geometrische n-Simplizes auffassen. 
+Dazu betrachten wir den Funktor $\abs{\cdot}: \Delta \to \Top$, gegeben durch
+\begin{equation*}
+	\abs{\cdot} : [n] \mapsto \abs{\Delta^n} \coloneqq \biggl\lbrace (t_0, \dotsc, t_n) \in \R^{n+1} 
+	\Big\vert \sum_{i=0}^n t_i = 1, t_i \geq 0 \biggr\rbrace
+\end{equation*}
+% TODO: standard Topologie auf |[n]|?
+
+
+\begin{defn}
+	Eine \textit{simpliziale Menge} ist ein Funktor 
+	$X : \Delta^{op} \to \Set$. Üblicherweise wird 
+	$X([n])$ als $X_n$ geschrieben, und wir bezeichnen die Elemente $x \in X_n$ als n-Simplizes. 
+	Der n-dimensionale \textit{Standardsimplex} ist 
+	
+	\begin{equation*}
+		\Delta^n \coloneqq \hom(-, [n]).
+	\end{equation*}
+\end{defn}
+
+Der Standardsimplex ist somit ein Hom-Funktor (siehe \ref{Hom-Funktor}).
+
+
+%----------------------------------------------------------------------------------------
+
+

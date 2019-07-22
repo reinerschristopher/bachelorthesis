@@ -1,0 +1,189 @@
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[
+11pt, % The default document font size, options: 10pt, 11pt, 12pt
+%oneside, % Two side (alternating margins) for binding by default, uncomment to switch to one side
+ngerman,
+singlespacing, % Single line spacing, alternatives: onehalfspacing or doublespacing
+%nolistspacing, % If the document is onehalfspacing or doublespacing, uncomment this to set spacing in lists to single
+%liststotoc, % Uncomment to add the list of figures/tables/etc to the table of contents
+%toctotoc, % Uncomment to add the main table of contents to the table of contents
+%parskip, % Uncomment to add space between paragraphs
+headsepline, % Uncomment to get a line under the header
+%chapterinoneline, % Uncomment to place the chapter title next to the number on one line
+%consistentlayout, % Uncomment to change the layout of the declaration, abstract and acknowledgements pages to match the default layout
+]{MastersDoctoralThesis} % The class file specifying the document structure
+
+\usepackage[latin1]{inputenc} % Required for inputting international characters. [utf8/applemac/latin1]
+\usepackage[T1]{fontenc} % Output font encoding for international characters
+% \usepackage[ngerman]{babel}
+% \usepackage{luaotfload}
+% \usepackage[EU2]{fontenc}
+% \usepackage{lmodern}
+
+\usepackage{mathpazo} % Use the Palatino font by default
+
+\usepackage[backend=biber,style=numeric,natbib=true]{biblatex} % Use the bibtex backend with the numeric citation style, backend=bibtex
+
+\addbibresource{quellen.bib} % The filename of the bibliography
+
+\usepackage[autostyle=true]{csquotes} % Required to generate language-dependent quotes in the bibliography
+
+\usepackage{siunitx} % Number formatting. [group-separator={.}]
+\sisetup{group-separator = {\,}, group-minimum-digits=5}  % small spacing between every third digit of long number
+% https://www.namsu.de/Extra/pakete/Siunitx.html
+
+%----------------------------------------------------------------------------------------
+%	OWN SETTINGS
+%----------------------------------------------------------------------------------------
+
+\setcounter{tocdepth}{3}  % A value of X=0 means that your table of contents will show nothing at all and 5 means, that even subparagraphs will be shown.
+
+% Define some commands to keep the formatting separated from the content 
+\newcommand{\keyword}[1]{\textbf{#1}}
+\newcommand{\tabhead}[1]{\textbf{#1}}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\file}[1]{\texttt{\bfseries#1}}
+\newcommand{\option}[1]{\texttt{\itshape#1}}
+
+%----------------------------------------------------------------------------------------
+%	MARGIN SETTINGS
+%----------------------------------------------------------------------------------------
+
+\geometry{
+	paper=a4paper, % Change to letterpaper for US letter
+	inner=2.5cm, % Inner margin
+	outer=3.8cm, % Outer margin
+	bindingoffset=.5cm, % Binding offset
+	top=1.5cm, % Top margin
+	bottom=1.5cm, % Bottom margin
+	%showframe, % Uncomment to show how the type block is set on the page
+}
+
+%----------------------------------------------------------------------------------------
+%	THESIS INFORMATION
+%----------------------------------------------------------------------------------------
+
+\thesistitle{Analyse des UMAP Verfahrens} % Your thesis title, this is used in the title and abstract, print it elsewhere with \ttitle
+\author{Christopher Reiners} % Your name, this is used in the title page and abstract, print it elsewhere with \author
+
+\supervisor{Prof. Dr. Jochen Garcke}
+\subject{Mathematik}
+\thesistype{Bachelorarbeit}
+\university{Rheinischen Friedrich-Wilhelms-Universität Bonn}
+\department{Mathematisches Institut für Numerische Simulation} 
+\faculty{Mathematisch-Naturwissenschaftliche Fakultät der}
+\geburtsdatum{9. April 1998}  %Author DoB
+\geburtsort{Detmold}  %Author place of birth
+\date{6. August 2019}  %\today  %Abgabedatum
+\zweitgutachter{Dr. Bastian Bohn}
+
+
+
+% \AtBeginDocument{
+% \hypersetup{pdftitle=\thesistitle} % Set the PDF's title to your title
+% \hypersetup{pdfauthor=\author} % Set the PDF's author to your name
+% \hypersetup{pdfkeywords=\keywordnames} % Set the PDF's keywords to your keywords
+% }
+
+\begin{document}
+
+\frontmatter % Use roman page numbering style (i, ii, iii, iv...) for the pre-content pages
+
+\pagestyle{plain} % Default to the plain heading style until the thesis style is called for the body content
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\maketitle
+
+%----------------------------------------------------------------------------------------
+%	QUOTATION PAGE
+%----------------------------------------------------------------------------------------
+
+% \vspace*{0.2\textheight}
+
+% \noindent\enquote{\itshape Do not worry about your difficulties in Mathematics. I can assure you mine are still greater.}\bigbreak
+
+% \hfill Albert Einstein
+
+%----------------------------------------------------------------------------------------
+%	ACKNOWLEDGEMENTS
+%----------------------------------------------------------------------------------------
+
+\begin{acknowledgements}
+
+\addchaptertocentry{\acknowledgementname} % Add the acknowledgements to the table of contents
+
+Ich bin den Personen sehr dankbar und verbunden welche mich auch dem Weg zu dieser Arbeit begleitet haben.
+
+Zuerst möchte ich Annalena Lange, Lennard Schiefelbein und Nico Gerber für die vielen anregenden 
+Gespräche danken und Hendrik Baers und Tobias Bork, welche die letzten drei Jahre zu einer spannenden 
+und herrausfordernden Studienzeit gemacht haben.
+
+Besonderer Dank gilt Prof. Dr. Jochen Garcke für das sehr interessante Thema und die 
+wegweisende Betreueung. Gerne möchte ich auch Leland McInnes für das persönliche Gespräch in Ottawa, Kanada 
+danken. So konnte ich die Motivation, welche er für das UMAP Verfahren hatte, aus erster Hand erfahren.
+
+Zum Schluss meiner Familie und Freunden für Ihre bedingungslose Unterstützung.
+
+\end{acknowledgements}
+
+%----------------------------------------------------------------------------------------
+%	LIST OF CONTENTS/FIGURES/TABLES PAGES
+%----------------------------------------------------------------------------------------
+
+\tableofcontents % Prints the main table of contents
+
+%\listoffigures % Prints the list of figures
+
+%\listoftables % Prints the list of tables
+
+%----------------------------------------------------------------------------------------
+%	THESIS CONTENT - CHAPTERS
+%----------------------------------------------------------------------------------------
+
+\mainmatter % Begin numeric (1,2,3...) page numbering
+
+\pagestyle{thesis} % Return the page headers back to the "thesis" style
+
+\include{Chapters/Einleitung}
+\include{Chapters/Grundlagen} 
+\include{Chapters/UMAP} 
+\include{Chapters/Implementierung}
+\include{Chapters/Experimente}
+\include{Chapters/Zusammenfassung} 
+
+%----------------------------------------------------------------------------------------
+%	THESIS CONTENT - APPENDICES
+%----------------------------------------------------------------------------------------
+
+\appendix % Cue to tell LaTeX that the following "chapters" are Appendices
+
+% Include the appendices of the thesis as separate files from the Appendices folder
+% Uncomment the lines as you write the Appendices
+
+%\include{Appendices/AppendixA}
+%\include{Appendices/AppendixB}
+%\include{Appendices/AppendixC}
+
+%----------------------------------------------------------------------------------------
+%	BIBLIOGRAPHY
+%----------------------------------------------------------------------------------------
+
+\printbibliography[heading=bibintoc]
+
+%----------------------------------------------------------------------------------------
+
+%----------------------------------------------------------------------------------------
+%	HELP
+%----------------------------------------------------------------------------------------
+%
+% Bibliography not showing? Run pdflatexmk
+%
+
+
+\end{document}  

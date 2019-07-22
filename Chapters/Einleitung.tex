@@ -1,0 +1,145 @@
+%!TEX root = ../main.tex
+
+\chapter{Einleitung} 
+
+\label{Einleitung}
+
+% Relevanz, Übersicht, UMAP, Struktur
+
+%----------------------------------------------------------------------------------------
+
+%Define math commands used in this chapter
+\newcommand{\R}{\mathbb{R}}  % Symbol for real numbers
+\newcommand{\seqx}{\{x_i\}_{i=1}^N, \ (x_i \in \mathbb{R}^D)}  % Sequence of x_i
+\providecommand{\abs}[1]{\lvert#1\rvert}  % produces | x |
+\providecommand{\norm}[1]{\lVert#1\rVert}  % produces || x ||
+
+%----------------------------------------------------------------------------------------
+
+% N O T I Z E N
+% 
+
+% T E X T B A U S T E I N E
+% 'UMAP wird für single cell RNA-sequencing genutzt'
+% scRNA hat mehr rauschen als bulkRNA-seq und wird zur Untersuchung der genetischen 
+% Information (Genexpression) einzelner Zellen genutzt.
+% 'Dimension ist Anzahl der Freiheitsgerade'
+
+%----------------------------------------------------------------------------------------
+%----------------------------------------------------------------------------------------
+
+% TODO: Was macht das Thema Dimensionsreduktion relevant?
+
+%----------------------------------------------------------------------------------------
+
+\section{Datenanalyse}
+% Einordnung verschiedener DR Algorithmen. (Geometrie, Stochastik, Topologie)
+% Was ist eine gute Repräsentation der Daten?
+% Sollte unabhängig von Transformationen weniger wichtiger Eigenschaften sein und 
+% unterscheidbar bzgl. relevanter Eigenschaften. (evtl. Bengio zitieren)
+% Früher 'feature engineering' jetzt lernen der wichtigen Eigenschaften (siehe Bengio 2013)
+% Welche Formen von Datenanalyse (statistische, geometrische,...)
+
+%-----------------------------------
+
+% \subsection{Topologische Datenanalyse}
+Eine neuere Form der Datenanalyse - die topologische Datenanalyse (\textit{kurz: TDA}) - 
+nutzt mathematische Instrumente des Teilgebiets der Topologie 
+(\textit{griechisch: Lehre vom Ort/Platz}) um Daten zu beschreiben und zu strukturieren.
+
+Wir beschreiben die Stituation einen Datensatz $X$ zu analysieren wie folgt. Wir betrachten 
+einen $D$-dimensionalen Raum und ein Objekt $K$. In unserem Fall werden wir uns größtenteils 
+mit dem euklidischen Raum $\R^D$ versehen mit der euklidischen Norm $\norm{\cdot}$ beschäftigen.
+
+$K$ kann beispielsweise eine geschlossene Menge sein. Die genaue Struktur von $K$ bleibt uns allerdings unbekannt. 
+Später werden wir argumentieren, dass $K$ gewisse Regularitätseigenschaften erfüllt und 
+in vielen Fällen lokal einem niedrigdimensionalen Raum $\R^d, (d \ll D)$ gleicht. 
+
+Statt $K$ ist uns eine endliche Menge an $N$ Punkten $X=\seqx$, gegeben. 
+$X$ wird als \textit{Punktwolke} bezeichnet und beschreibt in einem Experiment gemessene Daten, 
+beispielsweise Sensormessdaten, biologische Informationen oder Bilddatensätze. 
+
+In Kapitel \ref{Experimente} werden wir uns mit einem 
+Bilddatensatz mit \num{100000} Farbbildern mit einer Auflösung von $300 \times 300$ Pixeln 
+beschäftigen. Wir können diesen Datensatz als $N = \num{100000}$ elementige Punktwolke im 
+$\R^{300 \times 300 \times 4}$ auffassen, wobei wir die vier Farbkanäle der Bilder berücksichtigen.
+
+Wir gehen dabei davon aus, dass $K$ und $X$ in einem gewissen Sinne \enquote{ähnlich} sind. 
+Nun ist es Ziel der TDA mittels Methoden der Topologie Aussagen über die Struktur von $X$ zu treffen, 
+welche, aufgrund der Ähnlichkeit, auch für $K$ gelten sollen. Die $K$ zugrundeliegende Struktur 
+kann uns dann dabei helfen Aussagen über weitere gemessene Daten zu treffen, 
+da diese auch in der uns unbekannten Menge $K$ liegen sollten. Zusätzlich hilft
+% TODO: ergänzend siehe Oudot, Ch.4
+
+%-----------------------------------
+%----------------------------------------------------------------------------------------
+
+% (Eher später in Kap2) Simpliziale Mengen sind einer Form um topologische Räume kombinatoricsh darzustellen 
+% deshalb eignen sie sich besonders für Berechnungen.
+
+%----------------------------------------------------------------------------------------
+
+\section{Dimensionsreduktion}
+
+% hoch dimensionale Daten: Bilder, Word-count Vektoren, Zell Daten
+
+% Ganz ursprünglich Chernoff feces, dimensionen und knoten sie tSNE p.1
+
+Sei $X=\seqx$ wir bezeichnen $D$ als die Dimension unserer Daten, beziehungsweise als die Anzahl 
+der gemessenen Eigenschaften. $N$ ist die Anzahl der verfügbaren Datenpunkte. In der Praxis können $D$ und $N$ 
+sehr groß sein. So gilt für den Bilddatensatz welchen wir in Kapitel \ref{Experimente} betrachten werden, 
+$N=\num{100000}, D=\num{360000}$. %TODO: betrachten wir cartoonset100k oder cartoonset10k?
+
+% Wahrscheinlichkeitstheorie:      |  Geometrie:
+% Probabilistic PCA, VAEs, GANs    |  tSNE  (lt. Posada)
+
+% Dann überleiten zu UMAP
+
+\textit{Hier sollen die zwei Arten an DR Algorithmen vorgestellt werden (Matrix Faktorisierung 
+und Graph Layout). Zusätzlich sollen PCA, Isomap, Laplacian Eigenmaps und t-SNE vorgestellt werden.} \\
+
+Die meisten dimensionsreduktions Verfahren beruhen auf der Annahme, das reale hochdimensionale Daten 
+sich in der Umgebung einer niedrigdimensionalen Mannigfaltigkeit konzentrieren. 
+In der Literatur ist diese Annahme als Mannigfaltigkeits Hypothese (\textit{engl.: manifold hypothesis})
+bekannt \cite{Mitter,Rifai}. 
+Ansätze um einen gegebenen Datensatz auf diese Annahme zu testen 
+finden sich in \cite{Fefferman}.  % TODO: zu konkret?
+
+% TODO: betone Gleichverteilung auf Mannigfaltigkeit bei UMAP
+
+% TODO: warum ist Topologie sinnvoll?
+
+% TODO: Betrachte Oudot s.67
+
+% TODO: Anwendungen von persistence Oudot s.8
+
+%----------------------------------------------------------------------------------------
+
+\section{Eigene Beiträge}
+
+Wir möchten nun die Ziele dieser Arbeit formulieren.
+\begin{itemize}
+	\item Einführung in die grundlegenden Werkzeuge der topologischen Datenanalyse
+	\item Mögliche Schritte wie die Lücke zwischen Theorie und Praxis des UMAP Verfahrens 
+		  geschlossen werden kann
+	\item UMAP anhand sinnvoller Datensätze mit anderen Dimensionsreduktionsverfahren vergleichen
+	\item 
+\end{itemize}
+Insbesondere werden wir die in Kapitel 2 von \cite{UMAP} beschriebene Theorie ausführlicher 
+beschreiben und in einen allgemeineren Kontext setzen.
+
+%----------------------------------------------------------------------------------------
+
+\section{Gliederung}
+
+In Kapitel \ref{Grundlagen} werden wir die theoretische Grundlage des UMAP Verfahrens erklären. 
+Dies wird einige Definitionen und Grundlagen aus der Kategorientheorie und der 
+(Algebraischen-)Topologie erfordern. Wir haben mich bemüht diese möglichst vollständig darzustellen.
+Für zusätliche Informationen empfielt sich \cite{Brandenburg,Barr,Munkres}.
+
+Kapitel \ref{UMAP} wird die Theorie des UMAP Verfahrens darstellen. Dabei werden wir 
+auf die in \ref{Grundlagen} gelegten Grundlagen zurückgreifen. Zusätzlich soll argumentiert 
+werden, dass eine praktische Implementierung wie sie in der Theorie beschrieben ist zu 
+rechenaufwendig ist und somit wenig praktischen nutzen hat. Deshalb 
+
+%----------------------------------------------------------------------------------------

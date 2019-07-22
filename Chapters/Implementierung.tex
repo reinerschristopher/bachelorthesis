@@ -1,0 +1,62 @@
+%!TEX root = ../main.tex
+
+\chapter{Implementierung} 
+
+\label{Implementierung}
+
+% Docs for algorithms: 
+% http://mirror.physik-pool.tu-berlin.de/pub/CTAN/macros/latex/contrib/algorithmicx/algorithmicx.pdf
+
+%----------------------------------------------------------------------------------------
+
+%\newcommand{\cech}{\u{C}ech}  % Symbol for Cech complex
+
+%----------------------------------------------------------------------------------------
+%----------------------------------------------------------------------------------------
+
+% TODO: Beschreibung der Lücke in diesem Kapitel oder in UMAP
+% \section{Einleitung}
+In diesem Kapitel möchten wir die Implementierung des UMAP Verfahren beschreiben. 
+Die vollständige Berechnung aller Simplizes hat eine exponnentielle Laufzeit, da hierfür 
+alle Teilmengen unseres $N$-elementigen Datensatzes betrachtet werden müssten. 
+In der Implementierung von Leland McInnes et. al. \cite{cpu}  werden hingegen nur alle 
+zwei-elementigen Teilmengen betrachtet. 
+Wie wir in Kapitel \ref{Experimente} sehen werden, liefert uns diese Approximation des 
+\cech-Komplexes sehr gute visuelle Ergebbnisse. 
+Zuerst werden wir den Algorithmus mit seinen Subroutinen in Pseudo-Code angeben. Danach 
+werden wir Ansätze nennen um die Lücke zwischen Theorie und Praxis zu schließen. 
+Zusätzlich werden wir die rechenintensiven Schritte des Verfahrens betrachten und eine 
+effizientere Implementierung auf der GPU betrachten.
+
+%----------------------------------------------------------------------------------------
+
+\section{Pseudo-Code}
+
+Das berechnen des 
+\begin{algorithm}
+\caption{UMAP algorithm}
+\label{umap}
+\begin{algorithmic}
+\Function{UMAP}{$X, N, D, d, min\_dist, n\_epochs$}  %description
+	\For{$x \in X$}
+		\State $knn(x) \gets k\text-NearestNeighbour(x)$
+		\State $graph(x) \gets \bigcup_{y \in knn(x)} (\{x, y\}, exp(-d_{x,y})) \ \cup \ \bigcup_{y \notin knn(x)} (\{x, y\}, 0)$ % \Comment{union weights by using prob. t-norm ($w_{x,y} + w_{y,x} - w_{x,y} * w_{y,x}$)}
+   \EndFor
+   \State $A \gets \text{weighted adjacency matrix}(\bigcup_{x \in X} graph(x))$
+   \State $D \gets \text{degree matrix for the graph } A$
+   \State $L \gets D^{1/2} (D-A) D^{1/2}$ \Comment{Symmetric normalized Laplacian}
+   \State $evec \gets \text{sorted Eigenvectors of } L$
+   \State $Y \gets evec[1,...,d\text{+}1]$
+   \State $Y \gets OptimizeEmbedding(Y, min\_dist, n\_epochs)$
+   \State \textbf{return} $Y$
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+% Plot wie die stetige Approximierung für verschiedene Parameter a und b aussieht.
+
+% Einer der beiden rechenintensivsten Subroutinen im UMAP Algorithmus ist die nächste Nachbar suche.
+% in \cite{Tang} (k-NN is bottleneck) werden 3 verschiedene Methoden verglichen. Sehr effizient ist auch die 
+% Facebook FAISS Methode.
+
+
