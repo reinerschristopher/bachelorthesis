@@ -12,6 +12,9 @@
 *.cb2
 .*.lb
 
+## Sublime
+.sublime-workspace
+
 ## Intermediate documents:
 *.dvi
 *.xdv
