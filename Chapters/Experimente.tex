@@ -14,7 +14,16 @@
 
 % Google News für n_samples Dimension
 
+% Outlier, add completly different images 
+
 % Erwähne analytische Bewertungen der Einbettungen
+% trustworthiness-continuity (Kaski et al., 2003)
+% mean (smoothed) precision-recall (Venna et al., 2010)
+% nearest-neighbor accuracy (Van Der Maaten et al., 2009)
+
+% CUDA tSNE
+% https://github.com/CannyLab/tsne-cuda
+% https://arxiv.org/abs/1807.11824s
 
 % T E X T B A U S T E I N E
 % 'Empirisches testen der Hypothesen/ Annahmen'
@@ -43,6 +52,7 @@
 	Da die Implementierungen des Laplacian Eigenmaps Verfahrens und Isomap Verfahrens schlecht für große 
 	Datensätze skalieren, haben wir uns bewusst dazu entschieden, diese nicht mit in die Analyse aufzunehmen. 
 
+%-----------------------------------
 
 	\subsection*{t-SNE}
 	% TODO: wichtige Terme einfügen?
@@ -69,12 +79,51 @@
 	von zwischen $P$ und $Q$ bezüglich der $y_i$ minimiert. % TODO: werden y_i in Einleitung erwähnt?
 
 	Seit der Veröffentlichung des Verfahrens wurden zahlreiche Verbesserungen, 
-	insbesondere für die Laufzeit, vorgeschlagen \cite{tSNEmod1}. %TODO: zwei weitere Erweiterungen/Verbesserungen
+	insbesondere für die Laufzeit, vorgeschlagen \cite{tSNEmod1,tSNEmod3}. %TODO: zwei weitere Erweiterungen/Verbesserungen
 	Dabei ist besonders Barnes-Hut-SNE \cite{tSNEmod2} zu erwähnen, allerdings sollte hier beachtet werden, 
 	dass aufgrund der Konstruktion einer speziellen Datenstruktur die Laufzeit für $d>3$ sehr schlecht ist.
 
 
-	Für unsere Experimente haben wir 
+	Die von t-SNE produzierte Repräsentation der Daten ist vom \code{perplexity} Parameter abhängig. 
+	Dabei kann man festhalten, je größer die \code{perplexity} ist, desto größer ist die Varianz  % TODO: Verweise auf die Gleichungen oben 
+	des Gaußverteilung. Somit werden für große \code{perplexity} Werte globalere Strukturen erfasst, 
+	da der Gaußkern sehr breit ist. Wenn der \code{perplexity} Parameter in der Größenordnung der 
+	Anzahl an Datenpunkten $N$ liegt gleicht t-SNE dem MDS Verfahren. % TODO: Referenz? 
+
+	Der zweite wichtige Hyperparameter, welchen wir beschreiben möchten ist die \code{exaggeration}.
+	meistens wird hier zwischen \code{early-} und \code{late-exaggeration} unterschieden. 
+	Im wesentlichen verbessert der Parameter die Optimierung des Gradienten und sorgt dafür, 
+	dass Punkte desselben Clusters möglichst schnell in der niedrigdimensionalen Repräsentation 
+	gruppiert werden \cite{tSNEcluster}. Der \code{late-exaggeration} wie in \cite{tSNEmod3} 
+	beschrieben kontrahiert gefundene Cluster, so lassen sich in einer 2- oder 3-dimensionalen 
+	Darstellung leichter Cluster bestimmen - entweder visuell oder mittels Clustering-Verfahren. 
+
+	Wir werden reale Datensätze analysieren und das Vrehalten der Hyperparameter beschreiben, um 
+	ein zusätzliches Verständnis für die von t-SNE genutzten Hyperparemeter zu bekommen 
+	empfiehlt sich \cite{tSNEparam} - zeigt interaktiv auf künstlich erzeugten Datensätzen 
+	die Auswirkung der Parameter.
+
+
+	Für unsere Experimente haben wir die scikit Implementierung des t-SNE Verfahren genutzt \cite{scikit-learn}.
+	Zusätzlich haben wir die openTSNE \cite{opentSNE} Implementierung genutzt. Diese bescheleunigt 
+	die Laufzeit des t-SNE Algorithmus durch eine zusätzliche Fouriertransformation \cite{tSNEmod3}.
+	Die openTSNE Implementierung besitzt im Vergleich zur scikit Implementierung die Möglichkeit 
+	den \code{late-exaggeration} Parameter zu spezifizieren. % TODO: später sehen wir die 
+
+%-----------------------------------
+
+	\subsection*{TriMap}
+	Das TriMap Verfahren \cite{TriMap} soll eine globalere Repräsentation der Daten finden als 
+	beispielsweise t-SNE, das nicht nur paarweise die Ähnlichkeit zweier Objekte $i, j$ betrachet wird, 
+	sondern stets Triple $i, j, k$. Die so erhaltene globale Struktur der Daten soll die 
+	Cluster-Abstände der Daten repräsentieren. 
+
+	
+	
+	Wir haben diesem Algorithmus gewühlt, da die Triplets Ähnlichkeiten mit 2-Simplizes des UMAP Verfahren haben.
+	Die Triplets sind vergleichbar mit den 2-Simplizes des UMAP Verfahrens. 
+	Insbesondere können die Ansätze eine lineare Teilmenge ($O(N)$) an Triplets zu finden 
+	weitere Entwicklungen des UMAP Verfahren motivieren.
 
 %----------------------------------------------------------------------------------------
 
@@ -108,7 +157,7 @@
 	dabei variiert die Anzahl der Möglichkeiten pro Komponente zwischen zwei (Augenlied, Wimpern,\dots) und 
 	111 (Anzahl mögliche Frisuren). 
 	Die Farben der Komponenten wurden aus einem diskreten RGB Raum gewählt. Insgesamt ergibt sich eine mögliche 
-	Anzahl von $10^13$ Gesichtern.
+	Anzahl von $10^{13}$ Gesichtern.
 
 	Für die Analyse haben wir verschiedene Eigenschaften zusammengefasst um einen besseren Überblick zu haben. 
 	Beispielsweise haben wir die 111 Frisuren, nach qualitativer Analyse, zu 19 Frisurtypen zusammengefasst. 
