@@ -17,12 +17,12 @@
 % TODO: Beschreibung der Lücke in diesem Kapitel oder in UMAP
 % \section{Einleitung}
 In diesem Kapitel möchten wir die Implementierung des UMAP Verfahren beschreiben. 
-Die vollständige Berechnung aller Simplizes hat eine exponnentielle Laufzeit, da hierfür 
+Die vollständige Berechnung aller Simplizes hat eine exponentielle Laufzeit, da hierfür 
 alle Teilmengen unseres $N$-elementigen Datensatzes betrachtet werden müssten. 
 In der Implementierung von Leland McInnes et. al. \cite{cpu}  werden hingegen nur alle 
-zwei-elementigen Teilmengen betrachtet. 
+zweielementigen Teilmengen betrachtet. 
 Wie wir in Kapitel \ref{Experimente} sehen werden, liefert uns diese Approximation des 
-\cech-Komplexes sehr gute visuelle Ergebbnisse. 
+\cech-Komplexes sehr gute visuelle Ergebnisse.  % Cech Komplex?
 Zuerst werden wir den Algorithmus mit seinen Subroutinen in Pseudo-Code angeben. Danach 
 werden wir Ansätze nennen um die Lücke zwischen Theorie und Praxis zu schließen. 
 Zusätzlich werden wir die rechenintensiven Schritte des Verfahrens betrachten und eine 
@@ -43,7 +43,7 @@ effizientere Implementierung auf der GPU betrachten.
 
 Das berechnen des 
 \begin{algorithm}
-\caption{UMAP algorithm}
+\caption{UMAP Algorithmus}
 \label{umap}
 \begin{algorithmic}
 \Function{UMAP}{$X, N, D, d, min\_dist, n\_epochs$}  %description
@@ -64,8 +64,75 @@ Das berechnen des
 
 % Plot wie die stetige Approximierung für verschiedene Parameter a und b aussieht.
 
+
+%----------------------------------------------------------------------------------------
+
+\section{Profiling}
+   In Kapitel \ref{Experimente} werden wir genauer auf die tatsächliche Laufzeit des UMAP Algorithmus eingehen. 
+   An dieser Stelle möchten wir die rechenintensiven Subroutinen des Verfahrens ausmachen. Dafür haben wir den 
+   Python cProfiler verwendet, dieser misst die Laufzeit der aufgerufenen Funktionen. 
+   Um für verschiedene Umgebungsdimensionen vergleichbare Ergebnisse zu erhalten, haben wir $N = \num{10000}$ 
+   Datenpunkte in $10$ unterschiedlichen $D = [100, 500, 1000, 5000, 10000, 50000]$-dimensionalen Gauß-verteilten 
+   Datenwolken gewählt. Für den Funktionsaufruf haben wir die Standardparameter verwendet, insbesondere haben wir 
+   die Daten in einen zweidimensionalen Raum eingebettet.
+   Dabei ist uns aufgefallen, dass besonders der k-nächste-Nachbarn-Algorithmus und die Optimierung mittels 
+   stochastischem Gradienten Verfahren einen großen Teil der Laufzeit des Verfahrens beanspruchen. In Tabelle 
+   \ref{table:profiling} sind die Ergebnisse der Profilierung zusammengefasst. 
+
+   \begin{table}
+   \begin{tabular}{l|ll}
+   D     & Laufzeit NN-Descent & Laufzeit der Optimierung \\ \hline
+   100   & 9\%                 & 75,3\%                   \\
+   500   & 12\%                & 73,8\%                   \\
+   1000  & 14\%                & 72,9\%                   \\
+   5000  & 30,4\%              & 58\%                     \\
+   10000 & 44\%                & 45,1\%                   \\
+   50000 & 78,8\%              & 14,8\%                  
+   \end{tabular}
+   \caption{$D$ beschreibt die Größe der Umgebungsdimension. Abhängig von D haben wir die Laufzeit des UMAP Verfahrens 
+            profiliert. Die zweite und dritte Spalte beziehen sich auf die relativen Laufzeiten des kNN Verfahrens und 
+            der Optimierung der Einbettung.}
+   \label{table:profiling}
+   \end{table}
+
+   Insbesondere scheint der \textit{NN-Descent} Algorithmus \cite{k-NNG} die Laufzeit des UMAP Verfahren für 
+   hochdimensionale Daten stark zu beeinflussen. 
+
+%----------------------------------------------------------------------------------------
+
+\section{Nächste-Nachbarn-Klassifikation}
 % Einer der beiden rechenintensivsten Subroutinen im UMAP Algorithmus ist die nächste Nachbar suche.
 % in \cite{Tang} (k-NN is bottleneck) werden 3 verschiedene Methoden verglichen. Sehr effizient ist auch die 
 % Facebook FAISS Methode.
+   Zum effizienten finden der 1-Simplizes der topologischen Repräsentation unserer Daten, benötigen wir einen 
+   k-nächste-Nachbarn-Algorithmus (kurz: \textit{kNN-Algorithmus}). 
+   %TODO: Beschreibung was ein kNN-Alg macht
+
+   Das Ergebnis eines kNN-Algorithmus wird meist in einem ungerichteten Graph -- dem kNN-Graph -- dargestellt, 
+   wobei die Knoten den Datenpunkten entsprechen und die Kanten den Nachbarschaftsbeziehungen, 
+   somit besitzt jeder Knoten Grad k.
+
+   Bei einer naiven Implementierung beträgt die Laufzeit $\mathcal{O}(N^2D)$ (wobei N die Anzahl der Datenpunkte  % TODO: warum N^2D?
+   und D die Dimension der Datenpunkte ist). Mit einer effizienten Implementierung ist in der Praxis eine 
+   annähernd in N lineare Laufzeit möglich. Die Herangehensweisen lassen sich nach \cite{Tang} in drei Kategorien 
+   einteilen. (1) Baum basierte Verfahren auf Partitionen des Raumes, (2) Hashfunktionen auf lokalen Teilgebieten des Raumes 
+   (3) Nachbarschafts-Erkundungen. 
+
+   Wir möchten nun drei Verfahren vorstellen. 
+   \subsection*{NN-Descent}
+      Der NN-Descent Algorithmus \cite{k-NNG} beruht auf dem Prinzip der Nachbarschafts-Erkundungen. Dabei wird ein 
+      initialer kNN-Graph iterativ verbessert, unter der Annahme, dass die Nachbarschaftsbeziehung 
+      transitiv ist, für zwei vorhandene Nachbarschaftspaare $(x, y), (y,z)$ also mit hoher Wahrscheinlichkeit auch 
+      ein Nachbarschaftspaar $(x,z)$ im kNN-Graph existiert. 
+
+
+      Ein Vorteil des NN-Descent Verfahren ist, dass kein globaler Index der verwaltet werden muss. Somit ist eine 
+      Anwendung auf großen Datensätzen möglich welche nicht komplett in den Arbeitsspeicher (RAM) des verwendeten Rechners 
+      geladen werden können. 
+
+
+
+
+
 
 

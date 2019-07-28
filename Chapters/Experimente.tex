@@ -21,6 +21,12 @@
 % mean (smoothed) precision-recall (Venna et al., 2010)
 % nearest-neighbor accuracy (Van Der Maaten et al., 2009)
 
+% Stabilität der Ergebnisse
+
+% Komplett neue Gesichter
+
+% Cluster on FMNIST, Scores on MNIST (Costfunction and SVD)
+
 % CUDA tSNE
 % https://github.com/CannyLab/tsne-cuda
 % https://arxiv.org/abs/1807.11824s
@@ -54,23 +60,23 @@
 
 %-----------------------------------
 
-	\subsection*{t-SNE}
+	\subsection{t-SNE}
 	% TODO: wichtige Terme einfügen?
 	Das t-SNE Verfahren \cite{tSNE} ist zur Zeit eines der bekanntesten und meistgenutzten 
 	nicht-linearen Dimensionsreduktionsverfahren. Dabei wird UMAP fast ausschließlich 
 	zur Visualisierung genutzt, da die Laufzeit für höhere Einbettungsdimensionen schlecht ist. 
 	% TODO: Wie wir später sehen werden. (oder unten?)
 
-	t-SNE konstruiert zuerst eine Wahrscheinlichkeitsverteilung $P$ auf Paaren $(i, j)$ der hochedimensionalen 
+	t-SNE konstruiert zuerst eine Wahrscheinlichkeitsverteilung $P$ auf Paaren $(i, j)$ der hochdimensionalen 
 	Datenpunkten. Diese ist so gewählt, dass Paare ähnlicher Objekte eine höhere Wahrscheinlichkeit 
 	zugeordnet bekommen, wohingegen sehr unterschiedliche Datenpunkte eine Wahrscheinlichkeit nahe $0$ haben. 
 	Die Ähnlichkeit der Punkte wird dabei meist mittels der euklidischen Distanz gemessen, 
 	kann aber ähnlich wie im UMAP Algorithmus durch andere Metriken ersetzt werden. Um $P$ zu konstruieren 
 	wird eine Gaußverteilung genutzt, wobei die Varianz abhängig vom \code{perplexity} Parameter ist. 
-	Die so erhalenen Wahrscheinlichkeiten $p_{i | j}$ sind im Allgemeinen nicht symmetrisch. 
+	Die so erhaltenen Wahrscheinlichkeiten $p_{i | j}$ sind im Allgemeinen nicht symmetrisch. 
 	Die Symmetrie wird durch mitteln der Daten erhalten. 
 
-	Ähnlich wird eine Wahrscheinlichkeitsverteilung $Q$ im niedirgdimensionalen Raum mithilfe der 
+	Ähnlich wird eine Wahrscheinlichkeitsverteilung $Q$ im niedrigdimensionalen Raum mithilfe der 
 	studentschen t-Verteilung konstruiert. Ursprünglich wurde $Q$ ebenfalls durch eine Gausverteilung 
 	konstruiert, das so erhaltene Verfahren (SNE \cite{tSNEvar1}) ist allerdings aufgrund einer 
 	schwierig zu optimierenden Zielfunktion und dem \enquote{crowding problem} wenig praktikabel.
@@ -98,36 +104,77 @@
 	beschrieben kontrahiert gefundene Cluster, so lassen sich in einer 2- oder 3-dimensionalen 
 	Darstellung leichter Cluster bestimmen - entweder visuell oder mittels Clustering-Verfahren. 
 
-	Wir werden reale Datensätze analysieren und das Vrehalten der Hyperparameter beschreiben, um 
-	ein zusätzliches Verständnis für die von t-SNE genutzten Hyperparemeter zu bekommen 
+	Wir werden reale Datensätze analysieren und das Verhalten der Hyperparameter beschreiben, um 
+	ein zusätzliches Verständnis für die von t-SNE genutzten Hyperparameter zu bekommen 
 	empfiehlt sich \cite{tSNEparam} - zeigt interaktiv auf künstlich erzeugten Datensätzen 
 	die Auswirkung der Parameter.
 
 
 	Für unsere Experimente haben wir die scikit Implementierung des t-SNE Verfahren genutzt \cite{scikit-learn}.
-	Zusätzlich haben wir die openTSNE \cite{opentSNE} Implementierung genutzt. Diese bescheleunigt 
+	Zusätzlich haben wir die openTSNE \cite{opentSNE} Implementierung genutzt. Diese beschleunigt 
 	die Laufzeit des t-SNE Algorithmus durch eine zusätzliche Fouriertransformation \cite{tSNEmod3}.
 	Die openTSNE Implementierung besitzt im Vergleich zur scikit Implementierung die Möglichkeit 
 	den \code{late-exaggeration} Parameter zu spezifizieren. % TODO: später sehen wir die 
 
 %-----------------------------------
 
-	\subsection*{TriMap}
+	\subsection{TriMap}
 	Das TriMap Verfahren \cite{TriMap} soll eine globalere Repräsentation der Daten finden als 
-	beispielsweise t-SNE, das nicht nur paarweise die Ähnlichkeit zweier Objekte $i, j$ betrachet wird, 
+	beispielsweise t-SNE, das nicht nur paarweise die Ähnlichkeit zweier Objekte $i, j$ betrachtet wird, 
 	sondern stets Triple $i, j, k$. Die so erhaltene globale Struktur der Daten soll die 
 	Cluster-Abstände der Daten repräsentieren. 
 
-	
-	
-	Wir haben diesem Algorithmus gewühlt, da die Triplets Ähnlichkeiten mit 2-Simplizes des UMAP Verfahren haben.
-	Die Triplets sind vergleichbar mit den 2-Simplizes des UMAP Verfahrens. 
-	Insbesondere können die Ansätze eine lineare Teilmenge ($O(N)$) an Triplets zu finden 
+
+
+	Wir haben diesem Algorithmus gewühlt, da die Tripletts Ähnlichkeiten mit 2-Simplizes des UMAP Verfahren haben.
+	Die Tripletts sind vergleichbar mit den 2-Simplizes des UMAP Verfahrens. 
+	Insbesondere können die Ansätze eine lineare Teilmenge ($O(N)$) an Tripletts zu finden 
 	weitere Entwicklungen des UMAP Verfahren motivieren.
 
 %----------------------------------------------------------------------------------------
 
-\section{Cartoon Set}
+\section{Bewertung der Ergebnisse}
+	Um die $d$-dimensionalen Repräsentationen der Daten zu bewerten gibt es verschiedene Ansätze. 
+	Diese sollen nun vorgestellt und verglichen werden. 
+
+
+	Ein DR-Verfahren, welches die statistischen Eigenschaften der zugrundeliegenden Daten erfasst, 
+	sollte invariant bezüglich Rauschen der Daten sein. Hingegen sollte eine schlechte Einbettung 
+	wenig stabil sein, wenn zusätzliches Rauschen in den Daten auftritt. 
+
+	Eine weitere Methodik um die Qualität der Einbettung zu erfassen, erhält man dadurch, 
+	dass  
+
+	In \cite{Harmeling} werden zwei Methoden zur Auswahl eines geeigneten DR-Verfahrens verglichen. 
+	
+
+	Um die lokale Qualität der Algorithmen zu analysieren haben wir uns die \textit{Cluster} in der 
+	$2$-dimensionalen Repräsentation angeschaut, wobei wir als Cluster eine Teilmenge der Daten bezeichnen, 
+	welche deutlich von den anderen Datenpunkten getrennt ist. % TODO: 'Stetigkeit' innerhalb der Cluster?
+	Insbesondere bei der Analyse des Cartoon Set \ref{cartoonset} konnten wir gut lokale Strukturen 
+	erkennen, da jeder Datenpunkt mehrere Eigenschaften gegeben hat -- im Vergleich zum MNIST und FMNIST 
+	Datensatz, wo uns nur ein \textit{Label} pro Datenpunkt gegeben ist. 
+
+	Die globale Struktur der Repräsentation qualitativ zu bewerten ist subjektiv. Dabei ist insbesondere 
+	die Frage -- \enquote{Wie \textit{stark} unterscheiden sich die Cluster?} -- zu beantworten. 
+	Beispielsweise sollten die Cluster welche die Ziffern 1 und 7 darstellen näher zueinander liegen als 
+	die Cluster der Ziffern 1 und 6. 
+
+	Für die qualitative Analyse wird die Fähigkeit des Gehirns genutzt Strukturen zu erkennen. 
+	Nachteile der qualitativen Analyse sind, (1) die Subjektivität und somit Abhängigkeit vom Betrachter, 
+	(2) dass sie nur im $d$-dimensionalen $(d \leq 3)$ möglich ist. 
+	% und (3) die Problematik, dass es (noch) keine mathematische Formulierung der Bewertung gibt.
+
+	In den folgenden Experimenten haben wir uns auf eine qualitative Analyse der Daten beschränkt.
+	Einerseits ist dies unserer Erfahrung nach (und Einträgen in Internetforen,\dots) die 
+	meistgenutzte Art die Repräsentation in der Praxis zu bewerten. Zusätzlich bietet die Wahl der 
+	Datensätze eine gute Gelegenheit die Repräsentationen visuell zu bewerten. 
+
+
+%----------------------------------------------------------------------------------------
+
+\section{Cartoon Set} 
+\label{cartoonset}
 	In diesem Abschnitt werden wir den \textit{Cartoon Set} Datensatz analysieren \cite{cartoon}. 
 	Dabei werden wir:
 	\begin{itemize}
@@ -143,7 +190,7 @@
 
 	\subsection{Beschreibung des Datensatzes}
 	Der Cartoon Datensatz enthält \num{100000} unterschiedliche Bilder von gezeichneten Gesichtern 
-	(siehe \ref{fig:Cartoon_Sample}). 
+	(siehe Abbildung \ref{fig:Cartoon_Sample}). 
 
 	\begin{figure}
 		%\centering
@@ -154,13 +201,13 @@
 	\end{figure}
 
 	Die Bilder wurden aus 16 Komponenten zusammengesetzt (u.a. Gesichtsform, Gesichtsfarbe, Frisur, Haarfarbe), 
-	dabei variiert die Anzahl der Möglichkeiten pro Komponente zwischen zwei (Augenlied, Wimpern,\dots) und 
+	dabei variiert die Anzahl der Möglichkeiten pro Komponente zwischen zwei (Augenlid, Wimpern,\dots) und 
 	111 (Anzahl mögliche Frisuren). 
 	Die Farben der Komponenten wurden aus einem diskreten RGB Raum gewählt. Insgesamt ergibt sich eine mögliche 
 	Anzahl von $10^{13}$ Gesichtern.
 
 	Für die Analyse haben wir verschiedene Eigenschaften zusammengefasst um einen besseren Überblick zu haben. 
-	Beispielsweise haben wir die 111 Frisuren, nach qualitativer Analyse, zu 19 Frisurtypen zusammengefasst. 
+	Beispielsweise haben wir die 111 Frisuren, nach qualitativer Analyse, zu 19 Frisurformen zusammengefasst. 
 
 	Wir haben uns für diesen Datensatz entschieden um UMAP auf Daten mit einer komplexeren Struktur zu testen 
 	als dies in \cite{UMAP} gemacht wird. Dabei ist auch zu beachten, dass es aufgrund der 16 Komponenten aus 

@@ -17,7 +17,8 @@
 %----------------------------------------------------------------------------------------
 
 % N O T I Z E N
-% 
+% Zu unterscheiden zwischen Informations visualisierung und ML DR Algs
+% (siehe https://perso.uclouvain.be/michel.verleysen/papers/iconip13mv.pdf)
 
 % T E X T B A U S T E I N E
 % 'UMAP wird für single cell RNA-sequencing genutzt'
@@ -28,10 +29,31 @@
 % Betrachet man beispielsweise gleichverteilte Punkte auf einem Kreis und möchte diese 
 % in R einbetten, muss es zwei Punkte geben welche getrennt werden.
 
+% Sehr anschauliches Beispiel für die Größe des Raums, siehe \cite{Lawrence}, wenn man 
+% eine Zahl nimmt und jede Nanosekunde ein Beispiel betrachtet würde man 'nie' die 
+% ursprüngliche 6 sehen.
+
 %----------------------------------------------------------------------------------------
 %----------------------------------------------------------------------------------------
 
 % TODO: Was macht das Thema Dimensionsreduktion relevant?
+
+%----------------------------------------------------------------------------------------
+
+%\section{Einleitung}
+Wer eine Tageszeitung aufschlägt oder sie beim Frühstücken auf seinem Tablett liest, 
+wird nicht vermeiden können, mindestens einen Artikel über die \enquote{Algorithmen der Zukunft}, 
+\enquote{Daten hungrigen Konzerne}, \dots zu lesen. 
+Fakt ist heutzutage werden mehr Daten generiert und gespeichert als je zuvor in der 
+Geschichte der Menschheit und wir benötigen aussagekräftige, schnelle und zuverlässige 
+Verfahren um die gesammelten Daten auszuwerten, zu strukturieren und einen Mehrwert für die 
+Gesellschaft zu generieren.
+
+% hochdimensional ist nicht menschlich verständlich
+
+Wir werden uns in dieser Arbeit mit einer Klasse an Verfahren befassen, welche hochdimensionale Daten 
+visualisiert. Insbesondere werden wir das UMAP (Uniform Manifold Approximation and Projection) 
+Verfahren 
 
 %----------------------------------------------------------------------------------------
 
@@ -45,34 +67,34 @@
 
 %-----------------------------------
 
-% \subsection{Topologische Datenanalyse}
-Eine neuere Form der Datenanalyse - die topologische Datenanalyse (\textit{kurz: TDA}) - 
-nutzt mathematische Instrumente des Teilgebiets der Topologie 
-(\textit{griechisch: Lehre vom Ort/Platz}) um Daten zu beschreiben und zu strukturieren.
+	% \subsection{Topologische Datenanalyse}
+	Eine neuere Form der Datenanalyse - die topologische Datenanalyse (\textit{kurz: TDA}) - 
+	nutzt mathematische Instrumente des Teilgebiets der Topologie 
+	(\textit{griechisch: Lehre vom Ort/Platz}) um Daten zu beschreiben und zu strukturieren.
 
-Wir beschreiben die Stituation einen Datensatz $X$ zu analysieren wie folgt. Wir betrachten 
-einen $D$-dimensionalen Raum und ein Objekt $K$. In unserem Fall werden wir uns größtenteils 
-mit dem euklidischen Raum $\R^D$ versehen mit der euklidischen Norm $\norm{\cdot}$ beschäftigen.
+	Wir beschreiben die Situation einen Datensatz $X$ zu analysieren wie folgt. Wir betrachten 
+	einen $D$-dimensionalen Raum und ein Objekt $K$. In unserem Fall werden wir uns größtenteils 
+	mit dem euklidischen Raum $\R^D$ versehen mit der euklidischen Norm $\norm{\cdot}$ beschäftigen.
 
-$K$ kann beispielsweise eine geschlossene Menge sein. Die genaue Struktur von $K$ bleibt uns allerdings unbekannt. 
-Später werden wir argumentieren, dass $K$ gewisse Regularitätseigenschaften erfüllt und 
-in vielen Fällen lokal einem niedrigdimensionalen Raum $\R^d, (d \ll D)$ gleicht. 
+	$K$ kann beispielsweise eine geschlossene Menge sein. Die genaue Struktur von $K$ bleibt uns allerdings unbekannt. 
+	Später werden wir argumentieren, dass $K$ gewisse Regularitätseigenschaften erfüllt und 
+	in vielen Fällen lokal einem niedrigdimensionalen Raum $\R^d, (d \ll D)$ gleicht. 
 
-Statt $K$ ist uns eine endliche Menge an $N$ Punkten $X=\seqx$, gegeben. 
-$X$ wird als \textit{Punktwolke} bezeichnet und beschreibt in einem Experiment gemessene Daten, 
-beispielsweise Sensormessdaten, biologische Informationen oder Bilddatensätze. 
+	Statt $K$ ist uns eine endliche Menge an $N$ Punkten $X=\seqx$, gegeben. 
+	$X$ wird als \textit{Punktwolke} bezeichnet und beschreibt in einem Experiment gemessene Daten, 
+	beispielsweise Sensormessdaten, biologische Informationen oder Bilddatensätze. 
 
-In Kapitel \ref{Experimente} werden wir uns mit einem 
-Bilddatensatz mit \num{100000} Farbbildern mit einer Auflösung von $300 \times 300$ Pixeln 
-beschäftigen. Wir können diesen Datensatz als $N = \num{100000}$ elementige Punktwolke im 
-$\R^{300 \times 300 \times 4}$ auffassen, wobei wir die vier Farbkanäle der Bilder berücksichtigen.
+	In Kapitel \ref{Experimente} werden wir uns mit einem 
+	Bilddatensatz mit \num{100000} Farbbildern mit einer Auflösung von $300 \times 300$ Pixeln 
+	beschäftigen. Wir können diesen Datensatz als $N = \num{100000}$-elementige Punktwolke im 
+	$\R^{300 \times 300 \times 4}$ auffassen, wobei wir die vier Farbkanäle der Bilder berücksichtigen.
 
-Wir gehen dabei davon aus, dass $K$ und $X$ in einem gewissen Sinne \enquote{ähnlich} sind. 
-Nun ist es Ziel der TDA mittels Methoden der Topologie Aussagen über die Struktur von $X$ zu treffen, 
-welche, aufgrund der Ähnlichkeit, auch für $K$ gelten sollen. Die $K$ zugrundeliegende Struktur 
-kann uns dann dabei helfen Aussagen über weitere gemessene Daten zu treffen, 
-da diese auch in der uns unbekannten Menge $K$ liegen sollten. Zusätzlich hilft
-% TODO: ergänzend siehe Oudot, Ch.4
+	Wir gehen dabei davon aus, dass $K$ und $X$ in einem gewissen Sinne \enquote{ähnlich} sind. 
+	Nun ist es Ziel der TDA mittels Methoden der Topologie Aussagen über die Struktur von $X$ zu treffen, 
+	welche, aufgrund der Ähnlichkeit, auch für $K$ gelten sollen. Die $K$ zugrundeliegende Struktur 
+	kann uns dann dabei helfen Aussagen über weitere gemessene Daten zu treffen, 
+	da diese auch in der uns unbekannten Menge $K$ liegen sollten. Zusätzlich hilft
+	% TODO: ergänzend siehe Oudot, Ch.4
 
 %-----------------------------------
 %----------------------------------------------------------------------------------------
@@ -82,7 +104,7 @@ da diese auch in der uns unbekannten Menge $K$ liegen sollten. Zusätzlich hilft
 
 %----------------------------------------------------------------------------------------
 
-\section{Dimensionsreduktion}
+\section{Dimensionsreduktion / Problemstellung}
 
 % hoch dimensionale Daten: Bilder, Word-count Vektoren, Zell Daten
 
@@ -95,15 +117,22 @@ $N=\num{100000}, D=\num{360000}$. %TODO: betrachten wir cartoonset100k oder cart
 
 % Wahrscheinlichkeitstheorie:      |  Geometrie:
 % Probabilistic PCA, VAEs, GANs    |  tSNE  (lt. Posada)
+Eine Herangehensweise die $d$-dimensionale Repräsentation zu finden ist es eine $N \times N$ Matrix $M$ 
+aufzustellen, die ersten $d$ Eigenvektoren von $M$, wobei die Eigenvektoren absteigend nach der Größe der 
+zugehörigen Eigenvektoren geordnet sind, geben 
+
+
+% Erwähne Graph embedding Verfahren 
+% https://www.ncbi.nlm.nih.gov/pubmed/17108382
 
 % Dann überleiten zu UMAP
 
-\textit{Hier sollen die zwei Arten an DR Algorithmen vorgestellt werden (Matrix Faktorisierung 
+\textit{Hier sollen die zwei Arten an DR Algorithmen vorgestellt werden (Matrix-Faktorisierung 
 und Graph Layout). Zusätzlich sollen PCA, Isomap, Laplacian Eigenmaps und t-SNE vorgestellt werden.} \\
 
-Die meisten dimensionsreduktions Verfahren beruhen auf der Annahme, das reale hochdimensionale Daten 
+Die meisten Verfahren zur Dimensionsreduktion beruhen auf der Annahme, das reale hochdimensionale Daten 
 sich in der Umgebung einer niedrigdimensionalen Mannigfaltigkeit konzentrieren. 
-In der Literatur ist diese Annahme als Mannigfaltigkeits Hypothese (\textit{engl.: manifold hypothesis})
+In der Literatur ist diese Annahme als Mannigfaltigkeit-Hypothese (\textit{engl.: manifold hypothesis})
 bekannt \cite{Mitter,Rifai}. 
 Ansätze um einen gegebenen Datensatz auf diese Annahme zu testen 
 finden sich in \cite{Fefferman}.  % TODO: zu konkret?
@@ -115,6 +144,10 @@ finden sich in \cite{Fefferman}.  % TODO: zu konkret?
 % TODO: Betrachte Oudot s.67
 
 % TODO: Anwendungen von persistence Oudot s.8
+
+%----------------------------------------------------------------------------------------
+
+\section{Ziele der Arbeit}
 
 %----------------------------------------------------------------------------------------
 
@@ -133,12 +166,12 @@ beschreiben und in einen allgemeineren Kontext setzen.
 
 %----------------------------------------------------------------------------------------
 
-\section{Gliederung}
+\section{Aufbau der Arbeit}
 
 In Kapitel \ref{Grundlagen} werden wir die theoretische Grundlage des UMAP Verfahrens erklären. 
 Dies wird einige Definitionen und Grundlagen aus der Kategorientheorie und der 
 (Algebraischen-)Topologie erfordern. Wir haben mich bemüht diese möglichst vollständig darzustellen.
-Für zusätliche Informationen empfielt sich \cite{Brandenburg,Barr,Munkres}.
+Für zusätzliche Informationen empfiehlt sich \cite{Brandenburg,Barr,Munkres}.
 
 Kapitel \ref{UMAP} wird die Theorie des UMAP Verfahrens darstellen. Dabei werden wir 
 auf die in \ref{Grundlagen} gelegten Grundlagen zurückgreifen. Zusätzlich soll argumentiert 
@@ -146,3 +179,18 @@ werden, dass eine praktische Implementierung wie sie in der Theorie beschrieben 
 rechenaufwendig ist und somit wenig praktischen nutzen hat. Deshalb 
 
 %----------------------------------------------------------------------------------------
+
+\section{Danksagung}
+
+Ich bin den Personen sehr dankbar und verbunden welche mich auch dem Weg zu dieser Arbeit begleitet haben.
+
+Zuerst möchte ich Annalena Lange, Lennard Schiefelbein und Nico Gerber für die vielen anregenden 
+Gespräche danken und Hendrik Baers und Tobias Bork, welche die letzten drei Jahre zu einer spannenden 
+und herausfordernden Studienzeit gemacht haben.
+
+Besonderer Dank gilt Prof. Dr. Jochen Garcke für das sehr interessante Thema und die 
+wegweisende Betreuung. Gerne möchte ich auch Leland McInnes für das persönliche Gespräch in Ottawa, Kanada 
+danken. So konnte ich die Motivation, welche er für das UMAP Verfahren hatte, aus erster Hand erfahren.
+
+Zum Schluss meiner Familie und Freunden für Ihre bedingungslose Unterstützung.
+

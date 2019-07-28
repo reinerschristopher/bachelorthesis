@@ -35,6 +35,8 @@ headsepline, % Uncomment to get a line under the header
 \sisetup{group-separator = {\,}, group-minimum-digits=5}  % small spacing between every third digit of long number
 % https://www.namsu.de/Extra/pakete/Siunitx.html
 
+\setcounter{secnumdepth}{3}
+
 %----------------------------------------------------------------------------------------
 %	OWN SETTINGS
 %----------------------------------------------------------------------------------------
@@ -98,6 +100,7 @@ headsepline, % Uncomment to get a line under the header
 %	TITLE PAGE
 %----------------------------------------------------------------------------------------
 
+\fontfamily{cmr}\selectfont
 \maketitle
 
 %----------------------------------------------------------------------------------------
@@ -114,23 +117,23 @@ headsepline, % Uncomment to get a line under the header
 %	ACKNOWLEDGEMENTS
 %----------------------------------------------------------------------------------------
 
-\begin{acknowledgements}
+% \begin{acknowledgements}
 
-\addchaptertocentry{\acknowledgementname} % Add the acknowledgements to the table of contents
+% \addchaptertocentry{\acknowledgementname} % Add the acknowledgements to the table of contents
 
-Ich bin den Personen sehr dankbar und verbunden welche mich auch dem Weg zu dieser Arbeit begleitet haben.
+% Ich bin den Personen sehr dankbar und verbunden welche mich auch dem Weg zu dieser Arbeit begleitet haben.
 
-Zuerst möchte ich Annalena Lange, Lennard Schiefelbein und Nico Gerber für die vielen anregenden 
-Gespräche danken und Hendrik Baers und Tobias Bork, welche die letzten drei Jahre zu einer spannenden 
-und herrausfordernden Studienzeit gemacht haben.
+% Zuerst möchte ich Annalena Lange, Lennard Schiefelbein und Nico Gerber für die vielen anregenden 
+% Gespräche danken und Hendrik Baers und Tobias Bork, welche die letzten drei Jahre zu einer spannenden 
+% und herrausfordernden Studienzeit gemacht haben.
 
-Besonderer Dank gilt Prof. Dr. Jochen Garcke für das sehr interessante Thema und die 
-wegweisende Betreueung. Gerne möchte ich auch Leland McInnes für das persönliche Gespräch in Ottawa, Kanada 
-danken. So konnte ich die Motivation, welche er für das UMAP Verfahren hatte, aus erster Hand erfahren.
+% Besonderer Dank gilt Prof. Dr. Jochen Garcke für das sehr interessante Thema und die 
+% wegweisende Betreueung. Gerne möchte ich auch Leland McInnes für das persönliche Gespräch in Ottawa, Kanada 
+% danken. So konnte ich die Motivation, welche er für das UMAP Verfahren hatte, aus erster Hand erfahren.
 
-Zum Schluss meiner Familie und Freunden für Ihre bedingungslose Unterstützung.
+% Zum Schluss meiner Familie und Freunden für Ihre bedingungslose Unterstützung.
 
-\end{acknowledgements}
+% \end{acknowledgements}
 
 %----------------------------------------------------------------------------------------
 %	LIST OF CONTENTS/FIGURES/TABLES PAGES
@@ -155,6 +158,7 @@ Zum Schluss meiner Familie und Freunden für Ihre bedingungslose Unterstützung.
 \include{Chapters/UMAP} 
 \include{Chapters/Implementierung}
 \include{Chapters/Experimente}
+\include{Chapters/Ausblick}
 \include{Chapters/Zusammenfassung} 
 
 %----------------------------------------------------------------------------------------
