@@ -9,7 +9,9 @@
 
 %----------------------------------------------------------------------------------------
 
-%\newcommand{\cech}{\u{C}ech}  % Symbol for Cech complex
+% \newcommand{\indexij}[1][v]{{#1}_{ij}}  % Symbol for v_{ij}
+\newcommand{\vij}{v_{ij}}  % Symbol for b_{ij}
+\newcommand{\wij}{w_{ij}}  % Symbol for w_{ij}
 
 %----------------------------------------------------------------------------------------
 %----------------------------------------------------------------------------------------
@@ -19,7 +21,7 @@
 In diesem Kapitel möchten wir die Implementierung des UMAP Verfahren beschreiben. 
 Die vollständige Berechnung aller Simplizes hat eine exponentielle Laufzeit, da hierfür 
 alle Teilmengen unseres $N$-elementigen Datensatzes betrachtet werden müssten. 
-In der Implementierung von Leland McInnes et. al. \cite{cpu}  werden hingegen nur alle 
+In der Implementierung von McInnes et. al. \cite{cpu}  werden hingegen nur alle 
 zweielementigen Teilmengen betrachtet. 
 Wie wir in Kapitel \ref{Experimente} sehen werden, liefert uns diese Approximation des 
 \cech-Komplexes sehr gute visuelle Ergebnisse.  % Cech Komplex?
@@ -32,6 +34,7 @@ effizientere Implementierung auf der GPU betrachten.
 
 % N O T I Z E N
 % Cite Numba 24
+% Plot wie die stetige Approximierung für verschiedene Parameter a und b aussieht.
 
 % T E X T B A U S T E I N E
 % 
@@ -40,30 +43,69 @@ effizientere Implementierung auf der GPU betrachten.
 %----------------------------------------------------------------------------------------
 
 \section{Pseudo-Code}
+   Das berechnen des 
 
-Das berechnen des 
-\begin{algorithm}
-\caption{UMAP Algorithmus}
-\label{umap}
-\begin{algorithmic}
-\Function{UMAP}{$X, N, D, d, min\_dist, n\_epochs$}  %description
-	\For{$x \in X$}
-		\State $knn(x) \gets k\text-NearestNeighbour(x)$
-		\State $graph(x) \gets \bigcup_{y \in knn(x)} (\{x, y\}, exp(-d_{x,y})) \ \cup \ \bigcup_{y \notin knn(x)} (\{x, y\}, 0)$ % \Comment{union weights by using prob. t-norm ($w_{x,y} + w_{y,x} - w_{x,y} * w_{y,x}$)}
-   \EndFor
-   \State $A \gets \text{weighted adjacency matrix}(\bigcup_{x \in X} graph(x))$
-   \State $D \gets \text{degree matrix for the graph } A$
-   \State $L \gets D^{1/2} (D-A) D^{1/2}$ \Comment{Symmetric normalized Laplacian}
-   \State $evec \gets \text{sorted Eigenvectors of } L$
-   \State $Y \gets evec[1,...,d\text{+}1]$
-   \State $Y \gets OptimizeEmbedding(Y, min\_dist, n\_epochs)$
-   \State \textbf{return} $Y$
-\EndFunction
-\end{algorithmic}
-\end{algorithm}
+   \begin{algorithm}
+   \caption{UMAP Algorithmus}
+   \label{algorithm:umap}
+   \begin{algorithmic}[1]
+   \Function{UMAP}{$X, N, D, d, min\_dist, n\_epochs$}  %description
+      \For{$x \in X$}
+         \State $knn(x) \gets k\text{-nächste-Nachbarn}(x)$ \label{alg:kNN}
+         \State $graph(x) \gets \bot_{y \in knn(x)} (\{x, y\}, exp(-d_{x,y})) \ \bot \ \bot_{y \in X \setminus \{x\}} (\{x, y\}, 0)$ \label{alg:graph}
+      \EndFor
+      \State $V \gets \text{gewichtete Adjazenzmatrix}(\bigcup_{x \in X} graph(x))$
+      \State $D \gets \text{Grad-Matrix des Graphen } V$ \label{alg:grad}
+      \State $L \gets D^{1/2} (D-V) D^{1/2}$ \Comment{Symmetrische normalisierte Laplace-Matrix}
+      \State $evec \gets \text{sortierte Eigenvektoren von } L$
+      \State $Y \gets evec[1,\dots,d\text{+}1]$ \label{alg:spec}
+      \State $Y \gets OptimizeEmbedding(Y, min\_dist, n\_epochs)$
+      \State \textbf{return} $Y$
+   \EndFunction
+   \end{algorithmic}
+   \end{algorithm}
 
-% Plot wie die stetige Approximierung für verschiedene Parameter a und b aussieht.
+   In Abschnitt \ref{seq:kNN} werden zwei effiziente Verfahren für die k-nächste-Nachbarn Suche (Zeile \ref{alg:kNN}) angeben. 
+   
+   % TODO: Referenzen einfügen
+   Der in Zeile \ref{alg:graph} verwendete $\bot$ Operator verdeutlicht, dass wir die Kantengewichte mittels wahrscheinlichkeitstheoretischer 
+   t-Conorm vereinigen. 
+   In den von uns verwendeten Implementierung des UMAP Verfahrens \cite{cpu,GPUUMAP} wird ein zusätzlicher Hyperparameter verwendet, welcher 
+   eine Verallgemeinerung der Vereinigung darstellt (siehe:). %TODO: Verweis auf set_op_mix_ratio
+   Zusätzlich ist zu beachten, dass die Vereinigung in Zeile \ref{alg:graph} ungerichtete Kanten betrachtet. Der so erhaltene ungerichtete Graph 
+   besitzt aufgrund der Symmetrie der t-Conorm wohldefinierte Kantengewichte.
 
+   Die Grad-Matrix $D$ (Zeile \ref{alg:grad}) ist eine Diagonalmatrix, wobei  $d_{ii} \coloneqq  \sum_{1 \leq k \leq N} a_{ik}, (1 \leq i \leq N)$. 
+   Für den Spezialfall, der ungewichteten Adjazenzmatrix, beschreibt $d_{ii}$ also den Grad des Knoten $i$. 
+
+   Die Initialisierung der niedrigdimensionalen Repräsentation $Y$ in Zeile \ref{alg:spec} ist die spektrale Einbettung des Graphen. 
+   referenziere seqution oder beschreibe die Sinnhaftigkeit hier % TODO: seqution?
+
+
+   Um eine Unterscheidung zwischen der theoretischen Sichtweise auf das UMAP Verfahren, welche alle $k$-Simplizes 
+   $(1 \leq k \leq N)$ berücksichtigt, und der praktischen Implementierung zu verdeutlichen werden wir die 
+   verwendete Notation anpassen. 
+   % TODO: Füge Referenzen zu UMAP ein.
+   Die allgemeine Kreuzentropie für unsichere Mengen ref{} lässt sich für den Fall, dass nur das 1-Skelett betrachtet 
+   wird wie folgt notieren:
+
+   \begin{alignat}{2}
+      C &= \sum_{1 \leq i,j \leq N} \vij \log\left(\frac{\vij}{\wij}\right) + (1-\vij) \log\left(\frac{1-\vij}{1-\wij}\right) \\
+        &= 
+          \begin{aligned}[t]
+            &  \sum_{1 \leq i,j \leq N} (\vij \log(\vij) + (1-\vij) \log(1-\vij)) \\
+            &- \sum_{1 \leq i,j \leq N} (\vij \log(\wij) - \sum_{1 \leq i,j \leq N} (1-\vij) \log(1-\wij))
+         \end{aligned} \\
+       &=  C_v - \sum_{1 \leq i,j \leq N} (\vij \log(\wij) - \sum_{1 \leq i,j \leq N} (1-\vij) \log(1-\wij))
+   \end{alignat}
+
+   , wobei $\vij = \mu(a), \wij = \nu(a), \vij \in V, a \in A \text{ s.d. } a $ ist 1-Simplex zwischen den Datenpunkten $i, j$. 
+
+
+%----------------------------------------------------------------------------------------
+
+\section{Spektrale Einbettung}
+   Der Laplace Operator ist eine diskrete Approximation des Laplce-Beltrami Operators. Spectrale Eeinbettung \dots
 
 %----------------------------------------------------------------------------------------
 
@@ -97,10 +139,18 @@ Das berechnen des
 
    Insbesondere scheint der \textit{NN-Descent} Algorithmus \cite{k-NNG} die Laufzeit des UMAP Verfahren für 
    hochdimensionale Daten stark zu beeinflussen. 
+   Wir werden beide rechenintensiven Subroutinen im folgenden betrachten und geeignete Verbesserungen diskutieren. 
 
 %----------------------------------------------------------------------------------------
 
-\section{Nächste-Nachbarn-Klassifikation}
+\section{Gradienten Verfahren} \label{seq:SGD}
+   Um die Zielfunktion zu o{}ptimieren wird im UMAP Verfahren ein stochastisches Gradienten Verfahren (kurz: \textit{SGD}) 
+   genutzt. 
+   In \cite{SGDGPU} werden verschiedene Implementierungen verglichen.
+
+%----------------------------------------------------------------------------------------
+
+\section{Nächste-Nachbarn-Klassifikation} \label{seq:kNN}
 % Einer der beiden rechenintensivsten Subroutinen im UMAP Algorithmus ist die nächste Nachbar suche.
 % in \cite{Tang} (k-NN is bottleneck) werden 3 verschiedene Methoden verglichen. Sehr effizient ist auch die 
 % Facebook FAISS Methode.
@@ -118,19 +168,41 @@ Das berechnen des
    einteilen. (1) Baum basierte Verfahren auf Partitionen des Raumes, (2) Hashfunktionen auf lokalen Teilgebieten des Raumes 
    (3) Nachbarschafts-Erkundungen. 
 
-   Wir möchten nun drei Verfahren vorstellen. 
+   Wir möchten nun zwei Verfahren vorstellen. 
    \subsection*{NN-Descent}
       Der NN-Descent Algorithmus \cite{k-NNG} beruht auf dem Prinzip der Nachbarschafts-Erkundungen. Dabei wird ein 
       initialer kNN-Graph iterativ verbessert, unter der Annahme, dass die Nachbarschaftsbeziehung 
       transitiv ist, für zwei vorhandene Nachbarschaftspaare $(x, y), (y,z)$ also mit hoher Wahrscheinlichkeit auch 
       ein Nachbarschaftspaar $(x,z)$ im kNN-Graph existiert. 
-
+      Der initiale Graph im NN-Descent Verfahren wird dabei zufällig gewählt. Dies kann dazu führen, dass nur 
+      lokal optimale k-NN-Graphen gefunden werden. Dies könnte laut \cite{EFANNA} dadurch verbessert werden, indem 
+      für die Initialisierung \enquote{random projection trees}, wie in \cite{Tang}, verwendet werden. 
 
       Ein Vorteil des NN-Descent Verfahren ist, dass kein globaler Index der verwaltet werden muss. Somit ist eine 
       Anwendung auf großen Datensätzen möglich welche nicht komplett in den Arbeitsspeicher (RAM) des verwendeten Rechners 
       geladen werden können. 
 
+      Nachteil des NN-Descent Algorithmus ist die Speicherplatzkomplexität, diese ist durch $\mathcal{O}(N^2)$ beschränkt. 
+      Im wesentlichen ist dies dadurch begründet, dass paarweise die Ähnlichkeit, welche im Falle von UMAP durch die Metrik 
+      des Umgebungsraums gegeben ist, gespeichert wird. Aufgrund dessen, dass nur lokale Optima garantiert sind, ist das Ergebnis 
+      des NN-Descent Verfahren approximativ. In \cite{UMAP} wird jedoch argumentiert, dass dies wegen des Informationsverlust 
+      bei Dimensionsreduktionen kaum Auswirkungen auf die resultierende Einbettung hat. 
 
+
+   \subsection*{FAISS}
+      Das FAISS Bibliothek \cite{FAISS} nutzt die Architektur einer GPU aus. Dabei baut FAISS eine effiziente Datenstruktur, 
+      welche für die Vektoren die nächsten Nachbarn speichert. Somit ist eine sehr schnelle Implementierung 
+      für das aufstellen des k-NN-Graphen möglich. 
+
+      Der RAM der meisten GPUs ist stark begrenzt. Um dennoch mit großen Datensätzen zu arbeiten werden komprimierte 
+      Darstellungen der Vektoren genutzt. % TODO: Referenzen einfügen, aus FAISS
+      Für FAISS werden \enquote{product quantization codes} genutzt. % TODO: referenz und kurze Beschreibung 
+
+      Vorteile der FAISS Datenstruktur sind die effiziente Implementierung auf GPUs und das sowohl exakte Ergebnisse 
+      sowie Approximationen für die nächsten Nachbarn angegeben werden können. Die Rückgabe approximativer 
+      Ergebnisse erhält Laufzeit sowie Speicherplatz Vorteile. 
+
+      Nachteil des FAISS Verfahren ist, dass zurzeit nur die euklidische Distanz unterstützt wird. 
 
 
 
