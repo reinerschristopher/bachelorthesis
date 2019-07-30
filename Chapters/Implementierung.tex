@@ -53,13 +53,13 @@
    In Kapitel \ref{Zusammenfassung} werden wir Ansätze erwähnen um Simplizes höherer 
    Ordnungen effizient zu finden. 
 
-   Zunächst werden wir die Notation aus \ref{UMAP} anpassen, da wir nur das 1-Skelett der 
+   Zunächst werden wir die Notation aus Kapitel \ref{UMAP} anpassen, da wir nur das 1-Skelett der 
    topologischen Repräsentationen betrachten. Danach werden wir die Zielfunktion explizit 
-   angeben und den Gradienten betrachten. 
+   angeben und den Gradienten herleiten. 
    In Abschnitt \ref{seq:pseudo} werden wir den UMAP Algorithmus im Pseudo-Code angeben.
-   Die darauf folgenden Abschnitte beschreiben rechenintensive Schritte der von uns 
+   Die darauf folgenden Abschnitte identifizieren rechenintensive Schritte der von uns 
    verwendeten Implementierung \cite{cpu} und beschreiben Alternativen.
-   Abschnitt \ref{seq:hyper} fasst die Hyperparameter zusammen und gibt eine kurze Beschreibung an. 
+   Abschnitt \ref{seq:hyper} gibt eine Beschreibung der Hyperparameter an. 
 
 %----------------------------------------------------------------------------------------
 
@@ -71,13 +71,16 @@
    Die unsicheren Mengen $(A, \mu), (A, \nu)$ aus Gleichung (\ref{eq:crossentropy}) lassen sich als gewichtete Graphen, 
    in Form einer Adjazenzmatrix darstellen. % TODO: Für den Fall, dass nur 1-Simplizes betrachtet werden
    Das 1-Skelett der hochdimensionalen Repräsentation notieren wir als Adjazenzmatrix $V$ mit $\vij = \mu(a)$, für 
-   ein 1-Simplex $a$, mit Facetten $i$ und $j$.
+   ein 1-Simplex $a$, mit Facetten $i$ und $j$. 
+   % TODO: Wahl von \vij
 
    Die Wahl des Zugehörigkeitsgrades für 1-Simplizes der niedrigdimensionalen Repräsentation der Daten ist wie folgt gegeben:
 
    \begin{equation}
       \wij = (1+a(\norm{\mathbf{y}_i - \mathbf{y}_j}^2_2)^b)^{-1}, \label{eq:wij} % TODO: wie sind a, b gewählt?
    \end{equation}
+
+   % TODO: für a=b=1 tSNE, b=1 LargeVis
 
    wobei $\mathbf{y}_i, 1 \leq i \leq N$ die Vektoren der Einbettung sind. Die Wahl der Werte $a,b$ werden wir in 
    Abschnitt \ref{seq:hyper} beschreiben.
@@ -92,13 +95,13 @@
                      &  \sumtup{i}{j} (\vij \log(\vij) + (1-\vij) \log(1-\vij)) \\
                      &- \sumtup{i}{j} (\vij \log(\wij)) - \sumtup{i}{j} ((1-\vij) \log(1-\wij))
                   \end{aligned} \\
-              &=  C_v - \sumtup{i}{j} (\vij \log(\wij)) - \sumtup{i}{j} ((1-\vij) \log(1-\wij)) \label{eq:loss}
+              &=  C_v - \sumtup{i}{j} (\vij \log(\wij) + (1-\vij) \log(1-\wij)) \label{eq:loss}
    \end{alignat}
 
    Der Term $C_v$ bleibt während der Minimierung der Funktion bezüglich der $\mathbf{y}_i$ konstant.
    
    Aufgrund der Wahl einer differenzierbaren Funktion für den Zugehörigkeitsgrad der 1-Simplizes, 
-   bzw. der Gewichte des niedrigdimensionalen Graphen, lässt sich nun der Gradient von Gleichung (\ref{eq:loss}) herleiten.
+   bzw. der Gewichte des niedrigdimensionalen Graphen, lässt sich nun der Gradient der Zielfunktion (\ref{eq:loss}) herleiten.
 
    Mittels der Kettenregel ergibt sich mit $d_{ij} \coloneqq \norm{\mathbf{y}_i - \mathbf{y}_j}_2$:
 
@@ -133,9 +136,9 @@
 %----------------------------------------------------------------------------------------
 
 \section{Pseudo-Code} \label{seq:pseudo}
-   Das berechnen des 
+   Nun können wir das UMAP Verfahren für die 1-Skelette der topologischen Repräsentation angeben.
 
-   \begin{algorithm}
+   \begin{algorithm} %TODO: Verändere x zu x_i (y zu y_j) um Notation konsistent zu halten
    \caption{UMAP Algorithmus}
    \label{algorithm:umap}
    \begin{algorithmic}[1]
@@ -149,7 +152,7 @@
       \State $L \gets D^{1/2} (D-V) D^{1/2}$ \Comment{Symmetrische normalisierte Laplace-Matrix}
       \State $evec \gets \text{sortierte Eigenvektoren von } L$
       \State $Y \gets evec[1,\dots,d\text{+}1]$ \label{alg:spec}
-      \State $Y \gets OptimizeEmbedding(Y, min\_dist, n\_epochs)$
+      \State $Y \gets OptimiereEinbettung(Y, min\_dist, n\_epochs)$
       \State \textbf{return} $Y$
    \EndFunction
    \end{algorithmic}
@@ -162,7 +165,7 @@
    Der in Zeile \ref{alg:graph} verwendete $\bot$ Operator verdeutlicht, dass wir die Kantengewichte mittels wahrscheinlichkeitstheoretischer 
    t-Conorm vereinigen. % TODO: Referenzen t-Conorm einfügen
    In den von uns verwendeten Implementierung des UMAP Verfahrens \cite{cpu,GPUUMAP} wird ein zusätzlicher Hyperparameter verwendet, welcher 
-   eine Verallgemeinerung der Vereinigung darstellt (siehe:). %TODO: Verweis auf set_op_mix_ratio
+   eine Verallgemeinerung der Vereinigung darstellt (siehe: \code{set\_op\_mix\_ratio} in Abschnitt \ref{seq:hyper}). %TODO: Verweis auf set_op_mix_ratio
    Zusätzlich ist zu beachten, dass die Vereinigung in Zeile \ref{alg:graph} ungerichtete Kanten betrachtet. Der so erhaltene ungerichtete Graph 
    besitzt aufgrund der Symmetrie der t-Conorm wohldefinierte Kantengewichte.
 
@@ -172,8 +175,9 @@
    Die Initialisierung der niedrigdimensionalen Repräsentation $Y$ in Zeile \ref{alg:spec} ist die spektrale Einbettung des Graphen. 
    Eine genauere Beschreibung warum die so gewählte Initialisierung sinnvoll ist findet sich in Abschnitt \ref{seq:spec}. Dabei ist 
    zu beachten, dass eine Lösung des Eigenwertproblems nur von der Größe der Einbettungsdimension abhängig ist. Da wird stets $d \ll D$ 
-   betrachten ist eine effiziente Implementierung möglich, es verschiedene Verfahren gibt im sukzessive die Eigenwerte und ihre zugehörigen 
-   Eigenvektoren zu finden. % TODO: Referenz für sukkzesive suche % TODO: Verschieben in section unten.
+   betrachten ist eine effiziente Implementierung mittels sukzessiver Eigenwertsuche möglich. % TODO: Referenz für sukkzesive suche % TODO: Verschieben in section unten.
+
+%----------------------------------------------------------------------------------------
 
 \section{Spektrale Einbettung} \label{seq:spec}
    Der Laplace Operator ist eine diskrete Approximation des Laplace-Beltrami Operators. Spektrale Einbettung \dots
@@ -187,11 +191,14 @@
    Python cProfiler verwendet, dieser misst die Laufzeit der aufgerufenen Funktionen. 
    Um für verschiedene Umgebungsdimensionen vergleichbare Ergebnisse zu erhalten, haben wir $N = \num{10000}$ 
    Datenpunkte in $10$ unterschiedlichen $D = [100, 500, 1000, 5000, 10000, 50000]$-dimensionalen Gauß-verteilten 
-   Datenwolken gewählt. Für den Funktionsaufruf haben wir die Standardparameter verwendet, insbesondere haben wir 
-   die Daten in einen zweidimensionalen Raum eingebettet.
+   Datenwolken gewählt. Diese Daten wurden dann in den zweidimensionalen Raum eingebettet.
+   
    Dabei ist uns aufgefallen, dass besonders der k-nächste-Nachbarn-Algorithmus und die Optimierung mittels 
    stochastischem Gradienten Verfahren einen großen Teil der Laufzeit des Verfahrens beanspruchen. In Tabelle 
    \ref{table:profiling} sind die Ergebnisse der Profilierung zusammengefasst. 
+   Insbesondere scheint die k-nächste-Nachbarn Suche die Laufzeit des UMAP Verfahren für 
+   hochdimensionale Daten stark zu beeinflussen. 
+   Wir werden beide rechenintensiven Subroutinen im folgenden betrachten und geeignete Verbesserungen diskutieren.
 
    \begin{table}
    \centering
@@ -208,25 +215,34 @@
             profiliert. Die zweite und dritte Spalte beziehen sich auf die relativen Laufzeiten des kNN Verfahrens und 
             der Optimierung der Einbettung.}
    \label{table:profiling}
-   \end{table}
-
-   Insbesondere scheint der \textit{NN-Descent} Algorithmus \cite{k-NNG} die Laufzeit des UMAP Verfahren für 
-   hochdimensionale Daten stark zu beeinflussen. 
-   Wir werden beide rechenintensiven Subroutinen im folgenden betrachten und geeignete Verbesserungen diskutieren. 
+   \end{table} 
 
 %----------------------------------------------------------------------------------------
 
+% N O T I Z E N
+% sub-sampling bei Wortrepräsentationen sorgt für verbesserte Laufzeiten (2x - 10x)
+% und Genauigkeit weniger häufig repräsentierter Wörter nimmt zu
+
+% Negative sampling
+% Noise Contrastive Estimation (NCE), Gutmann and Hyvarinen
+% Ein Gutes Modell, kann Daten und Rauschen mittels logistischer Regression unterscheiden
+% Benötigt samples und numerische Wahrscheinlichkeiten der Raschverteilung 
+% Neg. Sampling benötigt nur samples
+% Für die Wahrsscheinlichkeitsverteilung wird in der Word2Vec Version die Unigram Verteilung ^3/4 gewählt
+
+
 \section{Gradientenverfahren} \label{seq:SGD}
-   Um die Funktion (\ref{eq:loss}) zu optimieren bietet sich die Wahl eines Gradientenverfahrens an, da eine differenzierbare 
+   Um die Zielfunktion (\ref{eq:loss}) zu optimieren bietet sich die Wahl eines Gradientenverfahrens an, da eine differenzierbare 
    Approximation des Zugehörigkeitsgrades (siehe Gleichung \ref{eq:wij}) gegeben ist.
 
    In den vergangenen Jahren gab es viele Weiterentwicklungen, insbesondere bezüglich der Konvergenzgeschwindigkeit, 
    von Gradientenverfahren. Diese werden unter anderem für das trainieren neuronaler Netzwerke bei der Backpropgation genutzt. 
-   Die von uns verwendeten Implementierungen nutzen zur Minimierung von Gleichung (\ref{eq:umapgrad})
-
-   Um die Zielfunktion zu optimieren wird im UMAP Verfahren eine Version des stochastischen Gradientenverfahren (kurz: \textit{SGD}) 
-   genutzt. 
    In \cite{SGDGPU} werden verschiedene Implementierungen verglichen.
+
+   Das UMAP Verfahren nutzt für die Optimierung der Zielfunktion die \textit{negative sampling} Methode aus dem Bereich 
+   der Worteinbettungen \cite{Mikolov}. Wir werden diese Methode vorstellen und dann Algorithmus \ref{algorithm:umap}, 
+   um die Subroutine \textsc{OptimiereEinbettung} vervollständigen.
+   
 
 
    % Optimiert Suchrichtung des Gradienten da wichtige Beispiele betrachtet werden. 
@@ -235,6 +251,25 @@
 
    \subsection*{Optimierung des UMAP Gradienten}
       Pseudo Code der Optimierung
+      \begin{algorithm}
+      \caption{OptimiereEinbettung}
+      \label{algorithm:optimize}
+      \begin{algorithmic}[1]
+      \Function{OptimiereEinbettung}{$Y, V, W, n\_epochs$}  %description
+         \For{$x \in X$}
+            \State $knn(x) \gets k\text{-nächste-Nachbarn}(x)$ 
+            \State $graph(x) \gets \bot_{y \in knn(x)} (\{x, y\}, exp(-d_{x,y})) \ \bot \ \bot_{y \in X \setminus \{x\}} (\{x, y\}, 0)$
+         \EndFor
+         \State $V \gets \text{gewichtete Adjazenzmatrix}(\bigcup_{x \in X} graph(x))$
+         \State $D \gets \text{Grad-Matrix des Graphen } V$
+         \State $L \gets D^{1/2} (D-V) D^{1/2}$ \Comment{Symmetrische normalisierte Laplace-Matrix}
+         \State $evec \gets \text{sortierte Eigenvektoren von } L$
+         \State $Y \gets evec[1,\dots,d\text{+}1]$
+         \State $Y \gets OptimiereEinbettung(Y, min\_dist, n\_epochs)$
+         \State \textbf{return} $Y$
+      \EndFunction
+      \end{algorithmic}
+      \end{algorithm}
 
 %----------------------------------------------------------------------------------------
 
@@ -312,7 +347,7 @@
          Text
       \item $\code{n\_epochs}$
          Text
-      \item $\code{set\_op\_mix\_ratio}$
+      \item \code{set\_op\_mix\_ratio}
         % Interpolate between (fuzzy) union and intersection as the set operation
         % used to combine local fuzzy simplicial sets to obtain a global fuzzy
         % simplicial sets. Both fuzzy set operations use the product t-norm.
