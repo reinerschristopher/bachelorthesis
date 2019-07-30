@@ -7,34 +7,34 @@
 % Docs for algorithms: 
 % http://mirror.physik-pool.tu-berlin.de/pub/CTAN/macros/latex/contrib/algorithmicx/algorithmicx.pdf
 
+% Quelle für Gradienten: TODO: remove
+% http://jlmelville.github.io/sneer/gradients.html#hellinger_distance
+% https://jlmelville.github.io/smallvis/theory.html#umap
+
 %----------------------------------------------------------------------------------------
 
 % \newcommand{\indexij}[1][v]{{#1}_{ij}}  % Symbol for v_{ij}
 \newcommand{\vij}{v_{ij}}  % Symbol for b_{ij}
 \newcommand{\wij}{w_{ij}}  % Symbol for w_{ij}
-
-%----------------------------------------------------------------------------------------
-%----------------------------------------------------------------------------------------
-
-% TODO: Beschreibung der Lücke in diesem Kapitel oder in UMAP
-% \section{Einleitung}
-In diesem Kapitel möchten wir die Implementierung des UMAP Verfahren beschreiben. 
-Die vollständige Berechnung aller Simplizes hat eine exponentielle Laufzeit, da hierfür 
-alle Teilmengen unseres $N$-elementigen Datensatzes betrachtet werden müssten. 
-In der Implementierung von McInnes et. al. \cite{cpu}  werden hingegen nur alle 
-zweielementigen Teilmengen betrachtet. 
-Wie wir in Kapitel \ref{Experimente} sehen werden, liefert uns diese Approximation des 
-\cech-Komplexes sehr gute visuelle Ergebnisse.  % Cech Komplex?
-Zuerst werden wir den Algorithmus mit seinen Subroutinen in Pseudo-Code angeben. Danach 
-werden wir Ansätze nennen um die Lücke zwischen Theorie und Praxis zu schließen. 
-Zusätzlich werden wir die rechenintensiven Schritte des Verfahrens betrachten und eine 
-effizientere Implementierung auf der GPU betrachten.
+\newcommand{\deriv}[2]{\frac{\partial {#1}}{\partial {#2}}}
+\newcommand{\sumtup}[2]{\sum_{{#1},{#2} = 1}^N}
+\newcommand{\sumtups}[1]{\sum_{{#1} = 1}^N}
 
 %----------------------------------------------------------------------------------------
 
 % N O T I Z E N
 % Cite Numba 24
-% Plot wie die stetige Approximierung für verschiedene Parameter a und b aussieht.
+
+% %\begin{equation}
+% \begin{align*}
+%    &\qquad&
+%    \sum_{i=1}^n \exp\left(\frac{-(\text{knn-dists}_i - \rho)}{\sigma}\right) &= \log_2(n) \\
+%    \iff&& \sum_{i=1}^n (\exp(-(\text{knn-dists}_i - \rho)) - \exp(\sigma)) &= \log_2(n) \\
+%    \iff&& \left(\sum_{i=1}^n \exp(-(\text{knn-dists}_i - \rho))\right) - n\exp(\sigma) &= \log_2(n) \\
+%    \iff&& \sum_{i=1}^n \exp(-(\text{knn-dists}_i - \rho)) &= \log_2(n) + n\exp(\sigma) \\
+%    \iff&& \log_e \left(\frac{\sum_{i=1}^n \exp(-(\text{knn-dists}_i - \rho)) - \log_2(n)}{n}\right) &= \sigma \\
+% \end{align*}
+% %\end{equation}
 
 % T E X T B A U S T E I N E
 % 
@@ -42,7 +42,97 @@ effizientere Implementierung auf der GPU betrachten.
 %----------------------------------------------------------------------------------------
 %----------------------------------------------------------------------------------------
 
-\section{Pseudo-Code}
+% \section{Einleitung}
+   In diesem Kapitel möchten wir die Implementierung des UMAP Verfahren beschreiben. 
+   Die vollständige Berechnung aller Simplizes hat eine exponentielle Laufzeit, da hierfür 
+   alle $2^N$ Teilmengen unseres $N$-elementigen Datensatzes betrachtet werden müssten. 
+   In aktuellen Implementierungen werden hingegen nur alle 
+   zweielementigen Teilmengen betrachtet. 
+   Wie wir in Kapitel \ref{Experimente} sehen werden, liefert uns diese Approximation des 
+   \cech-Komplexes sehr gute visuelle Ergebnisse.  % TODO: Cech Komplex?
+   In Kapitel \ref{Zusammenfassung} werden wir Ansätze erwähnen um Simplizes höherer 
+   Ordnungen effizient zu finden. 
+
+   Zunächst werden wir die Notation aus \ref{UMAP} anpassen, da wir nur das 1-Skelett der 
+   topologischen Repräsentationen betrachten. Danach werden wir die Zielfunktion explizit 
+   angeben und den Gradienten betrachten. 
+   In Abschnitt \ref{seq:pseudo} werden wir den UMAP Algorithmus im Pseudo-Code angeben.
+   Die darauf folgenden Abschnitte beschreiben rechenintensive Schritte der von uns 
+   verwendeten Implementierung \cite{cpu} und beschreiben Alternativen.
+   Abschnitt \ref{seq:hyper} fasst die Hyperparameter zusammen und gibt eine kurze Beschreibung an. 
+
+%----------------------------------------------------------------------------------------
+
+\section{Numerische Formulierung der Optimierung} \label{seq:numerische_formulierung}
+   Um eine Unterscheidung zwischen der theoretischen Sichtweise auf das UMAP Verfahren, welche alle $k$-Simplizes 
+   $(1 \leq k \leq N)$ berücksichtigt, und der praktischen Implementierung zu verdeutlichen, werden wir die 
+   verwendete Notation anpassen. 
+
+   Die unsicheren Mengen $(A, \mu), (A, \nu)$ aus Gleichung (\ref{eq:crossentropy}) lassen sich als gewichtete Graphen, 
+   in Form einer Adjazenzmatrix darstellen. % TODO: Für den Fall, dass nur 1-Simplizes betrachtet werden
+   Das 1-Skelett der hochdimensionalen Repräsentation notieren wir als Adjazenzmatrix $V$ mit $\vij = \mu(a)$, für 
+   ein 1-Simplex $a$, mit Facetten $i$ und $j$.
+
+   Die Wahl des Zugehörigkeitsgrades für 1-Simplizes der niedrigdimensionalen Repräsentation der Daten ist wie folgt gegeben:
+
+   \begin{equation}
+      \wij = (1+a(\norm{\mathbf{y}_i - \mathbf{y}_j}^2_2)^b)^{-1}, \label{eq:wij} % TODO: wie sind a, b gewählt?
+   \end{equation}
+
+   wobei $\mathbf{y}_i, 1 \leq i \leq N$ die Vektoren der Einbettung sind. Die Wahl der Werte $a,b$ werden wir in 
+   Abschnitt \ref{seq:hyper} beschreiben.
+
+
+   Somit erhalten wir folgende Kreuzentropie zwischen den Graphen der hoch- und niedrigdimensionalen 
+   Darstellung der Daten:
+
+   \begin{alignat}{2}
+      C(V, W) &= \sumtup{i}{j} \vij \log\left(\frac{\vij}{\wij}\right) + (1-\vij) \log\left(\frac{1-\vij}{1-\wij}\right) \\
+              &= \begin{aligned}[t]
+                     &  \sumtup{i}{j} (\vij \log(\vij) + (1-\vij) \log(1-\vij)) \\
+                     &- \sumtup{i}{j} (\vij \log(\wij)) - \sumtup{i}{j} ((1-\vij) \log(1-\wij))
+                  \end{aligned} \\
+              &=  C_v - \sumtup{i}{j} (\vij \log(\wij)) - \sumtup{i}{j} ((1-\vij) \log(1-\wij)) \label{eq:loss}
+   \end{alignat}
+
+   Der Term $C_v$ bleibt während der Minimierung der Funktion bezüglich der $\mathbf{y}_i$ konstant.
+   
+   Aufgrund der Wahl einer differenzierbaren Funktion für den Zugehörigkeitsgrad der 1-Simplizes, 
+   bzw. der Gewichte des niedrigdimensionalen Graphen, lässt sich nun der Gradient von Gleichung (\ref{eq:loss}) herleiten.
+
+   Mittels der Kettenregel ergibt sich mit $d_{ij} \coloneqq \norm{\mathbf{y}_i - \mathbf{y}_j}_2$:
+
+   \begin{align}
+   \quad
+      \deriv{C}{\mathbf{y}_i} &= \sumtup{k}{l} \deriv{C}{w_{kl}} \sumtup{m}{n} \deriv{w_{kl}}{d^2_{mn}} \sumtup{p}{q} \deriv{d^2_{mn}}{d_{pq}} \deriv{d_{pq}}{\mathbf{y}_i} \\
+                     &= \sumtup{k}{l} \deriv{C}{w_{kl}} \sumtup{m}{n} \deriv{w_{kl}}{d^2_{mn}} \deriv{d^2_{mn}}{d_{mn}} \deriv{d_{mn}}{\mathbf{y}_i} \\
+                     &= 2 \sumtup{k}{l} \deriv{C}{w_{kl}} \sumtups{m} \deriv{w_{kl}}{d^2_{mi}} \deriv{d^2_{mi}}{d_{mi}} \deriv{d_{mi}}{\mathbf{y}_i} \\
+                     &= 2 \sumtups{m} \left( \sumtup{k}{l} \deriv{C}{w_{kl}} \deriv{w_{kl}}{d^2_{mi}} \right) \deriv{d^2_{mi}}{d_{mi}} \deriv{d_{mi}}{\mathbf{y}_i}  \label{eq:deriv-2}\\
+                     &= 4 \sumtups{m} \left( \sumtup{k}{l} \deriv{C}{w_{kl}} \deriv{w_{kl}}{d^2_{mi}} \right) (\mathbf{y}_i - \mathbf{y}_m) \label{eq:deriv-1}
+   \end{align}
+
+   Bei der Umformung von (\ref{eq:deriv-2}) nach (\ref{eq:deriv-1}) haben wir verwendet, dass $d_{mi}$ die euklidische Norm ist. 
+   Für Einbettungen in andere metrische Räume müsste der Gradient an dieser Stelle entsprechend angepasst werden. Da wir 
+   das UMAP Verfahren im wesentlichen zur Visualisierung im $\R^2$ benutzen ist die Wahl der euklidischen Norm gerechtfertigt.
+   Die übrigen Umformungen ergeben sich aus umordnen und wegfallen der Terme. 
+
+   (\ref{eq:deriv-1}) lässt sich weiter umformen, dazu nutzen wir:
+
+   \begin{align}
+      \deriv{C}{\wij} &= - \frac{\vij}{\wij} + \frac{1-\vij}{1-\wij} = \frac{\wij - \vij}{\wij (1 - \wij)} \\
+      \deriv{\wij}{d^2_{ij}} &= -bad_{ij}^{2(b-1)} \wij^2 = - \frac{b}{d_{ij}^2} \wij (1 - \wij)
+   \end{align}
+
+   Der UMAP Gradient ist also gegeben durch:
+
+   \begin{equation}
+      \deriv{C}{\mathbf{y}_i} = 4 \sumtups{j} (\wij - \vij) \frac{b}{d_{ij}^2} (\mathbf{y}_i - \mathbf{y}_j)
+      \label{eq:umapgrad}
+   \end{equation}
+
+%----------------------------------------------------------------------------------------
+
+\section{Pseudo-Code} \label{seq:pseudo}
    Das berechnen des 
 
    \begin{algorithm}
@@ -54,7 +144,7 @@ effizientere Implementierung auf der GPU betrachten.
          \State $knn(x) \gets k\text{-nächste-Nachbarn}(x)$ \label{alg:kNN}
          \State $graph(x) \gets \bot_{y \in knn(x)} (\{x, y\}, exp(-d_{x,y})) \ \bot \ \bot_{y \in X \setminus \{x\}} (\{x, y\}, 0)$ \label{alg:graph}
       \EndFor
-      \State $V \gets \text{gewichtete Adjazenzmatrix}(\bigcup_{x \in X} graph(x))$
+      \State $V \gets \text{gewichtete Adjazenzmatrix}(\bigcup_{x \in X} graph(x))$ \label{alg:adj}
       \State $D \gets \text{Grad-Matrix des Graphen } V$ \label{alg:grad}
       \State $L \gets D^{1/2} (D-V) D^{1/2}$ \Comment{Symmetrische normalisierte Laplace-Matrix}
       \State $evec \gets \text{sortierte Eigenvektoren von } L$
@@ -67,45 +157,27 @@ effizientere Implementierung auf der GPU betrachten.
 
    In Abschnitt \ref{seq:kNN} werden zwei effiziente Verfahren für die k-nächste-Nachbarn Suche (Zeile \ref{alg:kNN}) angeben. 
    
-   % TODO: Referenzen einfügen
+   %TODO: wahl von d_xy
+
    Der in Zeile \ref{alg:graph} verwendete $\bot$ Operator verdeutlicht, dass wir die Kantengewichte mittels wahrscheinlichkeitstheoretischer 
-   t-Conorm vereinigen. 
+   t-Conorm vereinigen. % TODO: Referenzen t-Conorm einfügen
    In den von uns verwendeten Implementierung des UMAP Verfahrens \cite{cpu,GPUUMAP} wird ein zusätzlicher Hyperparameter verwendet, welcher 
    eine Verallgemeinerung der Vereinigung darstellt (siehe:). %TODO: Verweis auf set_op_mix_ratio
    Zusätzlich ist zu beachten, dass die Vereinigung in Zeile \ref{alg:graph} ungerichtete Kanten betrachtet. Der so erhaltene ungerichtete Graph 
    besitzt aufgrund der Symmetrie der t-Conorm wohldefinierte Kantengewichte.
 
-   Die Grad-Matrix $D$ (Zeile \ref{alg:grad}) ist eine Diagonalmatrix, wobei  $d_{ii} \coloneqq  \sum_{1 \leq k \leq N} a_{ik}, (1 \leq i \leq N)$. 
+   Die Grad-Matrix $D$ (Zeile \ref{alg:grad}) ist eine Diagonalmatrix, wobei  $d_{ii} \coloneqq  \sum_{1 \leq k \leq N} v_{ik}, (1 \leq i \leq N)$. 
    Für den Spezialfall, der ungewichteten Adjazenzmatrix, beschreibt $d_{ii}$ also den Grad des Knoten $i$. 
 
    Die Initialisierung der niedrigdimensionalen Repräsentation $Y$ in Zeile \ref{alg:spec} ist die spektrale Einbettung des Graphen. 
-   referenziere seqution oder beschreibe die Sinnhaftigkeit hier % TODO: seqution?
+   Eine genauere Beschreibung warum die so gewählte Initialisierung sinnvoll ist findet sich in Abschnitt \ref{seq:spec}. Dabei ist 
+   zu beachten, dass eine Lösung des Eigenwertproblems nur von der Größe der Einbettungsdimension abhängig ist. Da wird stets $d \ll D$ 
+   betrachten ist eine effiziente Implementierung möglich, es verschiedene Verfahren gibt im sukzessive die Eigenwerte und ihre zugehörigen 
+   Eigenvektoren zu finden. % TODO: Referenz für sukkzesive suche % TODO: Verschieben in section unten.
 
-
-   Um eine Unterscheidung zwischen der theoretischen Sichtweise auf das UMAP Verfahren, welche alle $k$-Simplizes 
-   $(1 \leq k \leq N)$ berücksichtigt, und der praktischen Implementierung zu verdeutlichen werden wir die 
-   verwendete Notation anpassen. 
-   % TODO: Füge Referenzen zu UMAP ein.
-   Die allgemeine Kreuzentropie für unsichere Mengen ref{} lässt sich für den Fall, dass nur das 1-Skelett betrachtet 
-   wird wie folgt notieren:
-
-   \begin{alignat}{2}
-      C &= \sum_{1 \leq i,j \leq N} \vij \log\left(\frac{\vij}{\wij}\right) + (1-\vij) \log\left(\frac{1-\vij}{1-\wij}\right) \\
-        &= 
-          \begin{aligned}[t]
-            &  \sum_{1 \leq i,j \leq N} (\vij \log(\vij) + (1-\vij) \log(1-\vij)) \\
-            &- \sum_{1 \leq i,j \leq N} (\vij \log(\wij) - \sum_{1 \leq i,j \leq N} (1-\vij) \log(1-\wij))
-         \end{aligned} \\
-       &=  C_v - \sum_{1 \leq i,j \leq N} (\vij \log(\wij) - \sum_{1 \leq i,j \leq N} (1-\vij) \log(1-\wij))
-   \end{alignat}
-
-   , wobei $\vij = \mu(a), \wij = \nu(a), \vij \in V, a \in A \text{ s.d. } a $ ist 1-Simplex zwischen den Datenpunkten $i, j$. 
-
-
-%----------------------------------------------------------------------------------------
-
-\section{Spektrale Einbettung}
-   Der Laplace Operator ist eine diskrete Approximation des Laplce-Beltrami Operators. Spectrale Eeinbettung \dots
+\section{Spektrale Einbettung} \label{seq:spec}
+   Der Laplace Operator ist eine diskrete Approximation des Laplace-Beltrami Operators. Spektrale Einbettung \dots
+   % TODO: ergänzen
 
 %----------------------------------------------------------------------------------------
 
@@ -122,6 +194,7 @@ effizientere Implementierung auf der GPU betrachten.
    \ref{table:profiling} sind die Ergebnisse der Profilierung zusammengefasst. 
 
    \begin{table}
+   \centering
    \begin{tabular}{l|ll}
    D     & Laufzeit NN-Descent & Laufzeit der Optimierung \\ \hline
    100   & 9\%                 & 75,3\%                   \\
@@ -143,10 +216,25 @@ effizientere Implementierung auf der GPU betrachten.
 
 %----------------------------------------------------------------------------------------
 
-\section{Gradienten Verfahren} \label{seq:SGD}
-   Um die Zielfunktion zu o{}ptimieren wird im UMAP Verfahren ein stochastisches Gradienten Verfahren (kurz: \textit{SGD}) 
+\section{Gradientenverfahren} \label{seq:SGD}
+   Um die Funktion (\ref{eq:loss}) zu optimieren bietet sich die Wahl eines Gradientenverfahrens an, da eine differenzierbare 
+   Approximation des Zugehörigkeitsgrades (siehe Gleichung \ref{eq:wij}) gegeben ist.
+
+   In den vergangenen Jahren gab es viele Weiterentwicklungen, insbesondere bezüglich der Konvergenzgeschwindigkeit, 
+   von Gradientenverfahren. Diese werden unter anderem für das trainieren neuronaler Netzwerke bei der Backpropgation genutzt. 
+   Die von uns verwendeten Implementierungen nutzen zur Minimierung von Gleichung (\ref{eq:umapgrad})
+
+   Um die Zielfunktion zu optimieren wird im UMAP Verfahren eine Version des stochastischen Gradientenverfahren (kurz: \textit{SGD}) 
    genutzt. 
    In \cite{SGDGPU} werden verschiedene Implementierungen verglichen.
+
+
+   % Optimiert Suchrichtung des Gradienten da wichtige Beispiele betrachtet werden. 
+   \subsection*{Sub-sampling}
+      siehe Word2Vec
+
+   \subsection*{Optimierung des UMAP Gradienten}
+      Pseudo Code der Optimierung
 
 %----------------------------------------------------------------------------------------
 
@@ -169,6 +257,9 @@ effizientere Implementierung auf der GPU betrachten.
    (3) Nachbarschafts-Erkundungen. 
 
    Wir möchten nun zwei Verfahren vorstellen. 
+
+%-----------------------------------
+
    \subsection*{NN-Descent}
       Der NN-Descent Algorithmus \cite{k-NNG} beruht auf dem Prinzip der Nachbarschafts-Erkundungen. Dabei wird ein 
       initialer kNN-Graph iterativ verbessert, unter der Annahme, dass die Nachbarschaftsbeziehung 
@@ -188,6 +279,7 @@ effizientere Implementierung auf der GPU betrachten.
       des NN-Descent Verfahren approximativ. In \cite{UMAP} wird jedoch argumentiert, dass dies wegen des Informationsverlust 
       bei Dimensionsreduktionen kaum Auswirkungen auf die resultierende Einbettung hat. 
 
+%-----------------------------------
 
    \subsection*{FAISS}
       Das FAISS Bibliothek \cite{FAISS} nutzt die Architektur einer GPU aus. Dabei baut FAISS eine effiziente Datenstruktur, 
@@ -204,7 +296,43 @@ effizientere Implementierung auf der GPU betrachten.
 
       Nachteil des FAISS Verfahren ist, dass zurzeit nur die euklidische Distanz unterstützt wird. 
 
+%----------------------------------------------------------------------------------------
 
+\section{Hyperparameter} \label{seq:hyper}
 
+   \begin{itemize}
+      \item \code{n\_neighbors}:
+            beschreibender Text
+        % The size of local neighborhood (in terms of number of neighboring
+        % sample points) used for manifold approximation. Larger values
+        % result in more global views of the manifold, while smaller
+        % values result in more local data being preserved. In general
+        % values should be in the range 2 to 100.
+      \item $\code{metric}$
+         Text
+      \item $\code{n\_epochs}$
+         Text
+      \item $\code{set\_op\_mix\_ratio}$
+        % Interpolate between (fuzzy) union and intersection as the set operation
+        % used to combine local fuzzy simplicial sets to obtain a global fuzzy
+        % simplicial sets. Both fuzzy set operations use the product t-norm.
+        % The value of this parameter should be between 0.0 and 1.0; a value of
+        % 1.0 will use a pure fuzzy union, while 0.0 will use a pure fuzzy
+        % intersection.
+      \item $\code{local\_connectivity}$ 
+         % The local connectivity required -- i.e. the number of nearest
+         % neighbors that should be assumed to be connected at a local level.
+         % The higher this value the more connected the manifold becomes
+         % locally. In practice this should be not more than the local intrinsic
+         % dimension of the manifold.
+      \item \code{repulsion\_strength}
+         % Weighting applied to negative samples in low dimensional embedding
+         % optimization. Values higher than one will result in greater weight
+         % being given to negative samples.
+      \item \code{a, b}:
+            Erwähne wie a und b standardmäßig gewählt werden, zeige Plot von a, b
+            Erwähne \code{min\_dist} und \code{spread}
+   \end{itemize}
 
+      
 

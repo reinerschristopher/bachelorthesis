@@ -32,25 +32,44 @@ hochdimensionalen anzupassen. Dies wird uns zum UMAP Verfahren führen.
 
 %-----------------------------------
 
-\subsection*{Fluch der Dimensionen}
-% Zitiere Bengio 2007
-Ein kritischer Punkt beim analysieren hochdimensionaler Daten ist der sogenannte Fluch der Dimensionen.
-Was das bedeutet und wie das UMAP Verfahren macht um diesen zu vermeiden werde ich im Folgenden kurz erklären.
-Unter dem Fluch der Dimensionen versteht man.
-% Dünn besetzt ist schlecht, da keine Stetigkeit mehr, besonders bei lokalen eigenschaften wichtig 
+	\subsection*{Fluch der Dimensionen}
+	% Zitiere Bengio 2007
+	Ein kritischer Punkt beim analysieren hochdimensionaler Daten ist der sogenannte Fluch der Dimensionen.
+	Was das bedeutet und wie das UMAP Verfahren macht um diesen zu vermeiden werde ich im Folgenden kurz erklären.
+	Unter dem Fluch der Dimensionen versteht man.
+	% Dünn besetzt ist schlecht, da keine Stetigkeit mehr, besonders bei lokalen eigenschaften wichtig 
 
 
-Siehe Abbildung \ref{fig:Curse}
+	Abbildung \ref{fig:Curse} kann man zwei interessante Aussagen über den Fluch der Dimensionen entnehmen. 
+	% TODO: enumerate einfügen?
+	\begin{enumerate}
+	\item Die paarweisen euklidischen Distanzen steigen mit zunehmender Größe der Dimensionen. 
+	\item Die paarweisen Distanzen sind ungefähr normalverteilt, wobei die Varianz der Normalverteilung für höhere 
+		Dimensionen abnimmt. Dadurch sind die Distanzen eines Punktes zu seinen ersten, zweiten, \dots k-ten Nachbarn 
+		im hochdimensionalen Raum annähernd gleich. 
+	\end{enumerate}
 
-\begin{figure}
-	%\centering
-	\includegraphics[width=400px, height=178px]{Figures/pairwise_dist}
-	%\decoRule
-	\caption[Durchsch. Distanz]{Paarweise Distanzen von $N=500$ zufällig gleichverteilten Punkten im $R^D$.}
-	\label{fig:Curse}
-\end{figure}
+	\begin{figure}
+		%\centering
+		\includegraphics[width=400px, height=178px]{Figures/pairwise_dist}
+		%\decoRule
+		\caption[Durchsch. Distanz]{Paarweise Distanzen von $N=500$ zufällig gleichverteilten Punkten im $R^D$.}
+		\label{fig:Curse}
+	\end{figure}
 
-%-----------------------------------
+	Um dieses Phänomen zu vermeiden nutzt das UMAP Verfahren eine Normalisierung der Distanzen mit dem ersten 
+	Nachbarn. So werden die relativen Distanzen zwischen den k-nächsten-Nachbarn größer, siehe %TODO: füge Grafik ein
+
+
+	Um die niedrigdimensionale Repräsentation der hochdimensionalen anzupassen wird für das UMAP Verfahren die 
+	Kreuzentropie zwischen zwei unsicheren (simplizialen) Mengen vorgeschlagen. 
+	
+	\begin{equation}
+		C((A,\mu), (A, \nu)) \coloneqq \sum_{a \in A} \left(\mu(a)\log\left(\frac{\mu(a)}{\nu(a)}\right) +  \left(1-\mu(a)\right)\log\left(\frac{1-\mu(a)}{1-\nu(a)}\right)  \right)
+		\label{eq:crossentropy}
+	\end{equation}
+	
+	In Abschnitt \ref{seq:numerische_formulierung} werden wir die Kreuzentropie genauer betrachten.
 
 %----------------------------------------------------------------------------------------
 
