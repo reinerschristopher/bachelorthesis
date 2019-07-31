@@ -25,6 +25,9 @@
 % N O T I Z E N
 % Cite Numba 24
 
+% TODO: Bem: Fehler in Kapitel 3 von UMAP wij sollten gewichte der Matrix B sein.
+
+% TODO: vij definieren.
 % %\begin{equation}
 % \begin{align*}
 %    &\qquad&
@@ -63,6 +66,7 @@
 
 %----------------------------------------------------------------------------------------
 
+% TODO: !!!!!!! Kontroliere ob \mu(a) = \vij ist oder = dennicht symetrischen Werten. (dann ändere V und definiere \fij = sym(\vij))
 \section{Numerische Formulierung der Optimierung} \label{seq:numerische_formulierung}
    Um eine Unterscheidung zwischen der theoretischen Sichtweise auf das UMAP Verfahren, welche alle $k$-Simplizes 
    $(1 \leq k \leq N)$ berücksichtigt, und der praktischen Implementierung zu verdeutlichen, werden wir die 
@@ -152,7 +156,7 @@
       \State $L \gets D^{1/2} (D-V) D^{1/2}$ \Comment{Symmetrische normalisierte Laplace-Matrix}
       \State $evec \gets \text{sortierte Eigenvektoren von } L$
       \State $Y \gets evec[1,\dots,d\text{+}1]$ \label{alg:spec}
-      \State $Y \gets OptimiereEinbettung(Y, min\_dist, n\_epochs)$
+      \State $Y \gets \textsc{OptimiereEinbettung}(Y, min\_dist, n\_epochs)$ \Comment{siehe Algorithmus \ref{algorithm:optimize}}
       \State \textbf{return} $Y$
    \EndFunction
    \end{algorithmic}
@@ -239,44 +243,102 @@
    von Gradientenverfahren. Diese werden unter anderem für das trainieren neuronaler Netzwerke bei der Backpropgation genutzt. 
    In \cite{SGDGPU} werden verschiedene Implementierungen verglichen.
 
-   Das UMAP Verfahren nutzt für die Optimierung der Zielfunktion die \textit{negative sampling} Methode aus dem Bereich 
-   der Worteinbettungen \cite{Mikolov}. Wir werden diese Methode vorstellen und dann Algorithmus \ref{algorithm:umap}, 
-   um die Subroutine \textsc{OptimiereEinbettung} vervollständigen.
-   
+   Um den Rechenaufwand im Gradientenverfahren zu verringern, wird der Gradient in zwei Summanden aufgeteilt. Dabei wird folgende Beobachtung 
+   genutzt:
+   Für Kanten $\{i,j\}$ mit einem hohen Zugehörigkeitsgrad $(\vij \approx 1)$ ist der Term $(1-\vij) \log(1-\wij)$ aus Gleichung (\ref{eq:loss}) 
+   nahe Null, deshalb ist es sinnvoll nur den Gradienten des Terms $\vij \log(\wij)$ zu betrachten. Für Kanten mit $\vij \approx 0)$ sollte 
+   hingegen der Gradient des Terms $(1-\vij) \log(1-\wij)$ betrachtet werden. 
+   Für das UMAP Verfahren wird deswegen folgende Implementierung vorgeschlagen:
 
-
-   % Optimiert Suchrichtung des Gradienten da wichtige Beispiele betrachtet werden. 
-   \subsection*{Sub-sampling}
-      siehe Word2Vec
-
-   \subsection*{Optimierung des UMAP Gradienten}
-      Pseudo Code der Optimierung
-      \begin{algorithm}
-      \caption{OptimiereEinbettung}
+   \begin{algorithm}
+      \caption{Optimiere die Einbettung mittels modifiziertem SGD}
       \label{algorithm:optimize}
       \begin{algorithmic}[1]
-      \Function{OptimiereEinbettung}{$Y, V, W, n\_epochs$}  %description
-         \For{$x \in X$}
-            \State $knn(x) \gets k\text{-nächste-Nachbarn}(x)$ 
-            \State $graph(x) \gets \bot_{y \in knn(x)} (\{x, y\}, exp(-d_{x,y})) \ \bot \ \bot_{y \in X \setminus \{x\}} (\{x, y\}, 0)$
+      \Function{OptimiereEinbettung}{$Y, V, W, \text{n\_epochs}$}
+         \State $\alpha \gets 1.0$
+         \For{$e \gets 1,\dots,\text{n\_epochs}$}
+            \ForAll{$\vij $} % TODO: !! stimmt das?
+               \If{$\text{Random()} \leq \vij$} \label{alg:rand}
+                  \State $\mathbf{y}_i \gets \mathbf{y}_i + \alpha \cdot \nabla (\log(\wij))$ \label{alg:up1}
+                  \For{$l \gets 1,\dots,\text{n\_neg\_samples}$}
+                     \State $m \gets \mathcal{U}\text{nif}((0,N))$
+                     \State $\mathbf{y}_i \gets \mathbf{y}_i + \alpha \gamma \cdot \nabla (\log(1-w_{im}))$ \label{alg:up2}
+                  \EndFor
+               \EndIf
+            \EndFor
          \EndFor
-         \State $V \gets \text{gewichtete Adjazenzmatrix}(\bigcup_{x \in X} graph(x))$
-         \State $D \gets \text{Grad-Matrix des Graphen } V$
-         \State $L \gets D^{1/2} (D-V) D^{1/2}$ \Comment{Symmetrische normalisierte Laplace-Matrix}
-         \State $evec \gets \text{sortierte Eigenvektoren von } L$
-         \State $Y \gets evec[1,\dots,d\text{+}1]$
-         \State $Y \gets OptimiereEinbettung(Y, min\_dist, n\_epochs)$
+         \State $\alpha \gets 1.0 - e/\text{n\_epochs}$
          \State \textbf{return} $Y$
       \EndFunction
       \end{algorithmic}
       \end{algorithm}
 
+   Die in Zeile \ref{alg:rand} beschriebene Ziehung der Stichprobe dient dazu in Zeile \ref{alg:up1} keine zusätzliche Multiplikation 
+   mit $\vij$ zu machen. Diese Idee entstammt \cite{LINE}. Dadurch wird der Gradient nicht durch den Wert von $\vij$ beeinflusst. % TODO: !! Besser begründen siehe 4.2.1 in LINE
+
+   Das in jedem Durchlauf des modifizierten SGD mehrere \textit{negative samples} betrachtet werden geht auch \cite{Mikolov} zurück. 
+   Im wesentlichen verhindert dies, das sich die Vektoren der niedrigdimensionalen Darstellung häufen. Die dabei $(0,N)$-gleichverteilt 
+   gezogene Stichprobe ist eine Modifizierung von \cite{Tang}. % TODO: besser begründen.
+
+   Der Gradient in Zeile \ref{alg:up1} ist gegeben durch: 
+
+   \begin{equation}
+      \nabla (\log(\wij)) = \frac{-2 a b \norm{\mathbf{y}_i - \mathbf{y}_j}^{2(b-1)}_2 }{(1+a(\norm{\mathbf{y}_i - \mathbf{y}_j}^2_2)^b)^{-1}} (\mathbf{y}_i - \mathbf{y}_j)
+   \end{equation}
+
+   und der Gradient in Zeile \ref{alg:up2} durch: 
+ 
+   \begin{equation}
+      \nabla (1-\log(\wij)) = \frac{2 b}{(\epsilon + \norm{\mathbf{y}_i - \mathbf{y}_j}^{2}_2)(1 + a\norm{\mathbf{y}_i - \mathbf{y}_j}^{2b}_2)} (\mathbf{y}_i - \mathbf{y}_j),
+   \end{equation}
+
+   wobei der $\epsilon$-Parameter eine Division mit Null vermeidet.
+
+
+
+
+   % Das UMAP Verfahren nutzt für die Optimierung der Zielfunktion die \textit{negative sampling} Methode aus dem Bereich 
+   % der Worteinbettungen \cite{Mikolov}. Wir werden diese Methode vorstellen und begründen warum sich die Argumentation aus dem 
+   % Bereich der Worteinbettungen auf die Dimensionsreduktion übertragen lässt.
+   % Dann vervollständigen Algorithmus \ref{algorithm:umap} um die Subroutine \textsc{OptimiereEinbettung}.
+   
+   % % Optimiert Suchrichtung des Gradienten da wichtige Beispiele betrachtet werden. 
+   % \subsection*{Negative Sampling}
+   %    Die erste uns bekannte Quelle des negative sampling ist Mikolov et. al \cite{Mikolov}. Das Methode wird 
+   %    für die Problemstellung entwickelt um für ein Paar $(w, c)$ eines Wortes $w$ und eines dazugehörigen Kontextes $c$ 
+   %    eine Vektorrepräsentation zu finden. Dafür ist uns eine Sprache $W$ und eine Kontextmenge $C$ gegeben, wobei für 
+   %    $w \in W$ die Menge $C(w)$ alle zu w passenden Kontexte angibt. Eine sinnvolle Repräsentation der Worte \enquote{Numerik}, 
+   %    \enquote{Garcke}, \enquote{Algebraische Topologie}, \enquote{Scholze} wäre beispielsweise 
+   %    $vec(\text{Algebraische Topologie}) - vec(\text{Scholze}) + vec(\text{Numerik}) = vec(\text{Garcke})$
+
+   % \subsection*{Optimierung des UMAP Gradienten}
+   %    Damit können wir Algorithmus \ref{algorithm:umap} vervollständigen.
+
+   %    \begin{algorithm}
+   %    \caption{OptimiereEinbettung}
+   %    \label{algorithm:optimize}
+   %    \begin{algorithmic}[1]
+   %    \Function{OptimiereEinbettung}{$Y, V, W, \text{n\_epochs}$}
+   %       \State $\alpha \gets 1.0$
+   %       \For{$e \gets 1,\dots,\text{n\_epochs}$}
+   %          \State $x \gets \dots$ % TODO: ergänze
+   %       \EndFor
+   %       \State $\alpha \gets 1.0 - e/\text{n\_epochs}$
+   %       \State \textbf{return} $Y$
+   %    \EndFunction
+   %    \end{algorithmic}
+   %    \end{algorithm}
+
+   %    In den uns bekannten Implementierungen wird der Gradient in Zeile REF?? außerhalb des Intervalls 
+   %    $[-4,4]$ auf $-4$ bzw. $4$ gesetzt, um die Auswirkung von schlechten Kanten zu reduzieren \cite{Goodfellow}. % TODO: Referenz
+
+
+   %    Für dünn-besetzte Datensätze $X$ könnte man beispielsweise das AdaGrad Verfahren betrachten, 
+   %    dieses zeigte in der Praxis sehr gute Ergebnisse für dünn-besetzte Daten. % TODO: Quellen
+
 %----------------------------------------------------------------------------------------
 
 \section{Nächste-Nachbarn-Klassifikation} \label{seq:kNN}
-% Einer der beiden rechenintensivsten Subroutinen im UMAP Algorithmus ist die nächste Nachbar suche.
-% in \cite{Tang} (k-NN is bottleneck) werden 3 verschiedene Methoden verglichen. Sehr effizient ist auch die 
-% Facebook FAISS Methode.
    Zum effizienten finden der 1-Simplizes der topologischen Repräsentation unserer Daten, benötigen wir einen 
    k-nächste-Nachbarn-Algorithmus (kurz: \textit{kNN-Algorithmus}). 
    %TODO: Beschreibung was ein kNN-Alg macht
@@ -367,6 +429,7 @@
       \item \code{a, b}:
             Erwähne wie a und b standardmäßig gewählt werden, zeige Plot von a, b
             Erwähne \code{min\_dist} und \code{spread}
+      \item \code{negative\_sample\_weight}
    \end{itemize}
 
       

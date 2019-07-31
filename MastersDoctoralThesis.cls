@@ -616,7 +616,7 @@ breaklinks=true,
 
 \usepackage{algorithm}
 \usepackage{algorithmicx}
-\usepackage{algpseudocode}
+\usepackage[noend]{algpseudocode}
 \algrenewcommand{\algorithmiccomment}[1]{\hskip3em$\rightarrow$ #1}
 
 \usepackage{mathtools}
