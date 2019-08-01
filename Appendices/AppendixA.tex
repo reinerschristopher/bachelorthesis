@@ -1,25 +1,134 @@
-% Appendix A
+%!TEX root = ../main.tex
 
-\chapter{Frequently Asked Questions} % Main appendix title
+\chapter{Appendix A}
 
-\label{AppendixA} % For referencing this appendix elsewhere, use \ref{AppendixA}
+\label{AppendixA}
 
-\section{How do I change the colors of links?}
+%----------------------------------------------------------------------------------------
 
-The color of links can be changed to your liking using:
+% TODO: evtl Cech und VR in Grundlagen
+\section{Homologie}
+	% Homöomorphismus, Homologie (Gruppen), homologie Equivalenz,
+	Eine bekannte Aussage, welche der Topologie entstammt, ist, dass eine Kaffeetasse das Gleiche \textit{topologische Objekt} 
+	wie ein Donut ist. Dies ist dadurch begründet, dass man eine Kaffeetasse durch strecken und stauchen 
+	(ohne reißen) in einen Donut transformieren kann. Diese \textit{Gleichheit} lässt sich wie folgt mathematisch darstellen:
 
-{\small\verb!\hypersetup{urlcolor=red}!}, or
+	\begin{defn}[Stetige Abbildung]
+		Sei ...
+	\end{defn}
 
-{\small\verb!\hypersetup{citecolor=green}!}, or
+	\begin{defn}[Homöomorphismus]
+		Sei ...
+	\end{defn}
 
-{\small\verb!\hypersetup{allcolor=blue}!}.
+	Nun werden wir den Begriff der Homologie einführen. Dafür werden wir den Begriff der simplizialen Komplexe 
+	benötigen um zuerst die simpliziale Homologie einzuführen.
 
-\noindent If you want to completely hide the links, you can use:
+	\begin{defn}[Simplizialer Komplex]
+		Sei ...
+	\end{defn}
 
-{\small\verb!\hypersetup{allcolors=.}!}, or even better: 
+	\begin{defn}[Abstrakter simplizialer Komplex]
+		Sei ...
+	\end{defn}
 
-{\small\verb!\hypersetup{hidelinks}!}.
+	\begin{ex}
+		\cech-Komplex
+	\end{ex}
 
-\noindent If you want to have obvious links in the PDF but not the printed text, use:
+	\begin{ex}
+		VR-Komplex
+	\end{ex}
 
-{\small\verb!\hypersetup{colorlinks=false}!}.
+	\begin{defn}[Homologie]
+		Sei ...
+	\end{defn}
+
+	\begin{defn}[Homologiegruppe]
+		Sei ...
+	\end{defn}
+
+	\begin{ex}
+		Die Homologiegruppen eines Balls, Donuts, Graphen, ...
+	\end{ex}
+
+	\begin{defn}[Filtration]
+		Sei $T \subseteq \R$, eine \textit{Filtration} $\mathcal{X}$ über $T$ ist eine Familie von 
+		topologischen Räumen $\{X_i\}_{i \in T}$, so dass $X_i \subseteq X_j$ 
+		für $i \leq j \in T$.  % (Oudot s.29)
+	\end{defn}
+
+	\begin{rem}
+		Eine Filtration $\mathcal{X}$ wird meist nicht als Familie verschiedener topologischer 
+		Räume $X_i$ angesehen, sondern als ein einziger Raum, welcher sich im Laufe der Zeit 
+		\enquote{transformiert}. Siehe dazu \cite{Oudot}.  % (Oudot s.30)
+		Dies stimmt mit unserem Bild überein, den $\epsilon$-Parameter eines \cech-Komplexes %TODO: Satz löschen und motivation cech komplex nennen
+		immer größer werden zu lassen. Wir werden \textit{persistente Homologie} nutzen um 
+		die homologischen Eigenschaften zu beschreiben, welche für alle $i \in T$ erhalten 
+		(bzw. persistent) bleiben.
+	\end{rem}
+
+	% TODO: Oudot Kap. 4,5 für Anwendungen von persistenter Homologie
+
+	% TODO: Bemerkung, dass \mathcal{X} eine Repräsentation eines Poset ist (siehe Oudot s.29)
+
+	\begin{ex}
+		% TODO: warum?
+		Insbesondere ist somit der \cech-Komplex eine Filtration, da ...
+	\end{ex}
+
+	\begin{ex}
+		% TODO: warum?
+		Eine weitere Filtration ist der Vietoris-Rips-Komplex
+	\end{ex}
+
+	\begin{rem} % TODO: Bem in Def umwandeln
+		Der VR-Komplex ist ein Beispiel eines Clique-Komplexes und wird als solcher 
+		eindeutig durch sein 1-Skelet identifiziert. Sei $V$ ein VR-Komplex und $V^1$ das 
+		zugehörige 1-Skelet. Dann erhält man $V$ aus $V^1$, indem man alle Cliquen im 
+		$V^1$ zugrundeliegenden Graphen bestimmt. Eine k-Clique ist ein vollständiger Subgraph 
+		mit k Knoten. 
+	\end{rem}
+
+	Es gibt weitere Formen von Komplexen, die bekanntesten sind die CW-Komplexe und Zellkomplexe. 
+	Ziel ist es stets mit Hilfe einfacher Konstrukte die Topologie eines Raums zu beschreiben.
+
+	Die vom \cech-Komplex und vom Vietoris-Rips-Komplex beschriebene Homologie kann sich unterscheiden (siehe Abbildung \ref{fig:Cech_VR}).
+
+	\begin{figure}
+		%\centering
+		\includegraphics[width=400px, height=274px]{Figures/Cech_VR_complex}  % width=1\textwidth
+		%\decoRule
+		\captionsetup{justification=RaggedRight}  % centerfirst
+		\caption[Versch. Komplexe]{Eine Punktwolke [oben links] kann zu einem \cech-Komplex [unten links] 
+								   oder einem VR-Komplex [unten rechts] basierend auf dem Parameter $\epsilon$ 
+								   konstruiert werden. Die Homotopietypen der $\epsilon/2$ Überdeckung vom 
+								   \cech-Komplex ($S^1 \vee S^1 \vee S^1$), während das VR-Komplex die Homotopietypen 
+								   ($S^1 \vee S^2$) besitzt. (\textit{Quelle:} \cite{Barcodes})}
+
+		\label{fig:Cech_VR}
+	\end{figure}
+
+	Wir benötigen nun noch den Begriff einer \textit{guten Überdeckung} um dann eine geeignete Aussage über einen \cech-Komplex einer Menge zu machen. 
+
+	\begin{defn}[Überdeckung]
+		Eine Überdeckung eines topologischen Raumes ist \dots
+		Eine gute Überdeckung ist \dots
+	\end{defn}
+
+	\begin{NT}  % Nerv Theorem
+		% Ein top. Raum ist homotopie equivalent zu einer endlichen guten Überdeckung. 
+		Sei ...
+		\label{thm:NT}
+	\end{NT}
+	
+	Das Nerv Theorem \ref{thm:NT} liefert uns eine Aussage darüber, dass ein topologischer Raum $X$ zu einer endlichen guten 
+	Überdeckung von $X$ homotopieäquivalent ist.
+	Wie wir sehen ist die Konstruktion stark abhängig vom $\epsilon$-Parameter. Um dem 
+	entgegenzuwirken nutzt man die Idee der \textit{persistenten Homologie}. Dabei 
+	wird betrachtet wie sich die Homologie eines Raumes für eine monoton wachsende Folge 
+	$(\epsilon_i)_{i \in \N}$ verhält.
+
+	Für den von uns betrachteten Fall, die Struktur einer Riemannschen Mannigfaltigkeit $(\M, g)$ zu beschreiben, werden wir 
+	Annehmen, dass die Daten $\mathbf{x}_i \in X$ gleichverteilt bezüglich der Riemannmetrik $g$ sind, bzw. $g$ so wählen, das 
+	die Annahme erfüllt ist. Somit erhalten wir eine gute Überdeckung ohne eine Abhängigkeit von $\epsilon$ zu haben. 

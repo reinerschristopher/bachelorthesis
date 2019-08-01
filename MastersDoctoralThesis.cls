@@ -654,6 +654,18 @@ breaklinks=true,
 \xpatchcmd{\@rem}{\rem@headpunct{.}}{\rem@headpunct{}}{}{}
 \makeatother
 
+% change pagewidth for a few pages:
+\newenvironment{changemargin}[2]{%
+\begin{list}{}{%
+\setlength{\topsep}{0pt}%
+\setlength{\leftmargin}{#1}%
+\setlength{\rightmargin}{#2}%
+\setlength{\listparindent}{\parindent}%
+\setlength{\itemindent}{\parindent}%
+\setlength{\parsep}{\parskip}%
+}%
+\item[]}{\end{list}}
+
 %----------------------------------------------------------------------------------------
 
 \endinput
