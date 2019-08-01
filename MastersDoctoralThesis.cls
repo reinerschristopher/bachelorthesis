@@ -627,8 +627,8 @@ breaklinks=true,
 \newtheorem{lem}[thm]{Lemma} 
 \newtheorem{prop}[thm]{Proposition} 
 \newtheorem*{cor}{Korollar} 
-%\newtheorem*{KL}{Klein’s Lemma}  % Besondere Lemma/Sätze
-\newtheorem*{NT}{Nerv Theorem}
+\newtheorem*{NT}{Nerv Theorem} % Besondere Sätze
+\newtheorem*{YL}{Yoneda Lemma}
 
 \theoremstyle{definition} 
 \newtheorem{defn}{Definition}[chapter]  % section 
