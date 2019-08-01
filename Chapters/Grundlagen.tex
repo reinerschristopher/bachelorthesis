@@ -38,7 +38,7 @@
 
 % \section{Einleitung}
 	Das UMAP Verfahren entstammt dem Gebiet der topologischen Datenanalyse. Die Theorie für das Verfahren 
-	nutzt Grundlagen aus den Bereichen der (algebraischen) Topologie, Kathegorientheorie und Mengentheorie. 
+	nutzt Grundlagen aus den Bereichen der (algebraischen) Topologie, Kategorientheorie und Mengentheorie. 
 	Wir wollen diese nun einführen. Dazu geben wir die wichtigsten Definitionen und Sätze und werden 
 	diese anschaulich erklären und in den Rahmen des UMAP Verfahren fassen. % TODO: ?erwähne appendixA
 
@@ -97,15 +97,71 @@
 	gemessenen Eigenschaften mittels $d, (d \ll D)$ Eigenschaften dargestellt werden können. 
 	Um dies in die Sprache der Topologie zu fassen, werden wir den Begriff der \textit{Mannigfaltigkeit} benötigen.
 	Anschaulich ist eine $d$-dimensionale Mannigfaltigkeit ein topologischer Raum welcher lokal dem euklidischen Raum $\R^d$ gleicht.
+	Bevor wir Mannigfaltigkeiten einführen benötigen wir \textit{homöomorphe Abbildungen}.
 
-	% TODO: Definition Mannigfaltigkeit
-	\begin{defn}[Mannigfaltigkeit]
-		Sei $\M$ ein topologischer Raum,...
+	\begin{defn} %[Homöomorphimus]
+		Seien $X$ und $Y$ topologische Räume. Eine Abbildung $f:X \to Y$ ist ein \textit{Homöomorphismus}, wenn gilt:
+		
+		\begin{enumerate}
+			\item $f$ ist bijektiv,
+			\item $f$ ist stetig also, wenn die Urbilder offener Mengen wieder offen sind,
+			\item die Umkehrfunktion $f^{-1}$ ist ebenfalls stetig.
+		\end{enumerate}
+
+		Wenn ein Homöomorphismus $f:X \to Y$ gibt, so nennen wir $X$ und $Y$ \textit{homöomorph}.
+	\end{defn}
+	
+	\begin{defn} %[Mannigfaltigkeit]
+		Sei $\M$ ein topologischer Raum, $d \in \N$, er heißt \textit{$d$-dimensionale Mannigfaltigkeit}, 
+		wenn folgende drei Bedingungen erfüllt sind:
+
+		\begin{enumerate}
+			\item für alle paarweise verschiedenen Punkte $p, q \in \M$ existieren disjunkte offene Mengen $U, V \subseteq \M$ 
+				  mit $p \in U$ und $q \in V$,
+			\item die Topologie von $\M$ besitzt eine abzählbare Basis 
+			\item jeder Punkt in $\M$ besitzt eine Umgebung, die homöomorph zu einer offenen Teilmenge des $\R^d$ ist.
+		\end{enumerate}
 	\end{defn}
 
-	\begin{rem}
+	Um eine \textit{riemannsche Mannigfaltigkeit} definieren zu können, benötigen wir noch einige Definitionen. 
+
+	\begin{defn} %[Diffeomorphismus]
+		Eine Abbildung $f:U\to V$ zwischen offenen Mengen $U, V \subset \R^n$ heißt \textit{$C^k$-Diffeomorphismus}, falls
+		\begin{enumerate}
+			\item $f$ ist bijektiv 
+			\item $f$ ist überall $k$-mal stetig differenzierbar
+			\item die Umkehrabbildung $f^{-1}$ ist überall $k$-mal stetig differenzierbar.
+		\end{enumerate}
+	\end{defn}
+
+	\begin{defn} %[Karte]
+		Es sein $\M$ eine Mannigfaltigkeit der Dimension $d$. Eine \textit{Karte} auf $\M$ ist ein Paar $(U, \phi)$, wobei $U \subseteq \M$ 
+		eine offene Menge und $\phi : U \to \phi(U)$ ein Homöomorphismus mit $\phi(U) \subseteq \R^d$ ist.
+
+		Sind $(U, \phi)$ und $(V, \psi)$ zwei Karten von $\M$ mit $U \cap V \neq \emptyset$, so nennt man die Abbildung 
+		\begin{align}
+			\psi \circ \phi^{-1} : \phi(U \cap V) \to \psi(U \cap V)
+		\end{align}
+		einen \textit{Kartenwechsel}. 
+
+		Ein \textit{Atlas} für $\M$ ist dann eine Familie $(U_i,\phi_i)_{i \in I}$ von Karten, so dass $\M = \cup_{i \in I} U_i$ gilt. 
+		Man nennt einen Atlas \textit{$C^k$-differenzierbar} mit $k \geq 1$, wenn alle seine Kartenwechsel $C^k$-Diffeomorphismen sind.
+	\end{defn}
+
+	Karten werden genutzt um zwischen der Mannigfaltigkeit und dem $\R^d$ zu übersetzen. 
+
+	\begin{figure}
+		%\centering
+		\includegraphics[width=400px, height=125px]{Figures/Atlas}
+		%\decoRule
+		\caption[Atlas einer Mannigfaltigkeit]{Atlas einer Mannigfaltigkeit.}
+		\label{fig:Atlas}
+	\end{figure}
+
+	\begin{defn}
+
 		Eine \textit{differenzierbare} Mannigfaltigkeit ist eine...
-	\end{rem}
+	\end{defn}
 
 	\begin{ex}
 		$S^n$ ist eine $n$-dimensionale Mannigfaltigkeit im $\R^{n+1}$.
@@ -120,7 +176,7 @@
 	% TODO: Definition riemannsche Mannigfaltigkeit
 	\begin{defn}[Riemannsche Mannigfaltigkeit]
 		Sei $g$,...
-		
+
 		Ein Tupel $(\M, g)$, wobei $\M$ eine Mannigfaltigkeit und $g$ eine riemannsche Metrik ist heißt
 		\textit{riemannsche Mannigfaltigkeit}.
 	\end{defn} 
