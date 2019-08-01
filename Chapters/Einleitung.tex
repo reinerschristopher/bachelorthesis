@@ -66,7 +66,7 @@ Verfahren
 
 %----------------------------------------------------------------------------------------
 
-\section{Datenanalyse}
+\subsection*{Datenanalyse}
 % Einordnung verschiedener DR Algorithmen. (Geometrie, Stochastik, Topologie)
 % Was ist eine gute Repräsentation der Daten?
 % Sollte unabhängig von Transformationen weniger wichtiger Eigenschaften sein und 
@@ -113,99 +113,97 @@ Verfahren
 
 %----------------------------------------------------------------------------------------
 
-\section{Dimensionsreduktion / Problemstellung}
+\subsection*{Dimensionsreduktion / Problemstellung}
+	% hoch dimensionale Daten: Bilder, Word-count Vektoren, Zell Daten
 
-% hoch dimensionale Daten: Bilder, Word-count Vektoren, Zell Daten
+	% Ganz ursprünglich Chernoff feces, dimensionen und knoten sie tSNE p.1
 
-% Ganz ursprünglich Chernoff feces, dimensionen und knoten sie tSNE p.1
+	Sei $X=\seqx$ wir bezeichnen $D$ als die Dimension unserer Daten, beziehungsweise als die Anzahl 
+	der gemessenen Eigenschaften. $N$ ist die Anzahl der verfügbaren Datenpunkte. In der Praxis können $D$ und $N$ 
+	sehr groß sein. So gilt für den Bilddatensatz welchen wir in Kapitel \ref{Experimente} betrachten werden, 
+	$N=\num{100000}, D=\num{360000}$. %TODO: betrachten wir cartoonset100k oder cartoonset10k?
 
-Sei $X=\seqx$ wir bezeichnen $D$ als die Dimension unserer Daten, beziehungsweise als die Anzahl 
-der gemessenen Eigenschaften. $N$ ist die Anzahl der verfügbaren Datenpunkte. In der Praxis können $D$ und $N$ 
-sehr groß sein. So gilt für den Bilddatensatz welchen wir in Kapitel \ref{Experimente} betrachten werden, 
-$N=\num{100000}, D=\num{360000}$. %TODO: betrachten wir cartoonset100k oder cartoonset10k?
-
-% Wahrscheinlichkeitstheorie:      |  Geometrie:
-% Probabilistic PCA, VAEs, GANs    |  tSNE  (lt. Posada)
-Eine Herangehensweise die $d$-dimensionale Repräsentation zu finden ist es eine $N \times N$ Matrix $M$ 
-aufzustellen, die ersten $d$ Eigenvektoren von $M$, wobei die Eigenvektoren absteigend nach der Größe der 
-zugehörigen Eigenvektoren geordnet sind, geben 
+	% Wahrscheinlichkeitstheorie:      |  Geometrie:
+	% Probabilistic PCA, VAEs, GANs    |  tSNE  (lt. Posada)
+	Eine Herangehensweise die $d$-dimensionale Repräsentation zu finden ist es eine $N \times N$ Matrix $M$ 
+	aufzustellen, die ersten $d$ Eigenvektoren von $M$, wobei die Eigenvektoren absteigend nach der Größe der 
+	zugehörigen Eigenvektoren geordnet sind, geben 
 
 
-% Erwähne Graph embedding Verfahren und verweise auf Kapitel 3
-% https://www.ncbi.nlm.nih.gov/pubmed/17108382
+	% Erwähne Graph embedding Verfahren und verweise auf Kapitel 3
+	% https://www.ncbi.nlm.nih.gov/pubmed/17108382
 
-% Dann überleiten zu UMAP
+	% Dann überleiten zu UMAP
 
-\textit{Hier sollen die zwei Arten an DR Algorithmen vorgestellt werden (Matrix-Faktorisierung 
-und Graph Layout). Zusätzlich sollen PCA, Isomap, Laplacian Eigenmaps und t-SNE vorgestellt werden.} \\
+	\textit{Hier sollen die zwei Arten an DR Algorithmen vorgestellt werden (Matrix-Faktorisierung 
+	und Graph Layout). Zusätzlich sollen PCA, Isomap, Laplacian Eigenmaps und t-SNE vorgestellt werden.} \\
 
-Die meisten Verfahren zur Dimensionsreduktion beruhen auf der Annahme, das reale hochdimensionale Daten 
-sich in der Umgebung einer niedrigdimensionalen Mannigfaltigkeit konzentrieren. 
-In der Literatur ist diese Annahme als Mannigfaltigkeit-Hypothese (\textit{engl.: manifold hypothesis})
-bekannt \cite{Mitter,Rifai}. 
-Ansätze um einen gegebenen Datensatz auf diese Annahme zu testen 
-finden sich in \cite{Fefferman}.  % TODO: zu konkret?
+	Die meisten Verfahren zur Dimensionsreduktion beruhen auf der Annahme, das reale hochdimensionale Daten 
+	sich in der Umgebung einer niedrigdimensionalen Mannigfaltigkeit konzentrieren. 
+	In der Literatur ist diese Annahme als Mannigfaltigkeit-Hypothese (\textit{engl.: manifold hypothesis})
+	bekannt \cite{Mitter,Rifai}. 
+	Ansätze um einen gegebenen Datensatz auf diese Annahme zu testen 
+	finden sich in \cite{Fefferman}.  % TODO: zu konkret?
 
-% TODO: betone Gleichverteilung auf Mannigfaltigkeit bei UMAP
+	% TODO: betone Gleichverteilung auf Mannigfaltigkeit bei UMAP
 
-% TODO: warum ist Topologie sinnvoll?
+	% TODO: warum ist Topologie sinnvoll?
 
-% TODO: Betrachte Oudot s.67
+	% TODO: Betrachte Oudot s.67
 
-% TODO: Anwendungen von persistence Oudot s.8
-
-%----------------------------------------------------------------------------------------
-
-\section{Ziele der Arbeit}
+	% TODO: Anwendungen von persistence Oudot s.8
 
 %----------------------------------------------------------------------------------------
 
-\section{Eigene Beiträge}
-
-Wir möchten nun die Ziele dieser Arbeit formulieren.
-\begin{itemize}
-	\item Einführung in die grundlegenden Werkzeuge der topologischen Datenanalyse
-	\item Mögliche Schritte wie die Lücke zwischen Theorie und Praxis des UMAP Verfahrens 
-		  geschlossen werden kann
-	\item UMAP anhand sinnvoller Datensätze mit anderen Dimensionsreduktionsverfahren vergleichen
-	\item 
-\end{itemize}
-Insbesondere werden wir die in Kapitel 2 von \cite{UMAP} beschriebene Theorie ausführlicher 
-beschreiben und in einen allgemeineren Kontext setzen.
+\subsection*{Ziele der Arbeit}
 
 %----------------------------------------------------------------------------------------
 
-\section{Aufbau der Arbeit}
+\subsection*{Eigene Beiträge}
+	Wir möchten nun die Ziele dieser Arbeit formulieren.
 
-In Kapitel \ref{Grundlagen} werden wir die theoretische Grundlage des UMAP Verfahrens erklären. 
-Dies wird einige Definitionen und Grundlagen aus der Kategorientheorie und der 
-(Algebraischen-)Topologie erfordern. Wir haben mich bemüht diese möglichst vollständig darzustellen.
-Für zusätzliche Informationen empfiehlt sich \cite{Brandenburg,Barr,Munkres}.
+	\begin{itemize}
+		\item Einführung in die grundlegenden Werkzeuge der topologischen Datenanalyse
+		\item Mögliche Schritte wie die Lücke zwischen Theorie und Praxis des UMAP Verfahrens 
+			  geschlossen werden kann
+		\item UMAP anhand sinnvoller Datensätze mit anderen Dimensionsreduktionsverfahren vergleichen
+		\item 
+	\end{itemize}
 
-Kapitel \ref{UMAP} wird die Theorie des UMAP Verfahrens darstellen. Dabei werden wir 
-auf die in \ref{Grundlagen} gelegten Grundlagen zurückgreifen. Zusätzlich soll argumentiert 
-werden, dass eine praktische Implementierung wie sie in der Theorie beschrieben ist zu 
-rechenaufwendig ist und somit wenig praktischen nutzen hat. Deshalb 
-
-%----------------------------------------------------------------------------------------
-
-\section{Vergleich mit Original Paper}
-% Sec 3 wird nicht wiedergegeben, andere ergänzt und erweitert
-% Eventuell in 'Aufbau der Arbeit' erwähnen
+	Insbesondere werden wir die in Kapitel 2 von \cite{UMAP} beschriebene Theorie ausführlicher 
+	beschreiben und in einen allgemeineren Kontext setzen.
 
 %----------------------------------------------------------------------------------------
 
-\section{Danksagung}
+\subsection*{Aufbau der Arbeit}
+	In Kapitel \ref{Grundlagen} werden wir die theoretische Grundlage des UMAP Verfahrens erklären. 
+	Dies wird einige Definitionen und Grundlagen aus der Kategorientheorie und der 
+	(Algebraischen-)Topologie erfordern. Wir haben mich bemüht diese möglichst vollständig darzustellen.
+	Für zusätzliche Informationen empfiehlt sich \cite{Brandenburg,Barr,Munkres}.
 
-Ich bin den Personen sehr dankbar und verbunden welche mich auch dem Weg zu dieser Arbeit begleitet haben.
+	Kapitel \ref{UMAP} wird die Theorie des UMAP Verfahrens darstellen. Dabei werden wir 
+	auf die in \ref{Grundlagen} gelegten Grundlagen zurückgreifen. Zusätzlich soll argumentiert 
+	werden, dass eine praktische Implementierung wie sie in der Theorie beschrieben ist zu 
+	rechenaufwendig ist und somit wenig praktischen nutzen hat. Deshalb 
 
-Zuerst möchte ich Annalena Lange, Lennard Schiefelbein und Nico Gerber für die vielen anregenden 
-Gespräche danken und Hendrik Baers und Tobias Bork, welche die letzten drei Jahre zu einer spannenden 
-und herausfordernden Studienzeit gemacht haben.
+%----------------------------------------------------------------------------------------
 
-Besonderer Dank gilt Prof. Dr. Jochen Garcke für das sehr interessante Thema und die 
-wegweisende Betreuung. Gerne möchte ich auch Leland McInnes für das persönliche Gespräch in Ottawa, Kanada 
-danken. So konnte ich die Motivation, welche er für das UMAP Verfahren hatte, aus erster Hand erfahren.
+\subsection*{Vergleich mit Original Paper}
+	% Sec 3 wird nicht wiedergegeben, andere ergänzt und erweitert
+	% Eventuell in 'Aufbau der Arbeit' erwähnen
 
-Zum Schluss meiner Familie und Freunden für Ihre bedingungslose Unterstützung.
+%----------------------------------------------------------------------------------------
+
+% \subsection*{Danksagung}
+% 	An dieser Stelle möchte ich gerne Prof. Dr. Jochen Garcke, für die Vergabe dieses sehr interessanten 
+% 	und spannenden Themas, danken. Besonderer Dank gilt Leland McInnes für das persönliche Gespräch in Ottawa, Kanada. 
+% 	So konnte ich die Motivation, welche er für das UMAP Verfahren hatte, aus erster Hand erfahren.
+
+% 	Gerne möchte ich auch meinen Freunden danken welche mich im Laufe der Studienzeit, besonders 
+% 	während der Bachelorarbeit, begleitet haben. Anna für die vielen Eispause und die lustige Unterhaltung 
+% 	auch spät in der Nacht, Tobi, Hendrik und Lennard für die Motivation und den mathematischen Austausch und Lukas 
+% 	für die hilfreichen Gespräche. Ohne euch wäre diese Arbeit nicht entstanden. 
+
+% 	Zum Schluss meiner Familie für Ihre bedingungslose Unterstützung, trotz Einsilbigkeit meiner Antworten 
+% 	in den letzten Wochen meiner Arbeit.
 
