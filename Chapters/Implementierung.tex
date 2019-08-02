@@ -39,13 +39,17 @@
 % \end{align*}
 % %\end{equation}
 
-% T E X T B A U S T E I N E
-% 
+% TODO: Daniel 
+% Ist es klar, was diese Cech-Komplexe sind? Falls nicht, müsstest du die noch irgendwo definieren.
+
+% Fallen in 4.9 alle Terme in der Summe weg für kl \neq mi ? Dann würde ich verstehen warum man auf 4.12 kommt. 
+% Das würde ich dann aber noch kurz erwähnen. Und entweder in 4.11 oder 4.12 sind die Vorzeichen falsch glaub ich.
 
 %----------------------------------------------------------------------------------------
 %----------------------------------------------------------------------------------------
 
 % \section{Einleitung}
+% TODO: Überarbeiten
    In diesem Kapitel möchten wir die Implementierung des UMAP Verfahren beschreiben. 
    Die vollständige Berechnung aller Simplizes hat eine exponentielle Laufzeit, da hierfür 
    alle $2^N$ Teilmengen unseres $N$-elementigen Datensatzes betrachtet werden müssten. 
@@ -131,7 +135,7 @@
    \end{align}
 
    Der UMAP Gradient ist also gegeben durch:
-
+   % TODO: Daniel: Fehlt da nicht noch eine innere Summe aus 4.9?
    \begin{equation}
       \deriv{C}{\mathbf{y}_i} = 4 \sumtups{j} (\wij - \vij) \frac{b}{d_{ij}^2} (\mathbf{y}_i - \mathbf{y}_j)
       \label{eq:umapgrad}

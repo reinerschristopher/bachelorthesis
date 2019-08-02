@@ -6,11 +6,7 @@
 
 %----------------------------------------------------------------------------------------
 
-% N O T I Z E N
-% Wirkung des Funktors beschreiben \cite{Posada}
-
-% T E X T B A U S T E I N E
-% 
+% TODO: Wirkung des Funktors beschreiben \cite{Posada}
 
 %----------------------------------------------------------------------------------------
 %----------------------------------------------------------------------------------------
@@ -41,7 +37,7 @@
 \section{Approximation der Mannigfaltigkeit} \label{sec:manifold}
 	Wir nehmen nun an, dass $(\M,g)$ die $d$-dimensionale riemannsche Mannigfaltigkeit ist, auf welcher unsere Daten $X$ 
 	liegen, also $X \subseteq \M$. 
-	Für den Fall, dass die Mannigfaltigkeit nicht bekannt ist, möchten wir nun die Geodäte auf $\M$, 
+	Für den Fall, dass die Mannigfaltigkeit nicht bekannt ist, möchten wir nun die Geodäten auf $\M$, 
 	und damit zwischen je zwei Datenpunkten auf $X$, approximieren. 
 	Dazu nutzen wir folgendes Lemma:
 
@@ -62,41 +58,87 @@
 	\begin{rem}
 		Ein Beweis des Lemmas findet sich in \cite{UMAP}. Die Idee lässt sich wie folgt skizzieren. Die Determinante von $g$ 
 		kann explizit angegeben werden, da das Volumen des Balls gegeben ist. Da $g$ zusätzlich eine Diagonalmatrix ist lässt sich $g$ 
-		in diesem Fall eindeutig aus der Determinante bestimmen. Mit der Form von $g$ kann man dann die Geodäte zwischen $p$ und $q$ 
-		berechnen.
+		in diesem Fall eindeutig aus der Determinante bestimmen. Die explizite Form von $g$ ermöglicht es uns die Geodäte zwischen 
+		$p$ und $q$ berechnen.
 	\end{rem}
 
 	Wir möchten nun argumentieren, dass die beiden Bedingungen aus Lemma \ref{lem:geod} für unsere Daten erfüllt sind. 
 	Die erste Bedingung ist erfüllt, falls wir annehmen, dass die Datenpunkte $\mathbf{x}_i$ gleichverteilt bezüglich $g$ auf $\M$ liegen. 
-	Betrachten wir einen Ball $B_r$ auf $(\M,g)$, wobei $r$ so gewählt ist, dass $B$ gerade $k, (k \in \N)$ Elemente aus $X$ enthält. 
+	Betrachten wir einen Ball $B_r$ auf $(\M,g)$, wobei $r$ so gewählt ist, dass $B_r$ genau $k, (k \in \N)$ Elemente aus $X$ enthält. 
 	Da die $\mathbf{x}_i$ gleichverteilt bezüglich $g$ sind liegen in jedem $B'_r$ ebenfalls $k$ Elemente aus $X$. 
 	Ein Ball $B(\mathbf{x}_i)$ welcher die $k$-nächsten-Nachbarn von $\mathbf{x}_i$ enthält hat somit ein festes Volumen. 
-	Wir skalieren $g$ mit der Distanz zum $k$-ten Nachbarn, dann gilt für das Volumen von $B$: 
+	Wir skalieren $g$ mit der inversen Distanz zum $k$-ten Nachbarn, dann gilt für das Volumen von $B$, 
 	$V(B(\mathbf{x}_i)) = \frac{\pi^{\frac{n}{2}}}{\Gamma(\frac{n}{2}+1)}$, somit ist auch die zweite Bedingung aus Lemma \ref{lem:geod} 
 	für unsere Daten $X$ erfüllt. 
 
 	\begin{rem}
-		Dabei ist der \textit{$j$-te Nachbar von $\mathbf{x}_i$ bzgl. $d$} gegeben durch $\mathbf{x}_{i_k}$, so dass 
-		$d(\mathbf{x}_i, \mathbf{x}_{i_1}) \leq \dots \leq d(\mathbf{x}_i,\mathbf{x}_{i_j}) \leq \dots \leq d(\mathbf{x}_i,\mathbf{x}_{i_n})$.
+		Dabei ist der \textit{$j$-te Nachbar von $\mathbf{x}_i$ bzgl. $d$} gegeben durch $\mathbf{x}_{i_j}$, so dass 
+		$d(\mathbf{x}_i, \mathbf{x}_{i_1}) \leq \dots \leq d(\mathbf{x}_i,\mathbf{x}_{i_j}) \leq \dots \leq d(\mathbf{x}_i,\mathbf{x}_{i_N})$. 
+		Die $k$-nächsten-Nachbarn eines Punktes sind somit die $1\text{-},\dotsc,k$-ten-Nachbarn. 
 	\end{rem}
 
 	Wir können nun für jedes $\mathbf{x}_i$ einen metrischen Raum $X_i$ definieren, so dass die Distanz zu den $k$-nächsten-Nachbarn die 
 	Geodäte auf der riemannschen Mannigfaltigkeit ist. 
-	Sei $d$ die zu unseren Daten gehörende Metrik. Dann definieren wir für $\mathbf{x}_i$ aus $X$ den metrischen Raum $(X_i, d_i)$ mit 
-	$d_i(x,y) \coloneqq \frac{d(x,y)}{k_{x_i}}$ und $X_i = X$, dabei bezeichnet $k_{x_i}$ den $k$-ten Nachbarn von $\mathbf{x}_i$. 
-	Diese Definition der $d_i$ ist für den Kontext nicht sinnvoll, da für $\mathbf{x}_i$ mit 
+	Sei $d$ die zu unseren Daten gehörende Metrik. Dann definieren wir für $\mathbf{x}_i \in X$ den metrischen Raum $(X_i, \tilde{d}_i)$ mit 
+	$\tilde{d}_i(x,y) \coloneqq \frac{d(x,y)}{k_{x_i}}$ und $X_i = X$, dabei bezeichnet $k_{x_i}$ den $k$-ten Nachbarn von $\mathbf{x}_i$. 
+	Diese Definition der $d_i$ ist für den Kontext nicht sinnvoll, da für $\mathbf{x}_i$ mit $h$-ten Nachbarn $\mathbf{x}_h$ und $j$-ten 
+	Nachbarn $\mathbf{x}_j$, mit $h,j \leq k$, nach Lemma \ref{lem:geod} $\tilde{d}_i$ nur für die Paare $(\mathbf{x}_i, \mathbf{x}_h), 
+	(\mathbf{x}_i, \mathbf{x}_j)$ die Geodäte angibt. Wir setzen, 
+
+	\begin{align}
+		\bar{d}_i(x,y) \coloneqq \begin{cases}
+									\tilde{d}_i(x,y), &\quad \text{falls } x = \mathbf{x}_i \vee y = \mathbf{x}_i, \\
+									\infty, 		  &\quad \text{sonst.}
+					  			 \end{cases}
+	\end{align}
+
+	Somit sind die $\bar{d}_i$ erweiterte Metriken. 
+
+	Eine bekannte Problematik, wenn man hochdimensionale Daten betrachtet ist der \textit{Fluch der Dimensionen}. Dieses Phänomen 
+	beschreibt die Effekte der Volumenvergrößerung in hochdimensionalen Räumen. 
+	Um zwei Auswirkungen auf paarweise Distanzen zu beschreiben, betrachten wir die paarweisen Distanzen randomisierter gleichverteilter 
+	Punkte in $n$-dimensionalen euklidischen Räumen, siehe Abbildung \ref{fig:Curse}. Die liefert uns (1) mit zunehmender Größe der Dimension 
+	erhöhen sich die paarweisen Distanzen, (2) dass die paarweisen Distanzen sind ungefähr normalverteilt, wobei die Varianz der Normalverteilung 
+	für höhere Dimensionen abnimmt. Dadurch sind die Distanzen eines Punktes zu seinen ersten, zweiten, \dots, k-ten Nachbarn im hochdimensionalen 
+	Raum annähernd gleich. Für eine genauere Analyse der Auswirkungen hochdimensionaler Räume auf die nächsten Nachbarn siehe \cite{Beyer}. 
+
+	\begin{figure}
+		%\centering
+		\includegraphics[width=400px, height=178px]{Figures/pairwise_dist}
+		%\decoRule
+		\caption[Durchsch. Distanz]{Paarweise Distanzen von $N=500$ zufällig gleichverteilten Punkten im $R^D$.}
+		\label{fig:Curse}
+	\end{figure}
+
+	Unter anderem kann man dem \textit{Fluch entfliehen}, in dem die Distanzen mit der Distanz zum ersten Nachbarn normalisiert werden. %TODO: füge Grafik ein 
+	Dies wenden wir auf unsere erweiterten Metriken $\bar{d}_i$ an und erhalten erweiterte Pseudometriken, 
+	
+	\begin{align}
+		d_i(\mathbf{x}_i,\mathbf{x}_j) \coloneqq \max(0, \bar{d}_i(\mathbf{x}_i,\mathbf{x}_j) - \bar{d}_i(\mathbf{x}_i,\mathbf{x}_{i_1})).
+	\end{align}
+
+	\begin{rem}
+		Wir nehmen an, dass unsere Daten $X$ keine Duplikate enthalten. Diese Annahme ist gerechtfertigt, da wir primär Aussagen über die 
+		Beziehung zwischen den Datenpunkten treffen möchten. Der erste Nachbar ist also ein \textit{echter Nachbar}, mit 
+		$\bar{d}_i(\mathbf{x}_i,\mathbf{x}_{i_1}) > 0$. 
+	\end{rem}
 
 %----------------------------------------------------------------------------------------
 
 \section{Topologische Repräsentation} \label{sec:repr}
-	Die im vorherigen Abschnitt definierten metrischen Räume $\{X_i\}_{1\leq i \leq N}$ liefern und lokal die Geodäte, welche hilfreich 
-	ist die zugrundeliegende Mannigfaltigkeit zu beschreiben. Allerdings sind die Metriken nicht zwingend miteinander kompatibel. 
+	Die im vorherigen Abschnitt definierten erweiterten pseudo-metrischen Räume $\{X_i\}_{1\leq i \leq N}$ liefern und lokal die Geodäte, 
+	welche hilfreich ist die zugrundeliegende Mannigfaltigkeit zu beschreiben. Allerdings sind die Metriken nicht zwingend miteinander kompatibel. 
 	In Satz \ref{thm:adj} haben wir eine Adjunktion zwischen topologischen Räumen und simplizialen Mengen eingeführt. Diese werden 
-	wir nun auf metrische Räume erweitern. 
+	wir nun auf erweiterten pseudo-metrische Räume erweitern. 
 
-	Dafür konstruieren eine Adjunktion zwischen der Kategorie der erweiterten pseudo-metrischen Räume $\EPMet$ und der Kategorie 
-	der unscharfen simplizialen Mengen $\sFuzz$. Dafür werden wir die Eigenschaft nutzen, dass sich simpliziale Mengen 
-	eindeutig durch die $n$-dimensionalen Standardsimplizes $\Delta^n$ darstellen lassen. 
+	Um eine Adjunktion zwischen der Kategorie der erweiterten pseudo-metrischen Räume $\EPMet$ und der Kategorie der unscharfen simplizialen Mengen $\sFuzz$ 
+	zu konstruieren, werden wir die Eigenschaft nutzen, dass sich simpliziale Mengen eindeutig durch die Standardsimplizes $\Delta^n$ darstellen lassen. 
+
+	\begin{rem}
+		Da wir nur endliche Datensätze betrachten, werden wir uns auf die \textit{Unterkategorien} der endlichen erweiterten pseudo-metrischen Räume 
+		$\fEPMet$ und endlichen unscharfen simpliziale Mengen $\fsFuzz$ beschränken. Eine Unterkategorie besteht aus Teilmengen der Objekte und Morphismen 
+		der zugehörigen Kategorie. 
+	\end{rem}
 
 	\begin{defn}
 		Der Funktor $\fReal : \fsFuzz \to \fEPMet$ ist gegeben durch
@@ -147,36 +189,6 @@
 	Die konstruierte Adjunktion ermöglicht es uns nun die in Abschnitt \ref{sec:manifold} eingeführten metrischen Räume mittels des 
 	$\fSing$ Funktors als unscharfe simpliziale Mengen darzustellen. Um die inkompatiblen Metriken miteinander zu verknüpfen, 
 	nutzen wir die t-Conorm und erhalten $\tConorm \fSing(X_i)$.
-
-%-----------------------------------
-
-	\subsection*{Fluch der Dimensionen}
-	% Zitiere Bengio 2007
-	Ein kritischer Punkt beim analysieren hochdimensionaler Daten ist der sogenannte Fluch der Dimensionen.
-	Was das bedeutet und wie das UMAP Verfahren macht um diesen zu vermeiden werde ich im Folgenden kurz erklären.
-	Unter dem Fluch der Dimensionen versteht man.
-	% Dünn besetzt ist schlecht, da keine Stetigkeit mehr, besonders bei lokalen eigenschaften wichtig 
-
-
-	Abbildung \ref{fig:Curse} kann man zwei interessante Aussagen über den Fluch der Dimensionen entnehmen. 
-	% TODO: enumerate einfügen?
-	\begin{enumerate}
-	\item Die paarweisen euklidischen Distanzen steigen mit zunehmender Größe der Dimensionen. 
-	\item Die paarweisen Distanzen sind ungefähr normalverteilt, wobei die Varianz der Normalverteilung für höhere 
-		Dimensionen abnimmt. Dadurch sind die Distanzen eines Punktes zu seinen ersten, zweiten, \dots k-ten Nachbarn 
-		im hochdimensionalen Raum annähernd gleich. 
-	\end{enumerate}
-
-	\begin{figure}
-		%\centering
-		\includegraphics[width=400px, height=178px]{Figures/pairwise_dist}
-		%\decoRule
-		\caption[Durchsch. Distanz]{Paarweise Distanzen von $N=500$ zufällig gleichverteilten Punkten im $R^D$.}
-		\label{fig:Curse}
-	\end{figure}
-
-	Um dieses Phänomen zu vermeiden nutzt das UMAP Verfahren eine Normalisierung der Distanzen mit dem ersten 
-	Nachbarn. So werden die relativen Distanzen zwischen den k-nächsten-Nachbarn größer, siehe %TODO: füge Grafik ein
 
 %----------------------------------------------------------------------------------------
 

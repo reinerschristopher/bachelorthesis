@@ -51,9 +51,8 @@
 %----------------------------------------------------------------------------------------
 
 %\section{Einleitung}
-Wer eine Tageszeitung aufschlägt, 
-wird nicht vermeiden können, mindestens einen Artikel über die \enquote{Algorithmen der Zukunft}, 
-\enquote{Daten hungrigen Konzerne}, \dots zu lesen. 
+Wer eine Tageszeitung aufschlägt, wird nicht vermeiden können, mindestens einen Artikel 
+über die \enquote{Algorithmen der Zukunft}, \enquote{Daten hungrigen Konzerne}, \dots zu lesen. 
 Fakt ist heutzutage werden mehr Daten generiert und gespeichert als je zuvor in der 
 Geschichte der Menschheit und wir benötigen aussagekräftige, schnelle und zuverlässige 
 Verfahren um die gesammelten Daten auszuwerten, zu strukturieren und einen Mehrwert für die 
@@ -90,7 +89,7 @@ Verfahren
 	einen $D$-dimensionalen Raum und ein Objekt $K$. In unserem Fall werden wir uns größtenteils 
 	mit dem euklidischen Raum $\R^D$ versehen mit der euklidischen Norm $\norm{\cdot}$ beschäftigen.
 
-	$K$ kann beispielsweise eine geschlossene Menge sein. Die genaue Struktur von $K$ bleibt uns allerdings unbekannt. 
+	$K$ kann beispielsweise eine abgeschlossene Menge sein. Die genaue Struktur von $K$ bleibt uns allerdings unbekannt. 
 	Später werden wir argumentieren, dass $K$ gewisse Regularitätseigenschaften erfüllt und 
 	in vielen Fällen lokal einem niedrigdimensionalen Raum $\R^d, (d \ll D)$ gleicht. 
 
@@ -123,7 +122,7 @@ Verfahren
 
 	% Ganz ursprünglich Chernoff feces, dimensionen und knoten sie tSNE p.1
 
-	Sei $X=\seqx$ wir bezeichnen $D$ als die Dimension unserer Daten, beziehungsweise als die Anzahl 
+	Sei $X=\seqx$. Wir bezeichnen $D$ als die Dimension unserer Daten, beziehungsweise als die Anzahl 
 	der gemessenen Eigenschaften. $N$ ist die Anzahl der verfügbaren Datenpunkte. In der Praxis können $D$ und $N$ 
 	sehr groß sein. So gilt für den Bilddatensatz welchen wir in Kapitel \ref{Experimente} betrachten werden, 
 	$N=\num{100000}, D=\num{360000}$. %TODO: betrachten wir cartoonset100k oder cartoonset10k?
@@ -165,6 +164,7 @@ Verfahren
 %----------------------------------------------------------------------------------------
 
 \subsection*{Eigene Beiträge}
+	% Daniel: Zussamen mit Ziele der Arbeit
 	Wir möchten nun die Ziele dieser Arbeit formulieren.
 
 	\begin{itemize}
@@ -183,11 +183,11 @@ Verfahren
 \subsection*{Aufbau der Arbeit}
 	In Kapitel \ref{Grundlagen} werden wir die theoretische Grundlage des UMAP Verfahrens erklären. 
 	Dies wird einige Definitionen und Grundlagen aus der Kategorientheorie und der 
-	(Algebraischen-)Topologie erfordern. Wir haben mich bemüht diese möglichst vollständig darzustellen.
+	(algebraischen) Topologie erfordern. Wir haben uns bemüht diese möglichst vollständig darzustellen.
 	Für zusätzliche Informationen empfiehlt sich \cite{Brandenburg,Barr,Munkres}.
 
 	Kapitel \ref{UMAP} wird die Theorie des UMAP Verfahrens darstellen. Dabei werden wir 
-	auf die in \ref{Grundlagen} gelegten Grundlagen zurückgreifen. Zusätzlich soll argumentiert 
+	auf die in Kapitel \ref{Grundlagen} gelegten Grundlagen zurückgreifen. Zusätzlich soll argumentiert 
 	werden, dass eine praktische Implementierung wie sie in der Theorie beschrieben ist zu 
 	rechenaufwendig ist und somit wenig praktischen nutzen hat. Deshalb 
 
