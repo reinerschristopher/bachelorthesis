@@ -8,8 +8,6 @@
 
 % N O T I Z E N
 % Wirkung des Funktors beschreiben \cite{Posada}
-% Bisher: Daten -> metr. Räume -> fuzzy simplicial sets
-% Ziel:   Daten -> metr. Räume -> VR complex
 
 % T E X T B A U S T E I N E
 % 
@@ -18,17 +16,137 @@
 %----------------------------------------------------------------------------------------
 
 % \section{Einleitung}
-In diesem Kapitel werden wir die aus \ref{Grundlagen} erlangten Grundlagen verwenden um 
-eine geeignete topologische Repräsentation unserer Daten $X=\seqx$ zu erlangen. Eine ähnliche 
-Repräsentation werden wir von einem $d$-dimensionalen Raum $(d \ll D)$ betrachten, um dann mit einem geeigneten 
-Begriff des Abstandes der beiden Repräsentationen die niedrigdimensionale Repräsentation der 
-hochdimensionalen anzupassen. Dies wird uns zum UMAP Verfahren führen. 
-% TODO: Ergänzungen hier erwähnen oder in \ref{Implementierung}?
+	In diesem Kapitel soll das UMAP Verfahren eingeführt werden. Dabei wird angenommen, 
+	das die Daten $X=\seqx$ auf einer $d$-dimensionalen riemannschen Mannigfaltigkeit liegen. 
+
+	Das UMAP Verfahren approximiert lokal die geodätische Distanz der $\mathbf{x}_i$. 
+	Dies führt dazu, dass wir für jeden Datenpunkt $\mathbf{x}_i$ einen metrischen Raum $X_i$ erhalten. 
+	Diese Konstruktion wird in Abschnitt \ref{sec:manifold} beschrieben. 
+
+	Da die Metriken der $X_i$ a priori nicht miteinander kompatibel sind, wird in Abschnitt \ref{sec:repr} 
+	die Adjunktion aus Satz \ref{thm:adj} auf metrische Räume und unscharfe simpliziale Mengen erweitert. 
+	Diese wird dazu genutzt die $X_i$ als unscharfe simpliziale Mengen darzustellen. Vereinigen wir die Mengen, 
+	erhalten wir eine topologische Darstellung der hochdimensionalen Daten. Aufgrund der konstruierten Metriken 
+	enthält diese lokale und aufgrund der unscharfen simplizialen Mengen globale Eigenschaften der Daten. 
+
+	Um die Daten in den $\R^d$ einzubetten und somit zu einer niedrigdimensionalen Darstellung $Y$ 
+	zu gelangen, wird in Abschnitt \ref{sec:einb} ebenfalls eine topologische Repräsentation vom $\R^d$ 
+	konstruiert. Die Angabe einer Funktion, welche den Unterschied der beiden Repräsentationen darstellt, 
+	ermöglicht uns dann die Repräsentation vom $\R^d$ so zu optimieren, dass sie der Repräsentation von $X$ 
+	möglichst ähnlich ist, somit erhalten wir eine $d$-dimensionale Darstellung $Y$ der Daten, welche mittels 
+	eines geeigneten Funktors in einen metrischen Raum überführt werden kann. 
 
 %----------------------------------------------------------------------------------------
 
-\section{Topologische Repräsentation}
-	Blabla bla
+\section{Approximation der Mannigfaltigkeit} \label{sec:manifold}
+	Wir nehmen nun an, dass $(\M,g)$ die $d$-dimensionale riemannsche Mannigfaltigkeit ist, auf welcher unsere Daten $X$ 
+	liegen, also $X \subseteq \M$. 
+	Für den Fall, dass die Mannigfaltigkeit nicht bekannt ist, möchten wir nun die Geodäte auf $\M$, 
+	und damit zwischen je zwei Datenpunkten auf $X$, approximieren. 
+	Dazu nutzen wir folgendes Lemma:
+
+	\begin{lem}
+		Sei $p \in \M$ ein Punkt. Wenn 
+
+		\begin{enumerate}
+			\item $g$ lokal konstant auf einer offenen Umgebung $U$ von $p$ ist, 
+				  so dass $g$ eine Diagonalmatrix bezüglich der Umgebungskoordinaten ist,
+			\item $B_{r}(p) \subseteq U$ ein Ball mit Volumen $\frac{\pi^{\frac{n}{2}}}{\Gamma(\frac{n}{2}+1)}$ bezüglich $g$ ist,
+		\end{enumerate}
+
+		dann ist die Geodäte von $p$ zu jedem $q$ aus $B_{r}(p)$ durch $\frac{1}{r}d_{\R^n}(p,q)$ gegeben. 
+		Dabei ist $d_{\R^n}$ die Metrik des Umgebungsraumes von $\M$ und $r$ der Radius von $B$ bezüglich des Umgebungsraumes.
+		\label{lem:geod}
+	\end{lem}
+
+	\begin{rem}
+		Ein Beweis des Lemmas findet sich in \cite{UMAP}. Die Idee lässt sich wie folgt skizzieren. Die Determinante von $g$ 
+		kann explizit angegeben werden, da das Volumen des Balls gegeben ist. Da $g$ zusätzlich eine Diagonalmatrix ist lässt sich $g$ 
+		in diesem Fall eindeutig aus der Determinante bestimmen. Mit der Form von $g$ kann man dann die Geodäte zwischen $p$ und $q$ 
+		berechnen.
+	\end{rem}
+
+	Wir möchten nun argumentieren, dass die beiden Bedingungen aus Lemma \ref{lem:geod} für unsere Daten erfüllt sind. 
+	Die erste Bedingung ist erfüllt, falls wir annehmen, dass die Datenpunkte $\mathbf{x}_i$ gleichverteilt bezüglich $g$ auf $\M$ liegen. 
+	Betrachten wir einen Ball $B_r$ auf $(\M,g)$, wobei $r$ so gewählt ist, dass $B$ gerade $k, (k \in \N)$ Elemente aus $X$ enthält. 
+	Da die $\mathbf{x}_i$ gleichverteilt bezüglich $g$ sind liegen in jedem $B'_r$ ebenfalls $k$ Elemente aus $X$. 
+	Ein Ball $B(\mathbf{x}_i)$ welcher die $k$-nächsten-Nachbarn von $\mathbf{x}_i$ enthält hat somit ein festes Volumen. 
+	Wir skalieren $g$ mit der Distanz zum $k$-ten Nachbarn, dann gilt für das Volumen von $B$: 
+	$V(B(\mathbf{x}_i)) = \frac{\pi^{\frac{n}{2}}}{\Gamma(\frac{n}{2}+1)}$, somit ist auch die zweite Bedingung aus Lemma \ref{lem:geod} 
+	für unsere Daten $X$ erfüllt. 
+
+	\begin{rem}
+		Dabei ist der \textit{$j$-te Nachbar von $\mathbf{x}_i$ bzgl. $d$} gegeben durch $\mathbf{x}_{i_k}$, so dass 
+		$d(\mathbf{x}_i, \mathbf{x}_{i_1}) \leq \dots \leq d(\mathbf{x}_i,\mathbf{x}_{i_j}) \leq \dots \leq d(\mathbf{x}_i,\mathbf{x}_{i_n})$.
+	\end{rem}
+
+	Wir können nun für jedes $\mathbf{x}_i$ einen metrischen Raum $X_i$ definieren, so dass die Distanz zu den $k$-nächsten-Nachbarn die 
+	Geodäte auf der riemannschen Mannigfaltigkeit ist. 
+	Sei $d$ die zu unseren Daten gehörende Metrik. Dann definieren wir für $\mathbf{x}_i$ aus $X$ den metrischen Raum $(X_i, d_i)$ mit 
+	$d_i(x,y) \coloneqq \frac{d(x,y)}{k_{x_i}}$ und $X_i = X$, dabei bezeichnet $k_{x_i}$ den $k$-ten Nachbarn von $\mathbf{x}_i$. 
+	Diese Definition der $d_i$ ist für den Kontext nicht sinnvoll, da für $\mathbf{x}_i$ mit 
+
+%----------------------------------------------------------------------------------------
+
+\section{Topologische Repräsentation} \label{sec:repr}
+	Die im vorherigen Abschnitt definierten metrischen Räume $\{X_i\}_{1\leq i \leq N}$ liefern und lokal die Geodäte, welche hilfreich 
+	ist die zugrundeliegende Mannigfaltigkeit zu beschreiben. Allerdings sind die Metriken nicht zwingend miteinander kompatibel. 
+	In Satz \ref{thm:adj} haben wir eine Adjunktion zwischen topologischen Räumen und simplizialen Mengen eingeführt. Diese werden 
+	wir nun auf metrische Räume erweitern. 
+
+	Dafür konstruieren eine Adjunktion zwischen der Kategorie der erweiterten pseudo-metrischen Räume $\EPMet$ und der Kategorie 
+	der unscharfen simplizialen Mengen $\sFuzz$. Dafür werden wir die Eigenschaft nutzen, dass sich simpliziale Mengen 
+	eindeutig durch die $n$-dimensionalen Standardsimplizes $\Delta^n$ darstellen lassen. 
+
+	\begin{defn}
+		Der Funktor $\fReal : \fsFuzz \to \fEPMet$ ist gegeben durch
+
+		\begin{align}
+			\fReal(X) \coloneqq \varinjlim \fReal(\Delta^n_{<a}),
+		\end{align}
+
+		wobei,
+
+		\begin{align}
+			 \quad \fReal(\Delta^n_{<a}) &\coloneqq (\{x_1,\dotsc, x_n\}, d_a), \\
+			 \quad d_a(x_i,x_j) &\coloneqq \begin{cases}
+			 								   -\log(a)  &\text{, falls } i \neq j \\
+			 								   0		  &\text{, sonst.}
+			 							  \end{cases}
+		\end{align}
+
+		Die Wirkung des Funktors $\fReal$ auf einem Morphismus $\Delta^n_{<a} \to \Delta^m_{<b}$, mit $a \leq b$ und $\sigma: \Delta^n \to \Delta^m$, 
+		ist gegeben durch $(\{x_1,\dotsc,x_n\},d_a) \mapsto (\{x_{\sigma(1)},\dotsc,x_{\sigma(n)}\},d_b)$.
+	\end{defn}
+
+	\begin{rem}
+		Dabei betrachten wir ähnlich zu Satz \ref{thm:adj} den Limes über \dots %TODO
+	\end{rem}
+
+	\begin{rem}
+		Der Funktor ist wohldefiniert, da aus $a \leq b, d_a \geq d_b$ folgt. Somit ist die Wirkung von $\fReal$ auf einem Morphismus von $\fsFuzz$ 
+		nichtexpansiv und somit ein Morphismus von $\fEPMet$.
+	\end{rem}
+
+	\begin{thm}
+		Die Funktoren $\fReal$ und $\fSing : \fsFuzz \to \fEPMet$, wobei für $Y \in \fEPMet$ gilt,
+
+		\begin{align}
+			\fSing(Y) : ([n], [0,a)) \to \hom_\fEPMet (\fReal(\Delta^n_{<a}), Y),
+		\end{align}
+
+		sind zueinander adjungiert.
+	\end{thm}
+
+	\begin{rem}
+		Ein Beweis findet sich in \cite{UMAP}. Die wesentliche Idee ist dabei, dass Funktoren welche Limiten erhalten einen rechts adjungierten 
+		Funktor besitzen, nach Konstruktion erhält $\fReal$ Limiten. Zusätzlich wird für den Beweis das Yoneda Lemma und Gleichung (\ref{eq:colimit}) 
+		verwendet. 
+	\end{rem}
+
+	Die konstruierte Adjunktion ermöglicht es uns nun die in Abschnitt \ref{sec:manifold} eingeführten metrischen Räume mittels des 
+	$\fSing$ Funktors als unscharfe simpliziale Mengen darzustellen. Um die inkompatiblen Metriken miteinander zu verknüpfen, 
+	nutzen wir die t-Conorm und erhalten $\tConorm \fSing(X_i)$.
 
 %-----------------------------------
 
@@ -60,9 +178,13 @@ hochdimensionalen anzupassen. Dies wird uns zum UMAP Verfahren führen.
 	Um dieses Phänomen zu vermeiden nutzt das UMAP Verfahren eine Normalisierung der Distanzen mit dem ersten 
 	Nachbarn. So werden die relativen Distanzen zwischen den k-nächsten-Nachbarn größer, siehe %TODO: füge Grafik ein
 
+%----------------------------------------------------------------------------------------
+
+\section{Einbettung} \label{sec:einb}
+
 
 	Um die niedrigdimensionale Repräsentation der hochdimensionalen anzupassen wird für das UMAP Verfahren die 
-	Kreuzentropie zwischen zwei unsicheren (simplizialen) Mengen vorgeschlagen. 
+	Kreuzentropie zwischen zwei unscharfen (simplizialen) Mengen vorgeschlagen. 
 	
 	\begin{equation}
 		C((A,\mu), (A, \nu)) \coloneqq \sum_{a \in A} \left(\mu(a)\log\left(\frac{\mu(a)}{\nu(a)}\right) +  \left(1-\mu(a)\right)\log\left(\frac{1-\mu(a)}{1-\nu(a)}\right)  \right)
@@ -73,8 +195,4 @@ hochdimensionalen anzupassen. Dies wird uns zum UMAP Verfahren führen.
 
 %----------------------------------------------------------------------------------------
 
-\section{Ergänzungen}
-
-% Wenn VR Komplex ausreichend, betrachte nur 1-Skelet und berechne Homologie darauf.
-% Siehe Oudot s.48, funktioniert noch nicht für Filtrationen. 
 

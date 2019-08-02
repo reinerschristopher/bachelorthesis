@@ -14,8 +14,15 @@
 \newcommand{\cech}{\u{C}ech}  % Symbol for Cech complex
 \newcommand{\Set}{\mathbf{Set}}  % Symbol for category of sets
 \newcommand{\sSet}{\mathbf{sSet}}  % Symbol for category of sets
-\newcommand{\Top}{\mathbf{Top}}  % Symbol for category of sets %TODO: uncomment
+\newcommand{\Top}{\mathbf{Top}}  % Symbol for category of sets
+\newcommand{\sFuzz}{\mathbf{sFuzz}}  % Symbol for fuzzy set category
+\newcommand{\EPMet}{\mathbf{EPMet}}  % Symbol for category of extended pseudo metric spaces
 \renewcommand{\hom}{\mathsf{Hom}}  % Symbol for morphisms
+\newcommand{\fReal}{\mathsf{FinReal}}  % Symbol for Real functor
+\newcommand{\fSing}{\mathsf{FinSing}}  % Symbol for Sing functor
+\newcommand{\fsFuzz}{\mathbf{Fin\text{-}sFuzz}}  % Symbol for finite fuzzy set category
+\newcommand{\fEPMet}{\mathbf{Fin\text{-}EPMet}}  % Symbol for category of finite extended pseudo metric spaces
+\newcommand{\tConorm}{\bot^N_{i=1}}  % Symbol for t-Conorm, $\bot_{\{1 \leq i \leq N\}}$ $\underset{i=1}{\overset{N}{\bot}}$ $\bot^N_{i=1}$
 
 %----------------------------------------------------------------------------------------
 
@@ -30,7 +37,7 @@
 % Ausblicke auf das was man später mit einer Definition macht
 % Wofür war die gerade gemachte Definition sinnvoll
 % Die Definition einer Adjunktion ist dafür wichtig einen zwischen metrischen Räumen und 
-% unsicheren simplizialen Mengen zu übersetzen.
+% unscharfen simplizialen Mengen zu übersetzen.
 % Typische Verwendungen für die Definition
 
 %----------------------------------------------------------------------------------------
@@ -100,9 +107,28 @@
 		kann nämlich stets äquivalente eine (echte) Metrik $d'$ konstruiert werden, zum Beispiel ist $d' = \frac{d}{1+d}$ äquivalent 
 		zu einer erweiterten Metrik $d$. Eine formale Definition der Äquivalenz zweier metrischer Räume soll hier nicht gegeben werden. 
 		Es genügt zu wissen, dass wichtige topologische Eigenschaften erhalten zwischen den beiden Räumen übertragen werden können.
+		Hier gilt $x + \infty = \infty + x = \infty, x \in [0,\infty]$.
 	\end{rem}
 
 	% https://math.stackexchange.com/questions/399722/metric-assuming-the-value-infinity#399759 erweiterte metriken beitzten gute eigenschaften
+
+	% TODO: n-dim euklidischer Raum als Beispiel
+
+	% nichtexpansive Abbildung
+
+	\begin{rem}
+		Für einen metrischen Raum $(X, d)$, ist ein offener \textit{Ball mit Radius $r > 0)$} und Mittelpunkt $p$ mit $p$ aus $X$ gegeben durch: 
+		
+		\begin{align}
+			B_r(p) \coloneq \{x \in X | d(x,p) < r\}.
+		\end{align}
+
+		Für den Fall, das $X$ der $n$-dimensionale euklidische Raum ist, ist das $n$-dimensionale Volumen bezüglich der euklidischen Metrik:
+
+		\begin{align}
+			V_n(B_r(p)) = \frac{\pi^{\frac{n}{2}}}{\Gamma(\frac{n}{2}+1)}r^n
+		\end{align}
+	\end{rem}
 
 	In der Einleitung bereits erwähnt, werden wir Annehmen, dass unsere Daten $X=\{\mathbf{x}_i\}_{i=1}^N, (\mathbf{x}_i \in \R^D)$ mit $D$ 
 	gemessenen Eigenschaften mittels $d, (d \ll D)$ Eigenschaften dargestellt werden können. 
@@ -184,7 +210,7 @@
 	$d$--dimensionale Mannigfaltigkeit $\M$ im $\R^D$ liegen. Zusätzlich gehen wir davon aus, dass unsere Daten 
 	einen Abstandsbegriff erlauben. Somit lässt sich die Definition der Mannigfaltigkeit erweitern.
 
-	% TODO: Definition riemannsche Mannigfaltigkeit
+	% TODO: Definition riemannsche Mannigfaltigkeit, erwähne matrix darstellungs
 	\begin{defn}[Riemannsche Mannigfaltigkeit]
 		Sei $g$,...
 
@@ -268,7 +294,8 @@
 	\end{rem}
 
 	\begin{ex}
-		\textit{Passende Beispiele von Kategorien, welche später wieder genutzt werden. $\Top, \Set, (Fin)EPMet$}
+		\textit{Passende Beispiele von Kategorien, welche später wieder genutzt werden. $\Top, \Set, (Fin)EPMet$} 
+		% Erwähne dass nicht erweiternde Abbildungen genutzt werden, da Isometrien der Räume zu restriktiv wären 
 	\end{ex}
 
 	Ein weiterer für die folgenden Definitionen wichtiger Begriff ist der der dualen Kategorie.
@@ -518,16 +545,17 @@
 		Die \textit{geometrische Realisierung} gegeben durch:
 		
 		\begin{equation}
-			\quad \abs{\cdot} : \sSet \to \Top,		\quad \abs{X} \mapsto \varinjlim \abs{\Delta^n},
+			\quad \abs{\cdot} : \sSet \to \Top,		\quad \abs{X} \mapsto \varinjlim \abs{\Delta^n}, %TODO: worüber geht der Limes?
 		\end{equation}
 
 		und der \textit{singuläre Mengen} Funktor
 
 		\begin{equation}
-			\quad S : \Top \to \sSet,		\quad S(Y) \mapsto \hom_\Top(\abs{\Delta^n}, Y),
+			\quad S : \Top \to \sSet, \text{mit}		\quad S(Y) : [n] \to \hom_\Top(\abs{\Delta^n}, Y),
 		\end{equation}
 
 		bilden eine Adjunktion.
+		\label{thm:adj}
 	\end{thm}
 
 	Auf diese Adjunktion werden wir in Kapitel \ref{UMAP} zurückkommen und diese für metrische Räume anpassen. 
@@ -542,6 +570,9 @@
 
 	In der klassischen Mengentheorie ist die Zugehörigkeit eines Elementes $x$ zu einer Menge $X$ eine binäre Funktion. Entweder gilt $x \in X \text{oder} x \notin X$. 
 	Eine \textit{unscharfe Menge} verallgemeinert die Zugehörigkeit.
+
+	% TODO: normale und ketegorien Definition Fuzz und übersetzung von Garbe nach normal
+	% TODO: T-norm und T-conorm
 
 	\begin{defn}
 

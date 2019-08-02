@@ -10,7 +10,8 @@
 
 %Define math commands used in this chapter
 \newcommand{\R}{\mathbb{R}}  % Symbol for real numbers
-\newcommand{\seqx}{\{x_i\}_{i=1}^N, \ (x_i \in \mathbb{R}^D)}  % Sequence of x_i
+\newcommand{\seqx}{\{\mathbf{x}_i\}_{i=1}^N, \ (\mathbf{x}_i \in \mathbb{R}^D)}  % Sequence of x_i
+\newcommand{\seq}[1][\mathbf{x}]{\{{#1}_i\}_{i=1}^N, \ ({#1}_i \in \mathbb{R}^D)}  % Sequence of input
 \providecommand{\abs}[1]{\lvert#1\rvert}  % produces | x |
 \providecommand{\norm}[1]{\lVert#1\rVert}  % produces || x ||
 
@@ -50,7 +51,7 @@
 %----------------------------------------------------------------------------------------
 
 %\section{Einleitung}
-Wer eine Tageszeitung aufschlägt oder sie beim Frühstücken auf seinem Tablett liest, 
+Wer eine Tageszeitung aufschlägt, 
 wird nicht vermeiden können, mindestens einen Artikel über die \enquote{Algorithmen der Zukunft}, 
 \enquote{Daten hungrigen Konzerne}, \dots zu lesen. 
 Fakt ist heutzutage werden mehr Daten generiert und gespeichert als je zuvor in der 
@@ -63,6 +64,10 @@ Gesellschaft zu generieren.
 Wir werden uns in dieser Arbeit mit einer Klasse an Verfahren befassen, welche hochdimensionale Daten 
 visualisiert. Insbesondere werden wir das UMAP (Uniform Manifold Approximation and Projection) 
 Verfahren 
+
+%----------------------------------------------------------------------------------------
+
+\subsection*{Aufgabenstellung}
 
 %----------------------------------------------------------------------------------------
 
