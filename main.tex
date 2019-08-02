@@ -45,9 +45,9 @@ headsepline, % Uncomment to get a line under the header
 
 \setcounter{secnumdepth}{3}
 
-\usepackage{lineno}
-\linenumbers
-\modulolinenumbers[5]
+% \usepackage{lineno}
+% \linenumbers
+% \modulolinenumbers[5]
 
 %----------------------------------------------------------------------------------------
 %	OWN SETTINGS
@@ -131,19 +131,23 @@ headsepline, % Uncomment to get a line under the header
 
 \begin{acknowledgements}
 
-\addchaptertocentry{\acknowledgementname} % Add the acknowledgements to the table of contents
+\begin{changemargin}{1.5cm}{1.5cm}
+\vspace*{0.03\textheight}
+% \addchaptertocentry{\acknowledgementname} % Add the acknowledgements to the table of contents
 
 An dieser Stelle möchte ich gerne Prof. Dr. Jochen Garcke, für die Vergabe dieses sehr interessanten 
 und spannenden Themas, danken. Besonderer Dank gilt Leland McInnes für das persönliche Gespräch in Ottawa, Kanada. 
-So konnte ich die Motivation, welche er für das UMAP Verfahren hatte, aus erster Hand erfahren.
+Dadurch konnte ich die Motivation, welche er für das UMAP Verfahren hatte, aus erster Hand erfahren. \\
 
-Gerne möchte ich auch meinen Freunden danken, welche mich im Laufe der Studienzeit, besonders 
-während der Bachelorarbeit, begleitet haben. Anna für die vielen Eispausen und die lustigen Unterhaltungen 
-auch spät in der Nacht, Tobi, Hendrik und Lennard für die Motivation und den mathematischen Austausch und Lukas 
-für die hilfreichen Gespräche. Ohne euch wäre diese Arbeit nicht entstanden. 
+Gerne möchte ich auch meinen Freunden danken welche mich im Laufe der Studienzeit, besonders 
+während der Bachelorarbeit, begleitet haben. Annalena für die vielen Eispausen und die lustigen Unterhaltungen 
+auch spät in der Nacht, Tobi, Hendrik und Lennard für die Motivation und den mathematischen Austausch und Kim und Lukas 
+für die hilfreichen und aufmunternden Gespräche. Ohne euch wäre diese Arbeit nicht entstanden. \\
 
-Zum Schluss danke ich meiner Familie für Ihre bedingungslose Unterstützung, trotz Einsilbigkeit meiner Antworten 
+Zum Schluss meiner Familie für Ihre bedingungslose Unterstützung, trotz Einsilbigkeit meiner Antworten 
 in den letzten Wochen meiner Arbeit.
+
+\end{changemargin}
 
 \end{acknowledgements}
 
@@ -182,7 +186,7 @@ in den letzten Wochen meiner Arbeit.
 % Include the appendices of the thesis as separate files from the Appendices folder
 % Uncomment the lines as you write the Appendices
 
-%\include{Appendices/AppendixA}
+\include{Appendices/AppendixA}
 %\include{Appendices/AppendixB}
 %\include{Appendices/AppendixC}
 
