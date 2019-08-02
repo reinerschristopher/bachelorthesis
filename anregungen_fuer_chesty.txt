@@ -1,0 +1,23 @@
+Section 2:
+Section 2.2: Man könnte noch zitieren in welchem Paper Samuel Eilenberg und Saunders Mac Lane Kategorientheorie eingeführt haben.
+
+Bemerkung über Klassen: Ich würde den Satz "Eine Klasse ist eine Menge, die zu groß ist um eine Menge zu sein." ändern. Evtl. sowas wie: Bei Klassen kann es sich um Ansammlungen von Objekten handeln, die "größer" als Mengen sind.
+
+Bei der Definition des Kompositionsoperators für die duale Kategorie steht ein Hom(C,B) zu viel da.
+
+Bei der Definition vom n-Simplex: Facetten sind glaub ich die Mengen die von Teilmengen von {v_0,...,v_n} aufgespannt werden und nicht die Teilmengen selbst oder?
+
+Bei der Definition von abstrakten Simplizialkomplexen: Das mit den (i+1)-elementigen Teilmengen sieht irgendwie falsch aus, bzw. man versteht nicht wirklich was du meinst. 
+														Das würde doch heißen, dass jeder Punkt aus z.b. S^1 auch in S^0 ist (?)
+														
+Section 3:
+Beim Fluch der Dimensionen würde ich noch am Anfang erwähnen dass sich deine Aussagen auf randomisierte (normalveteilte?) Daten beziehen.
+
+Section 4:
+Ist es klar, was diese Cech-Komplexe sind? Falls nicht, müsstest du die noch irgendwo definieren.
+
+Fallen in 4.9 alle Terme in der Summe weg für kl \neq mi ? Dann würde ich verstehen warum man auf 4.12 kommt. 
+Das würde ich dann aber noch kurz erwähnen. Und entweder in 4.11 oder 4.12 sind die Vorzeichen falsch glaub ich.	
+
+Es wäre evtl. gut noch zu definieren was dieser _|_ Operator bei der Vereinigung genau macht.
+
