@@ -79,17 +79,23 @@
 
 	Wir können nun für jedes $\mathbf{x}_i$ einen metrischen Raum $X_i$ definieren, so dass die Distanz zu den $k$-nächsten-Nachbarn die 
 	Geodäte auf der riemannschen Mannigfaltigkeit ist. 
-	Sei $d$ die zu unseren Daten gehörende Metrik. Dann definieren wir für $\mathbf{x}_i \in X$ den metrischen Raum $(X_i, \tilde{d}_i)$ mit 
-	$\tilde{d}_i(x,y) \coloneqq \frac{d(x,y)}{k_{x_i}}$ und $X_i = X$, dabei bezeichnet $k_{x_i}$ den $k$-ten Nachbarn von $\mathbf{x}_i$. 
-	Diese Definition der $d_i$ ist für den Kontext nicht sinnvoll, da für $\mathbf{x}_i$ mit $h$-ten Nachbarn $\mathbf{x}_h$ und $j$-ten 
-	Nachbarn $\mathbf{x}_j$, mit $h,j \leq k$, nach Lemma \ref{lem:geod} $\tilde{d}_i$ nur für die Paare $(\mathbf{x}_i, \mathbf{x}_h), 
-	(\mathbf{x}_i, \mathbf{x}_j)$ die Geodäte angibt. Wir setzen, 
+	Sei $d$ die zu unseren Daten gehörende Metrik. Dann definieren wir für $\mathbf{x}_i \in X$ den metrischen Raum $(X, \tilde{d}_i)$ mit 
+
+	\begin{align}
+		\tilde{d}_i(x,y) \coloneqq \frac{d(x,y)}{k_{x_i}},
+		\label{eq:tilde}
+	\end{align}
+	
+	dabei bezeichnet $k_{x_i}$ den $k$-ten Nachbarn von $\mathbf{x}_i$. Diese Definition der $d_i$ ist für den Kontext nicht sinnvoll, 
+	da für $\mathbf{x}_i$ mit $h$-ten Nachbarn $\mathbf{x}_h$ und $j$-ten Nachbarn $\mathbf{x}_j$, mit $h,j \leq k$, nach Lemma \ref{lem:geod} 
+	$\tilde{d}_i$ nur für die Paare $(\mathbf{x}_i, \mathbf{x}_h), (\mathbf{x}_i, \mathbf{x}_j)$ die Geodäte angibt. Wir setzen, 
 
 	\begin{align}
 		\bar{d}_i(x,y) \coloneqq \begin{cases}
 									\tilde{d}_i(x,y), &\quad \text{falls } x = \mathbf{x}_i \vee y = \mathbf{x}_i, \\
 									\infty, 		  &\quad \text{sonst.}
 					  			 \end{cases}
+		\label{eq:bar}
 	\end{align}
 
 	Somit sind die $\bar{d}_i$ erweiterte Metriken. 
@@ -115,6 +121,7 @@
 	
 	\begin{align}
 		d_i(\mathbf{x}_i,\mathbf{x}_j) \coloneqq \max(0, \bar{d}_i(\mathbf{x}_i,\mathbf{x}_j) - \bar{d}_i(\mathbf{x}_i,\mathbf{x}_{i_1})).
+		\label{eq:di}
 	\end{align}
 
 	\begin{rem}
@@ -123,16 +130,23 @@
 		$\bar{d}_i(\mathbf{x}_i,\mathbf{x}_{i_1}) > 0$. 
 	\end{rem}
 
+	\begin{rem}
+		Für den Fall, das die Metrik der zugrundeliegenden Mannigfaltigkeit $d_\M$ bekannt ist, setzen wir in Gleichung (\ref{eq:tilde}) 
+		$\tilde{d}_i \coloneqq d_\M$ und wenden die Modifikationen aus Gleichungen (\ref{eq:bar}) und (\ref{eq:di}) an um $d_i$ zu erhalten. 
+	\end{rem}
+
+	Die erweiterten Pseudometriken $d_i$ liefern uns lokal die Geodäte, welche hilfreich ist die zugrundeliegende Mannigfaltigkeit zu beschreiben. 
+	Allerdings sind die Metriken nicht zwingend miteinander kompatibel. Eine Lösung für die Inkompatibilität der Metriken werden wir im folgenden Abschnitt beschreiben.
+
 %----------------------------------------------------------------------------------------
 
 \section{Topologische Repräsentation} \label{sec:repr}
-	Die im vorherigen Abschnitt definierten erweiterten pseudo-metrischen Räume $\{X_i\}_{1\leq i \leq N}$ liefern und lokal die Geodäte, 
-	welche hilfreich ist die zugrundeliegende Mannigfaltigkeit zu beschreiben. Allerdings sind die Metriken nicht zwingend miteinander kompatibel. 
-	In Satz \ref{thm:adj} haben wir eine Adjunktion zwischen topologischen Räumen und simplizialen Mengen eingeführt. Diese werden 
-	wir nun auf erweiterten pseudo-metrische Räume erweitern. 
-
-	Um eine Adjunktion zwischen der Kategorie der erweiterten pseudo-metrischen Räume $\EPMet$ und der Kategorie der unscharfen simplizialen Mengen $\sFuzz$ 
-	zu konstruieren, werden wir die Eigenschaft nutzen, dass sich simpliziale Mengen eindeutig durch die Standardsimplizes $\Delta^n$ darstellen lassen. 
+	In Satz \ref{thm:adj} haben wir gesehen, dass es eine Adjunktion zwischen topologischen Räumen und simplizialen Mengen gibt. 
+	Wir könnten die in Gleichung (\ref{eq:di}) definierten Metriken als topologische Räume mit $\{(X,\tau_i)\}_{1 \leq i \leq N}$ und 
+	der von $d_i$ induzierten Topologie $\tau_i$ auffassen, diese mittels singuläre Mengen Funktors in simpliziale Mengen überführen 
+	und die Mengen Vereinigen. Durch diese Konstruktion würden uns wichtige Informationen verloren gehen. Um dies zu vermeiden, 
+	werden wir eine Adjunktion zwischen der Kategorie der erweiterten pseudo-metrischen Räume $\EPMet$ und der Kategorie der 
+	unscharfen simplizialen Mengen $\sFuzz$ konstruieren.
 
 	\begin{rem}
 		Da wir nur endliche Datensätze betrachten, werden wir uns auf die \textit{Unterkategorien} der endlichen erweiterten pseudo-metrischen Räume 
@@ -152,8 +166,8 @@
 		\begin{align}
 			 \quad \fReal(\Delta^n_{<a}) &\coloneqq (\{x_1,\dotsc, x_n\}, d_a), \\
 			 \quad d_a(x_i,x_j) &\coloneqq \begin{cases}
-			 								   -\log(a)  &\text{, falls } i \neq j \\
-			 								   0		  &\text{, sonst.}
+			 								   0  			&\text{, falls } i = j \\
+			 								   -\log(a)		&\text{, sonst.}
 			 							  \end{cases}
 		\end{align}
 
@@ -161,9 +175,9 @@
 		ist gegeben durch $(\{x_1,\dotsc,x_n\},d_a) \mapsto (\{x_{\sigma(1)},\dotsc,x_{\sigma(n)}\},d_b)$.
 	\end{defn}
 
-	\begin{rem}
-		Dabei betrachten wir ähnlich zu Satz \ref{thm:adj} den Limes über \dots %TODO
-	\end{rem}
+	% \begin{rem}
+	% 	Dabei betrachten wir ähnlich zu Satz \ref{thm:adj} den Limes über \dots %TODO
+	% \end{rem}
 
 	\begin{rem}
 		Der Funktor ist wohldefiniert, da aus $a \leq b, d_a \geq d_b$ folgt. Somit ist die Wirkung von $\fReal$ auf einem Morphismus von $\fsFuzz$ 
@@ -180,15 +194,33 @@
 		sind zueinander adjungiert.
 	\end{thm}
 
+	% TODO: Intuition
+
 	\begin{rem}
 		Ein Beweis findet sich in \cite{UMAP}. Die wesentliche Idee ist dabei, dass Funktoren welche Limiten erhalten einen rechts adjungierten 
 		Funktor besitzen, nach Konstruktion erhält $\fReal$ Limiten. Zusätzlich wird für den Beweis das Yoneda Lemma und Gleichung (\ref{eq:colimit}) 
 		verwendet. 
 	\end{rem}
 
-	Die konstruierte Adjunktion ermöglicht es uns nun die in Abschnitt \ref{sec:manifold} eingeführten metrischen Räume mittels des 
-	$\fSing$ Funktors als unscharfe simpliziale Mengen darzustellen. Um die inkompatiblen Metriken miteinander zu verknüpfen, 
-	nutzen wir die t-Conorm und erhalten $\tConorm \fSing(X_i)$.
+	Die konstruierte Adjunktion ermöglicht es uns nun die erweiterten pseudo-metrischen Räume $\{(X,d_i)\}_{1 \leq i \leq N}$, 
+	mit $d_i$ aus Gleichung (\ref{eq:di}), mittels des $\fSing$ Funktors als unscharfe simpliziale Mengen darzustellen. 
+	Diese verknüpfen wir mittels t-Conorm und erhalten die \textit{unscharfe topologische Repräsentation} des Datensatzes $X$
+
+	\begin{align}
+		\tConorm \fSing((X, d_i)).
+	\end{align}
+
+	Die Intuition dieser Repräsentation kann wie folgt beschrieben werden. Lokale Eigenschaften der Daten werden dadurch erhalten, dass 
+	wir mit Lemma \ref{lem:geod} die Geodäten auf der $X$ zugrundeliegenden Mannigfaltigkeit bestimmt haben. Für die erweiterten pseudo-metrischen 
+	Räume wird dann eine geeignete unscharfe simpliziale Menge konstruiert. In Abschnitt \ref{seq:sSet} haben wir argumentiert, dass 
+	es intuitiv oft genügt anstelle einer simplizialen Menge einen Simplizialkomplex zu betrachten. Deshalb können wir uns den Funktor $\fSing$ als 
+	\textit{Abbildung} des erweiterten pseudo-metrischen Raumes $X_i$ auf einen unscharfen Simplizialkomplex $\mathcal{K}_i$ vorstellen, wobei jeder Simplex einen 
+	Zugehörigkeitsgrad hat. Betrachten wir beispielsweise das $1$-Skelett von $\mathcal{K}_i$ so sind die $0$-Simplizes die $\mathbf{x}_j \in X$. Die 
+	$1$-Simplizes beschreiben Abstände zwischen den $\mathbf{x}_j$, wobei der Zugehörigkeitsgrad eines $1$-Simplizes aus $\mathcal{K}_i$, mit Facetten 
+	$\mathbf{x}_j, \mathbf{x}_l$, gerade $d_i(\mathbf{x}_j, \mathbf{x}_l)$ entspricht. 
+	Wir werden später, in Kapitel \ref{Implementierung}, auf diese Interpretation der $1$-Simplizes zurückkommen. 
+	Doch zuerst möchten wir noch beschreiben, wie die unscharfe topologische Repräsentation für das UMAP Verfahren genutzt wird um 
+	eine niedrigdimensionale Darstellung der Daten zu finden.
 
 %----------------------------------------------------------------------------------------
 

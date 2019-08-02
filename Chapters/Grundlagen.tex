@@ -22,7 +22,8 @@
 \newcommand{\fSing}{\mathsf{FinSing}}  % Symbol for Sing functor
 \newcommand{\fsFuzz}{\mathbf{Fin\text{-}sFuzz}}  % Symbol for finite fuzzy set category
 \newcommand{\fEPMet}{\mathbf{Fin\text{-}EPMet}}  % Symbol for category of finite extended pseudo metric spaces
-\newcommand{\tConorm}{\bot^N_{i=1}}  % Symbol for t-Conorm, $\bot_{\{1 \leq i \leq N\}}$ $\underset{i=1}{\overset{N}{\bot}}$ $\bot^N_{i=1}$
+\newcommand*{\Scale}[2][4]{\scalebox{#1}{\ensuremath{#2}}}
+\newcommand{\tConorm}{\Scale[1.5]{\bot}^N_{i=1}}  % Symbol for t-Conorm, $\bot_{\{1 \leq i \leq N\}}$ $\underset{i=1}{\overset{N}{\bot}}$ $\bot^N_{i=1}$
 
 %----------------------------------------------------------------------------------------
 
@@ -452,6 +453,8 @@
 		Die Objekte der \textit{Simplexkategorie} $\Delta$ sind die Mengen 
 		$[n] \coloneqq \{0,1,\dotsc,n\}$ für $n \in \mathbb{N}$, 
 		und Morphismen sind monoton wachsende Abbildungen. 
+
+		Dabei ist $[n] \coloneqq \{1,\dotsc,n\}$.
 	\end{defn}
 
 	\begin{figure}
