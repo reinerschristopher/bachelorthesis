@@ -91,7 +91,18 @@
 
 		Das Paar $(X, d)$ heißt \textit{metrischer Raum}. Die Metrik $d$ heißt \textit{Pseudometrik}, wenn die erste Bedingung durch 
 		$d(x,y) = 0 \Leftarrow x = y$ abgeschwächt wird.
+
+		Falls die Metrik den Wert $\infty$ annehmen kann, sprechen wir von einer \textit{erweiterten Metrik}.
 	\end{defn}
+
+	\begin{rem}
+		In Fakt ist die Erweiterung einer Metrik um den Wert $\infty$ keine Einschränkung. Für eine gegebene erweiterte Metrik $d$ 
+		kann nämlich stets äquivalente eine (echte) Metrik $d'$ konstruiert werden, zum Beispiel ist $d' = \frac{d}{1+d}$ äquivalent 
+		zu einer erweiterten Metrik $d$. Eine formale Definition der Äquivalenz zweier metrischer Räume soll hier nicht gegeben werden. 
+		Es genügt zu wissen, dass wichtige topologische Eigenschaften erhalten zwischen den beiden Räumen übertragen werden können.
+	\end{rem}
+
+	% https://math.stackexchange.com/questions/399722/metric-assuming-the-value-infinity#399759 erweiterte metriken beitzten gute eigenschaften
 
 	In der Einleitung bereits erwähnt, werden wir Annehmen, dass unsere Daten $X=\{\mathbf{x}_i\}_{i=1}^N, (\mathbf{x}_i \in \R^D)$ mit $D$ 
 	gemessenen Eigenschaften mittels $d, (d \ll D)$ Eigenschaften dargestellt werden können. 
@@ -257,7 +268,7 @@
 	\end{rem}
 
 	\begin{ex}
-		\textit{Passende Beispiele von Kategorien, welche später wieder genutzt werden. $\Top, \Set$}
+		\textit{Passende Beispiele von Kategorien, welche später wieder genutzt werden. $\Top, \Set, (Fin)EPMet$}
 	\end{ex}
 
 	Ein weiterer für die folgenden Definitionen wichtiger Begriff ist der der dualen Kategorie.
