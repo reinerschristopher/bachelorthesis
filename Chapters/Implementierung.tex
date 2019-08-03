@@ -1,24 +1,16 @@
 %!TEX root = ../main.tex
 
-\chapter{Implementierung} 
-
-\label{Implementierung}
-
-% Docs for algorithms: 
-% http://mirror.physik-pool.tu-berlin.de/pub/CTAN/macros/latex/contrib/algorithmicx/algorithmicx.pdf
-
-% Quelle für Gradienten: TODO: remove
-% http://jlmelville.github.io/sneer/gradients.html#hellinger_distance
-% https://jlmelville.github.io/smallvis/theory.html#umap
+\chapter{Implementierung} \label{Implementierung}
 
 %----------------------------------------------------------------------------------------
 
-% \newcommand{\indexij}[1][v]{{#1}_{ij}}  % Symbol for v_{ij}
-\newcommand{\vij}{v_{ij}}  % Symbol for b_{ij}
-\newcommand{\wij}{w_{ij}}  % Symbol for w_{ij}
-\newcommand{\deriv}[2]{\frac{\partial {#1}}{\partial {#2}}}
-\newcommand{\sumtup}[2]{\sum_{{#1},{#2} = 1}^N}
-\newcommand{\sumtups}[1]{\sum_{{#1} = 1}^N}
+%Define math commands used in this chapter
+   \newcommand{\indexij}[1][v]{{#1}_{ij}}  % Symbol for inp_{ij}
+   \newcommand{\vij}{v_{ij}}  % Symbol for b_{ij}
+   \newcommand{\wij}{w_{ij}}  % Symbol for w_{ij}
+   \newcommand{\deriv}[2]{\frac{\partial {#1}}{\partial {#2}}}
+   \newcommand{\sumtup}[2]{\sum_{{#1},{#2} = 1}^N}
+   \newcommand{\sumtups}[1]{\sum_{{#1} = 1}^N}
 
 %----------------------------------------------------------------------------------------
 
@@ -28,20 +20,12 @@
 % TODO: Bem: Fehler in Kapitel 3 von UMAP wij sollten gewichte der Matrix B sein.
 
 % TODO: vij definieren.
-% %\begin{equation}
-% \begin{align*}
-%    &\qquad&
-%    \sum_{i=1}^n \exp\left(\frac{-(\text{knn-dists}_i - \rho)}{\sigma}\right) &= \log_2(n) \\
-%    \iff&& \sum_{i=1}^n (\exp(-(\text{knn-dists}_i - \rho)) - \exp(\sigma)) &= \log_2(n) \\
-%    \iff&& \left(\sum_{i=1}^n \exp(-(\text{knn-dists}_i - \rho))\right) - n\exp(\sigma) &= \log_2(n) \\
-%    \iff&& \sum_{i=1}^n \exp(-(\text{knn-dists}_i - \rho)) &= \log_2(n) + n\exp(\sigma) \\
-%    \iff&& \log_e \left(\frac{\sum_{i=1}^n \exp(-(\text{knn-dists}_i - \rho)) - \log_2(n)}{n}\right) &= \sigma \\
-% \end{align*}
-% %\end{equation}
+
+% \begin{align}
+%    \sum_{i=1}^n \exp\left(\frac{-(\text{knn-dists}_i - \rho)}{\sigma}\right) = \log_2(n)
+% \end{align}
 
 % TODO: Daniel 
-% Ist es klar, was diese Cech-Komplexe sind? Falls nicht, müsstest du die noch irgendwo definieren.
-
 % Fallen in 4.9 alle Terme in der Summe weg für kl \neq mi ? Dann würde ich verstehen warum man auf 4.12 kommt. 
 % Das würde ich dann aber noch kurz erwähnen. Und entweder in 4.11 oder 4.12 sind die Vorzeichen falsch glaub ich.
 
@@ -49,28 +33,30 @@
 %----------------------------------------------------------------------------------------
 
 % \section{Einleitung}
-% TODO: Überarbeiten
    In diesem Kapitel möchten wir die Implementierung des UMAP Verfahren beschreiben. 
-   Die vollständige Berechnung aller Simplizes hat eine exponentielle Laufzeit, da hierfür 
-   alle $2^N$ Teilmengen unseres $N$-elementigen Datensatzes betrachtet werden müssten. 
-   In aktuellen Implementierungen werden hingegen nur alle 
-   zweielementigen Teilmengen betrachtet. 
-   Wie wir in Kapitel \ref{Experimente} sehen werden, liefert uns diese Approximation des 
-   \cech-Komplexes sehr gute visuelle Ergebnisse.  % TODO: Cech Komplex?
-   In Kapitel \ref{Zusammenfassung} werden wir Ansätze erwähnen um Simplizes höherer 
+   Ideal-typischerweise würden wir dafür die metrischen Räume konstruieren und diese mittels 
+   des modifizierten Singulären Mengen Funktors mit der in Gleichung (\ref{eq:toprep}) beschriebenen 
+   unscharfen topologischen Repräsentation darstellen. Praktikabel ist dies nicht für große Datensätze 
+   umsetzbar, da wir für die Berechnung der unscharfen simplizialen Mengen alle 
+   $2^N$ Teilmengen unseres $N$-elementigen Datensatzes betrachten müssten. 
+
+   In aktuellen Implementierungen werden hingegen nur alle zweielementigen Teilmengen betrachtet. 
+   Wir werden in Kapitel \ref{Zusammenfassung} Ansätze erwähnen um Simplizes höherer 
    Ordnungen effizient zu finden. 
 
-   Zunächst werden wir die Notation aus Kapitel \ref{UMAP} anpassen, da wir nur das 1-Skelett der 
-   topologischen Repräsentationen betrachten. Danach werden wir die Zielfunktion explizit 
-   angeben und den Gradienten herleiten. 
-   In Abschnitt \ref{seq:pseudo} werden wir den UMAP Algorithmus im Pseudo-Code angeben.
-   Die darauf folgenden Abschnitte identifizieren rechenintensive Schritte der von uns 
-   verwendeten Implementierung \cite{cpu} und beschreiben Alternativen.
+   Zunächst werden wir in Abschnitt \ref{seq:numerische_formulierung} die Notation anpassen und 
+   die Formulierung der Optimierung konkretisieren.
+   In Abschnitt \ref{seq:pseudo} werden wir den gesamten UMAP Algorithmus im Pseudo-Code angeben. 
+   Wir werden dann mittels Profiling die rechenintensiven Subroutinen der von uns verwendeten 
+   Implementierung \cite{cpu} identifizieren. In den darauffolgenden Abschnitten werden 
+   wir die aufwendigen Routinen genauer betrachten, in dem wir in Abschnitt \ref{seq:SGD} 
+   das verwendete Verfahren zur Optimierung der Einbettung beschreiben und in Abschnitt \ref{seq:kNN} 
+   zwei Verfahren zu Berechnung der $1$-Simplizes diskutieren.
    Abschnitt \ref{seq:hyper} gibt eine Beschreibung der Hyperparameter an. 
 
 %----------------------------------------------------------------------------------------
 
-% TODO: !!!!!!! Kontroliere ob \mu(a) = \vij ist oder = dennicht symetrischen Werten. (dann ändere V und definiere \fij = sym(\vij))
+% TODO: !!!!!!! Kontroliere ob \mu(a) = \vij ist oder = den nicht symetrischen Werten. (dann ändere V und definiere \fij = sym(\vij))
 \section{Numerische Formulierung der Optimierung} \label{seq:numerische_formulierung}
    Um eine Unterscheidung zwischen der theoretischen Sichtweise auf das UMAP Verfahren, welche alle $k$-Simplizes 
    $(1 \leq k \leq N)$ berücksichtigt, und der praktischen Implementierung zu verdeutlichen, werden wir die 
@@ -180,16 +166,11 @@
    Die Grad-Matrix $D$ (Zeile \ref{alg:grad}) ist eine Diagonalmatrix, wobei  $d_{ii} \coloneqq  \sum_{1 \leq k \leq N} v_{ik}, (1 \leq i \leq N)$. 
    Für den Spezialfall, der ungewichteten Adjazenzmatrix, beschreibt $d_{ii}$ also den Grad des Knoten $i$. 
 
+   % TODO: Spektrale Einbettung beschreiben
    Die Initialisierung der niedrigdimensionalen Repräsentation $Y$ in Zeile \ref{alg:spec} ist die spektrale Einbettung des Graphen. 
-   Eine genauere Beschreibung warum die so gewählte Initialisierung sinnvoll ist findet sich in Abschnitt \ref{seq:spec}. Dabei ist 
+   Eine genauere Beschreibung warum die so gewählte Initialisierung sinnvoll ist findet sich in Abschnitt \dots. Dabei ist 
    zu beachten, dass eine Lösung des Eigenwertproblems nur von der Größe der Einbettungsdimension abhängig ist. Da wird stets $d \ll D$ 
    betrachten ist eine effiziente Implementierung mittels sukzessiver Eigenwertsuche möglich. % TODO: Referenz für sukkzesive suche % TODO: Verschieben in section unten.
-
-%----------------------------------------------------------------------------------------
-
-\section{Spektrale Einbettung} \label{seq:spec}
-   Der Laplace Operator ist eine diskrete Approximation des Laplace-Beltrami Operators. Spektrale Einbettung \dots
-   % TODO: ergänzen
 
 %----------------------------------------------------------------------------------------
 
@@ -359,7 +340,7 @@
 
    Wir möchten nun zwei Verfahren vorstellen. 
 
-%-----------------------------------
+   %-----------------------------------
 
    \subsection*{NN-Descent}
       Der NN-Descent Algorithmus \cite{k-NNG} beruht auf dem Prinzip der Nachbarschafts-Erkundungen. Dabei wird ein 
@@ -380,7 +361,7 @@
       des NN-Descent Verfahren approximativ. In \cite{UMAP} wird jedoch argumentiert, dass dies wegen des Informationsverlust 
       bei Dimensionsreduktionen kaum Auswirkungen auf die resultierende Einbettung hat. 
 
-%-----------------------------------
+   %-----------------------------------
 
    \subsection*{FAISS}
       Das FAISS Bibliothek \cite{FAISS} nutzt die Architektur einer GPU aus. Dabei baut FAISS eine effiziente Datenstruktur, 
@@ -436,5 +417,4 @@
       \item \code{negative\_sample\_weight}
    \end{itemize}
 
-      
-
+%----------------------------------------------------------------------------------------      

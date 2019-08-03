@@ -1,37 +1,31 @@
 %!TEX root = ../main.tex
 
-\chapter{Grundlagen} 
-
-\label{Grundlagen}
+\chapter{Grundlagen} \label{Grundlagen}
 
 %----------------------------------------------------------------------------------------
 
-%Define math commands used just in this chapter
-\renewcommand{\C}{\mathscr{C}}  % Symbol for a category C
-\newcommand{\D}{\mathscr{D}}  % Symbol for a category D
-\renewcommand{\N}{\mathbb{N}}  % Symbol for natural numbers
-\newcommand{\M}{\mathcal{M}}  % Symbol for Manifold M
-\newcommand{\cech}{\u{C}ech}  % Symbol for Cech complex
-\newcommand{\Set}{\mathbf{Set}}  % Symbol for category of sets
-\newcommand{\sSet}{\mathbf{sSet}}  % Symbol for category of sets
-\newcommand{\Top}{\mathbf{Top}}  % Symbol for category of sets
-\newcommand{\sFuzz}{\mathbf{sFuzz}}  % Symbol for fuzzy set category
-\newcommand{\EPMet}{\mathbf{EPMet}}  % Symbol for category of extended pseudo metric spaces
-\renewcommand{\hom}{\mathsf{Hom}}  % Symbol for morphisms
-\newcommand{\fReal}{\mathsf{FinReal}}  % Symbol for Real functor
-\newcommand{\fSing}{\mathsf{FinSing}}  % Symbol for Sing functor
-\newcommand{\fsFuzz}{\mathbf{Fin\text{-}sFuzz}}  % Symbol for finite fuzzy set category
-\newcommand{\fEPMet}{\mathbf{Fin\text{-}EPMet}}  % Symbol for category of finite extended pseudo metric spaces
-\newcommand*{\Scale}[2][4]{\scalebox{#1}{\ensuremath{#2}}}
-\newcommand{\tConorm}{\Scale[1.5]{\bot}^N_{i=1}}  % Symbol for t-Conorm, $\bot_{\{1 \leq i \leq N\}}$ $\underset{i=1}{\overset{N}{\bot}}$ $\bot^N_{i=1}$
+%Define math commands used in this chapter
+	\renewcommand{\C}{\mathscr{C}}  % Symbol for a category C
+	\newcommand{\D}{\mathscr{D}}  % Symbol for a category D
+	\renewcommand{\N}{\mathbb{N}}  % Symbol for natural numbers
+	\newcommand{\M}{\mathcal{M}}  % Symbol for Manifold M
+	\newcommand{\cech}{\u{C}ech}  % Symbol for Cech complex
+	\newcommand{\Set}{\mathbf{Set}}  % Symbol for category of sets
+	\newcommand{\sSet}{\mathbf{sSet}}  % Symbol for category of sets
+	\newcommand{\Top}{\mathbf{Top}}  % Symbol for category of sets
+	\newcommand{\sFuzz}{\mathbf{sFuzz}}  % Symbol for fuzzy set category
+	\newcommand{\EPMet}{\mathbf{EPMet}}  % Symbol for category of extended pseudo metric spaces
+	\renewcommand{\hom}{\mathsf{Hom}}  % Symbol for morphisms
+	\newcommand{\fReal}{\mathsf{FinReal}}  % Symbol for Real functor
+	\newcommand{\fSing}{\mathsf{FinSing}}  % Symbol for Sing functor
+	\newcommand{\fsFuzz}{\mathbf{Fin\text{-}sFuzz}}  % Symbol for finite fuzzy set category
+	\newcommand{\fEPMet}{\mathbf{Fin\text{-}EPMet}}  % Symbol for category of finite extended pseudo metric spaces
+	\newcommand*{\Scale}[2][4]{\scalebox{#1}{\ensuremath{#2}}}
+	\newcommand{\tConorm}{\Scale[1.5]{\bot}^N_{i=1}}  % Symbol for t-Conorm
+	% Alternatives for t-Conorms: $\bot_{\{1 \leq i \leq N\}}$ $\underset{i=1}{\overset{N}{\bot}}$ $\bot^N_{i=1}$
 
 %----------------------------------------------------------------------------------------
 
-% Struktur Posada:
-% Kategorientheorie (Kategorien, Funktoren, natürliche Transformationen)
-% Dieses allgemeine Gerüst lässt einen leicht simpliziale Komplexe zu simplizialen Mengen
-% veralgemeinern, unischere Mengen einführen und die für UMAP verwendete Theorie erläutern.
-% discrete, free and monoid category
 % category Set, Top, duale Kategorie kurz (morphismen umkehren)
 
 % Zusammenfassen der bisherigen Konstruktion und das man einen Schritt weiter geht
@@ -40,19 +34,6 @@
 % Die Definition einer Adjunktion ist dafür wichtig einen zwischen metrischen Räumen und 
 % unscharfen simplizialen Mengen zu übersetzen.
 % Typische Verwendungen für die Definition
-
-% TODO: Daniel 
-% Section 2:
-% Section 2.2: Man könnte noch zitieren in welchem Paper Samuel Eilenberg und Saunders Mac Lane Kategorientheorie eingeführt haben.
-
-% Bemerkung über Klassen: Ich würde den Satz "Eine Klasse ist eine Menge, die zu groß ist um eine Menge zu sein." ändern. Evtl. sowas wie: Bei Klassen kann es sich um Ansammlungen von Objekten handeln, die "größer" als Mengen sind.
-
-% Bei der Definition des Kompositionsoperators für die duale Kategorie steht ein Hom(C,B) zu viel da.
-
-% Bei der Definition vom n-Simplex: Facetten sind glaub ich die Mengen die von Teilmengen von {v_0,...,v_n} aufgespannt werden und nicht die Teilmengen selbst oder?
-
-% Bei der Definition von abstrakten Simplizialkomplexen: Das mit den (i+1)-elementigen Teilmengen sieht irgendwie falsch aus, bzw. man versteht nicht wirklich was du meinst. 
-% 														Das würde doch heißen, dass jeder Punkt aus z.b. S^1 auch in S^0 ist (?)
 
 %----------------------------------------------------------------------------------------
 %----------------------------------------------------------------------------------------
@@ -65,7 +46,7 @@
 
 	Die grundlegenden Definitionen \textit{topologischer und metrischer Räume} in Abschnitt \ref{seq:top} 
 	werden uns helfen \textit{(riemannsche) Mannigfaltigkeiten} einzuführen. Der Begriff der Mannigfaltigkeit 
-	formalisiert den niedrigdimensionalen Raum auf welchem der zu untersuchende Datensatz $X$ liegt.
+	formalisiert den niedrigdimensionalen Raum auf, welchem der zu untersuchende Datensatz $X$ liegt.
 
 	Die geometrische und topologische Struktur dieser Räume sollen durch \textit{simpliziale Mengen} dargestellt 
 	werden. Um diese in Abschnitt \ref{seq:sSet} einzuführen, benötigen wir grundlegende Definitionen 
@@ -256,7 +237,7 @@
 	Die für die mathematischen Grundlagen des UMAP Verfahren benötigten Definitionen 
 	werde ich mithilfe der Kategorientheorie einführen. 
 	Diese sehr abstrakte Form mathematische Objekte und Zusammenhänge zu formalisieren 
-	wurde erstmals in den vierziger Jahren von Samuel Eilenberg und Saunders Mac Lane eingeführt. \\
+	wurde erstmals in den vierziger Jahren von Samuel Eilenberg und Saunders Mac Lane eingeführt \cite{Eilenberg}. \\
 	Die Definitionen sind dem Buch von Brandenberg \cite{Brandenburg} entnommen. 
 	 
 	\begin{defn}[Kategorie]
@@ -301,14 +282,14 @@
 
 	\begin{rem}
 		% TODO: Besser formulieren
-		Eine Klasse ist eine Menge, welche zu groß ist um eine Menge zu sein. 
+		Bei Klassen kann es sich um Ansammlungen von Objekten handeln, die \enquote{größer} als Mengen sind.
 		Für eine Definition einer Klasse verweisen wir auf \cite{Levy}. 
 		In unseren Beispielen genügt die Vorstellung einer Menge.
 		Meist ist $Ob(\C)$ sogar eine Menge. Dann spricht man formal von einer strikten kleinen Kategorie.
 	\end{rem}
 
 	\begin{ex}
-		\textit{Passende Beispiele von Kategorien, welche später wieder genutzt werden. $\Top, \Set, (Fin)EPMet$} 
+		\textit{Passende Beispiele von Kategorien, welche später wieder genutzt werden. $\Top, \Set, (Fin)EPMet, I$} % fürr I siehe fuzzy sets, Sets einfach definiert aber viele anwendungen
 		% Erwähne dass nicht erweiternde Abbildungen genutzt werden, da Isometrien der Räume zu restriktiv wären 
 	\end{ex}
 
@@ -327,7 +308,7 @@
 		\end{equation*}
 		ist durch
 		\begin{equation*}
-			\hom_\C(B, A) \times \hom_\C(C, B) \cong \hom_\C(C, B) \times \hom_\C(C, B) \times \hom_\C(B, A) \mathring{\longrightarrow} \hom_\C(C, A)
+			\hom_\C(B, A) \times \hom_\C(C, B) \cong \times \hom_\C(C, B) \times \hom_\C(B, A) \mathring{\longrightarrow} \hom_\C(C, A)
 		\end{equation*}
 		definiert, d.h. $f \circ^{op} g \coloneqq g \circ f$. Auf diese Weise ist  $\C^{op}$ tatsächlich 
 		eine Kategorie und heißt die \textit{zu} $\C$ \textit{duale Kategorie}.
@@ -445,15 +426,14 @@
 		Ein \textit{(geometrischer) $n$-Simplex} ist eine von $n+1$ geometrisch unabhängigen Punkten $\{v_0,\dotsc,v_n\}$ 
 		aufgespannte konvexe Hülle im euklidischen Raum. Die geometrische Unabhängigkeit der Vektoren bedeutet dabei, das 
 		$v_1 - v_0, \dotsc v_n - v_0$ linear unabhängig sind. 
-		Die Vektoren $v_i$ werden \textit{Knoten} genannt und die Teilmengen von $\{v_0,\dotsc,v_n\}$, 
-		\textit{Facetten} des $n$-Simplex.
+		Die Vektoren $v_i$ werden \textit{Knoten} genannt und die von den Teilmengen von $\{v_0,\dotsc,v_n\}$ aufgespannten 
+		konvexen Hüllen, \textit{Facetten} des $n$-Simplex.
 	\end{defn}
 
 	\begin{defn}[Simplexkategorie]
 		Die Objekte der \textit{Simplexkategorie} $\Delta$ sind die Mengen 
 		$[n] \coloneqq \{0,1,\dotsc,n\}$ für $n \in \mathbb{N}$, 
 		und Morphismen sind monoton wachsende Abbildungen. 
-
 		Dabei ist $[n] \coloneqq \{1,\dotsc,n\}$.
 	\end{defn}
 
@@ -511,7 +491,7 @@
 	\end{defn}
 
 	\begin{rem}
-		Ein Simplizialkomplex ist anschaulich betrachtet ein geometrisches Objekt, welches aus mehreren Simplizes \textit{zusammengefügt} wird. 
+		Ein Simplizialkomplex ist anschaulich betrachtet ein geometrisches Objekt, welches aus mehreren Simplizes besteht. 
 		Die Simplizes dürfen dabei nur entlang ihrer Facetten \textit{zusammengefügt} werden. 
 	\end{rem}
 
@@ -520,15 +500,14 @@
 	Dabei sind die genauen räumlichen Lagebeziehungen der Simplizes oft zu vernachlässigen und es kann folgende Verallgemeinerung gemacht werden:  
 
 	\begin{defn} %[Abstrakter Simplizialkomplex]
-		Ein \textit{abstrakter Simplizialkomplex} besteht aus einer Menge $S^0$ an \textit{Knoten} und, für jedes $k$, einer Menge $S^k$, bestehend aus 
-		Teilmengen von $S^0$ der Kardinalität $k+1$, so dass jede $(i+1)$-elementige Teilmenge einer Menge aus $S^k$ auch in $S^i$ ist.
-		Die Menge $S^k$ wird \textit{$k$-Skelett} genannt.
+		Ein \textit{abstraktes Simplex $\sigma$} ist eine nichtleere endliche Menge. Ein Element eines abstrakten Simplex $\sigma$ nennen 
+		wir \textit{Knoten}, eine nichtleere Teilmenge $\sigma' \subset \sigma$ ist wieder ein abstrakter Simplex und wird \textit{Facette} von $\sigma$ genannt. 
+		Die \textit{Dimension} eines abstrakten Simplex $\sigma$ welcher aus einer $k+1$-Elementigen Menge besteht ist $k$, oft nennen wir $\sigma$ dann einen 
+		(abstrakten) $k$-Simplex. 
+		Ein \textit{abstrakter Simplizialkomplex} $\mathcal{K}$ ist eine Menge von Simplizes mit der Eigenschaft, dass jede Facette $\sigma' \subset \sigma$ 
+		eines Simplizes $\sigma \in \mathcal{K}$ wieder zu $\mathcal{K}$ gehört, also $\sigma' \in \mathcal{K}$. 
+		Das \textit{$k$-Skelett} eines Simplizialkomplex $\mathcal{K}$ ist die Menge aller seiner Simplizes der Dimension $\leq k$.
 	\end{defn}
-
-	\begin{rem}
-		Analog zum $k$-Skelett eines Simplizialkomplexes werden wir im folgenden die $k$-Simplizes einer simplizialen Menge als $k$-Skelett bezeichnen. 
-		Für simpliziale Mengen wird diese Bezeichnung nicht konsistent in der Literatur genutzt. 
-	\end{rem}
 
 	Abstrakte Simplizialkomplexe besitzen im Allgemeinen also keine Informationen über die relative räumliche Lage der Knoten, insbesondere können die 
 	Knoten beliebige Objekte sein. Ähnlich sind simpliziale Mengen zu verstehen, allerdings enthalten diese noch \textit{mehr} Informationen über die 
@@ -554,6 +533,10 @@
 	Anschaulich werden die Objekte (hier die $\Delta^n$) in einer passenden Weise \textit{zusammengefügt}. 
 	In Gleichung (\ref{eq:colimit}) bedeutet dies also, dass sich eine simpliziale Menge aus den Standardsimplizes zusammensetzt.
 
+	\begin{rem}
+		Somit können wir analog zu Simplizialkomplexen das $k$-Skelett einer simplizialen Menge als Menge aller $k$-Simplizes und die Elemente 
+		des $0$-Skelett als Knoten bezeichnen.
+	\end{rem}
 
 	Wie bereits erwähnt lassen sich für topologische Räume geeignete (abstrakte) Simplizialkomplexe konstruieren, ähnliches gilt auch für simpliziale Mengen. 
 	In der Tat gibt es aus kategorientheoretischer Sichtweise eine \textit{gute} Beziehung zwischen simplizialen Mengen und topologischen Räumen, diese lässt 
@@ -576,31 +559,88 @@
 		\label{thm:adj}
 	\end{thm}
 
-	Auf diese Adjunktion werden wir in Kapitel \ref{UMAP} zurückkommen und diese für metrische Räume anpassen. 
+	Diese Adjunktion werden wir in Kapitel \ref{UMAP} für metrische Räume erweitern. 
 
 %----------------------------------------------------------------------------------------
 
 \section{Unscharfe Mengen} \label{seq:fuzz}
 	Ein geometrischer Simplizialkomplex enthält Informationen über die Lage der Knoten, abstrakte Simplizialkomplexe und simpliziale Mengen 
-	fehlt diese Eigenschaft. In Kapitel \ref{UMAP} werden wir die hochdimensionalen Daten $\mathbf{x}_i$ betrachten und diese indirekt 
-	eine simpliziale Menge konstruieren. Dazu möchten wir auch die Eigenschaft nutzen, dass für die Daten eine Metrik gegeben ist. 
+	fehlt diese Eigenschaft. In Kapitel \ref{UMAP} werden wir die hochdimensionalen Daten $\mathbf{x}_i$ betrachten und für diese  
+	eine simpliziale Menge konstruieren. Dazu möchten wir auch die Eigenschaft nutzen, dass die betrachteten Daten $X$ eine Metrik besitzen. 
 	Um simplizialen Mengen, genauer gesagt den Knoten, einen \textit{Abstandsbegriff} zuzuordnen werden wir den Begriff der \textit{unscharfen Menge} nutzen.
 
 	In der klassischen Mengentheorie ist die Zugehörigkeit eines Elementes $x$ zu einer Menge $X$ eine binäre Funktion. Entweder gilt $x \in X \text{oder} x \notin X$. 
-	Eine \textit{unscharfe Menge} verallgemeinert die Zugehörigkeit.
+	Eine \textit{unscharfe Menge} verallgemeinert die Zugehörigkeit. 
 
 	% TODO: normale und ketegorien Definition Fuzz und übersetzung von Garbe nach normal
-	% TODO: T-norm und T-conorm
 
-	\begin{defn}
-
+	\begin{defn} %[Unscharfe Menge]
+		Sei $A$ eine Menge und $\mu: A \to [0,1]$. Wir nennen des Paar $(A, \mu)$ \textit{unscharfe Menge}. 
+		Für $a \in A$ nennen wir $\mu(a)$ den \textit{Zugehörigkeitsgrad von $a$}.
 	\end{defn}
 
+	\begin{rem}
+		Dabei wird das Bild von $a \in A$ unter $\mu$ als Wahrscheinlichkeit interpretiert, dass $a \in A$. 
+		Eine \textit{klassische} Menge $A$ ist ein Spezialfall einer unscharfen Menge, mit $\mu(A) = 1$. 
+	\end{rem}
 
+	\begin{defn}
+		Seien $(A,\mu), (B, \nu)$ unscharfe Mengen. Man sagt \textit{$(A, \mu)$ ist leer}, falls $\mu$ die konstante Nullfunktion ist. 
+		Die \textit{Gleichheit} von $(A,\mu), (B, \nu)$ ist gegeben, wenn $A = B$ und $\mu(a) = \nu(a)$ für alle $a \in A$.
+	\end{defn}
 
+	\begin{rem}
+		Die Elemente mit Zugehörigkeitsgrad $0$ spielen also eine entschiedene Rolle bei der Angabe einer unscharfen Menge. 
+		Beispielsweise sind unscharfen Mengen $(\{1,2\}, (\mu(1)=1, \mu(2)=0)), (\{1,3\}, (\mu(1)=1, \mu(3)=0))$ nicht gleich. 
+	\end{rem}
+
+	Eine Verallgemeinerung der klassischen Mengenoperationen für unscharfe Mengen zu definieren benötigt die \textit{t-Normen}.
+
+	\begin{defn} %[t-Norm]
+		Sei $\top : [0,1] \times [0,1] \to [0,1]$. Dann ist $\top$ eine \textit{t-Norm}, wenn gilt, 
+
+		\begin{itemize}
+			\item $\top(a,b) = \top(b,a)$,
+			\item $a \leq b, c \leq d \Rightarrow \top(a,b) \leq \top(c,d)$, 
+			\item $\top(a,\top(b,c)) = \top(\top(a,b),c)$, 
+			\item $\top(1,a) = \top(a,1) = 1$.
+		\end{itemize}
+
+		Eine monoton fallende Abbildung $\neg : [0,1] \to [0,1]$ mit $\neg(0)=1, \neg(1)=0$ wird \textit{Negator} genannt. 
+		Die Abbildung $\bot$, mit $\bot(a,b) = \neg\top(\neg a,\neg b)$ wird als \textit{zu $\top$ über $\neg$ zugehörige t-Conorm} bezeichnet. 
+	\end{defn}
+
+	\begin{defn}
+		Das Tripel $(\top, \bot, \neg)$ heißt \textit{De-Morgan-Triplett}, wenn $\top$ eine t-Norm, $\neg$ ein Negator und $\bot$ die zu $\top$ 
+		über $\neg$ zugehörige t-Conorm ist. 
+	\end{defn}
+
+	\begin{ex}
+		Die Abbildungen $\top(a,b) \coloneqq ab, \bot(a,b) \coloneqq a + b - ab, \neg(a) \coloneqq 1-a$ bilden ein De-Morgan-Triplett. 
+		\label{ex:tNorm}
+	\end{ex}
+
+	Nun können wir die Definition der Mengenoperationen aus der Fuzzy-Logik geben.
+
+	\begin{defn}
+		Sei $(\top, \bot, \neg)$ ein De-Morgan-Triplett und $(A, \mu), (A, \nu)$ unscharfe Mengen. Dann ist 
+
+		\begin{itemize}
+			\item $(A, \mu \cap \nu)$, mit $(\mu \cap \nu)(a) \coloneqq \top(\mu(a), \nu(a)), a \in A$, der \textit{Schnitt von $(A, \mu)$ und $(A, \nu)$},
+			\item $(A, \mu \cup \nu)$, mit $(\mu \cup \nu)(a) \coloneqq \bot(\mu(a), \nu(a)), a \in A$, die \textit{Vereinigung von $(A, \mu)$ und $(A, \nu)$},
+			\item $(A, \neg \circ \mu)$, das \textit{Komplement von $(A, \mu)$}.
+		\end{itemize}
+	\end{defn}
+
+	\begin{rem}
+		Es gilt $\neg((A, \mu \cap \nu)) = (A,(\neg \circ \mu) \cup (\neg \circ \nu))$ und $\neg((A, \mu \cup \nu)) = (A,(\neg \circ \mu) \cap (\neg \circ \nu))$.
+		Die definierten Mengenoperationen auf unscharfen Mengen erfüllen also die De-Morgan Regeln der klassischen Mengenlehre. 
+	\end{rem}
+
+	Um die Theorie des UMAP Verfahrens in Kapitel \ref{UMAP} zu formal beschreiben zu können, werden wir die Kategorie unscharfer simplizialer Mengen benötigen. 
+	Seit der Einführung unscharfer Mengen in \cite{Zadeh} gab es verschiedene Ansätze diese Kategorie zu definieren, unter anderem von 
+	Goguen \cite{Goguen}. Diese Definition hat laut \cite{Barr} den Nachteil, dass zwei Morphismen unscharfer Mengen nicht gleich sind, wenn sie sich nur 
+	auf Elementen mit Zugehörigkeitsgrad $0$ unterscheiden. Da wir Elemente mit Zugehörigkeitsgrad $0$ als Elemente interpretieren möchten, welche nicht 
+	zur Menge gehören, ist Goguens Definition problematisch. 
 
 %----------------------------------------------------------------------------------------
-
-
-
-

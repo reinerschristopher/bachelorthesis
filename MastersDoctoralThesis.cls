@@ -614,6 +614,8 @@ breaklinks=true,
 \usepackage{amsthm}
 \usepackage[mathscr]{eucal}  % used for \mathcal
 
+% Docs for algorithms: 
+% http://mirror.physik-pool.tu-berlin.de/pub/CTAN/macros/latex/contrib/algorithmicx/algorithmicx.pdf
 \usepackage{algorithm}
 \usepackage{algorithmicx}
 \usepackage[noend]{algpseudocode}
