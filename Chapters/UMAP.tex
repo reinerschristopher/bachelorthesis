@@ -32,6 +32,9 @@
 	möglichst ähnlich ist, somit erhalten wir eine $d$-dimensionale Darstellung $Y$ der Daten, welche mittels 
 	eines geeigneten Funktors in einen metrischen Raum überführt werden kann. 
 
+	Wir werden uns in diesem Kapitel nach der in McInnes et. al. \cite{UMAP} gewählten Beschreibung des UMAP 
+	Verfahrens richten und diese insbesondere durch intuitive Erklärungen ergänzen. 
+
 %----------------------------------------------------------------------------------------
 
 \section{Approximation der Mannigfaltigkeit} \label{sec:manifold}
@@ -208,16 +211,34 @@
 
 	\begin{align}
 		\tConorm \fSing((X, d_i)).
+		\label{eq:toprep}
 	\end{align}
 
-	Die Intuition dieser Repräsentation kann wie folgt beschrieben werden. Lokale Eigenschaften der Daten werden dadurch erhalten, dass 
-	wir mit Lemma \ref{lem:geod} die Geodäten auf der $X$ zugrundeliegenden Mannigfaltigkeit bestimmt haben. Für die erweiterten pseudo-metrischen 
-	Räume wird dann eine geeignete unscharfe simpliziale Menge konstruiert. In Abschnitt \ref{seq:sSet} haben wir argumentiert, dass 
-	es intuitiv oft genügt anstelle einer simplizialen Menge einen Simplizialkomplex zu betrachten. Deshalb können wir uns den Funktor $\fSing$ als 
-	\textit{Abbildung} des erweiterten pseudo-metrischen Raumes $X_i$ auf einen unscharfen Simplizialkomplex $\mathcal{K}_i$ vorstellen, wobei jeder Simplex einen 
-	Zugehörigkeitsgrad hat. Betrachten wir beispielsweise das $1$-Skelett von $\mathcal{K}_i$ so sind die $0$-Simplizes die $\mathbf{x}_j \in X$. Die 
-	$1$-Simplizes beschreiben Abstände zwischen den $\mathbf{x}_j$, wobei der Zugehörigkeitsgrad eines $1$-Simplizes aus $\mathcal{K}_i$, mit Facetten 
-	$\mathbf{x}_j, \mathbf{x}_l$, gerade $d_i(\mathbf{x}_j, \mathbf{x}_l)$ entspricht. 
+	%-----------------------------------
+
+	\subsection*{Intuition der Repräsentation}
+
+	Der folgende Absatz soll die Konstruktion der unscharfen topologischen Repräsentation intuitiv erklären. Dabei werden wir an einigen Stellen 
+	mathematische Strenge gegen eine illustrative Herangehensweise eintauschen.	
+
+	Lokale Eigenschaften der Daten werden dadurch erhalten, dass wir mit Lemma \ref{lem:geod} die Geodäten auf der $X$ zugrundeliegenden 
+	Mannigfaltigkeit bestimmt haben. Für die erweiterten pseudo-metrischen Räume, wird dann eine geeignete unscharfe simpliziale Menge konstruiert. 
+	In Abschnitt \ref{seq:sSet} haben wir argumentiert, dass es intuitiv oft genügt anstelle einer simplizialen Menge einen Simplizialkomplex zu betrachten. 
+	Deshalb können wir uns den Funktor $\fSing$ als \textit{Abbildung} des erweiterten pseudo-metrischen Raumes $X_i$ auf einen unscharfen 
+	Simplizialkomplex $\mathcal{K}_i$ vorstellen, wobei jeder Simplex einen Zugehörigkeitsgrad hat. 
+
+	Betrachten wir nun das $1$-Skelett von $\mathcal{K}_i$, so sind die $0$-Simplizes die $\mathbf{x}_j \in X$ mit Zugehörigkeitsgrad $1$. 
+	Die $1$-Simplizes beschreiben Abstände zwischen den $\mathbf{x}_j$, wobei der Zugehörigkeitsgrad eines $1$-Simplizes aus $\mathcal{K}_i$, mit Facetten 
+	$\mathbf{x}_j, \mathbf{x}_l$, gerade $\exp(-d_i(\mathbf{x}_j, \mathbf{x}_l))$ entspricht. Der Zugehörigkeitsgrad des ersten Nachbarn von $\mathbf{x}_i$ 
+	in $\mathcal{K}_i$ ist also stets $1$ und nimmt für weiter entfernte Nachbarn exponentiell ab. Die Repräsentation erhält also metrische Informationen 
+	der $\mathbf{x}_i$, bevorzugt dabei allerdings stark die lokalen Abstände. Dies spiegelt Aussage des Lemma \ref{lem:geod} wieder, dass wir nur lokal 
+	zu $\mathbf{x}_i$ die Geodäte bestimmen können. 
+
+	Um die lokal unterschiedlichen Zugehörigkeitsgrade der $1$-Simplizes % TODO:
+
+	Die Vereinigung der unscharfen simplizialen Mengen in Gleichung (\ref{eq:toprep}) lässt sich wie folgt für den stark vereinfachten Fall des $1$-Skelett 
+	der Simplizialkomplexe $\mathcal{K}_i$ beschreiben. Die $0$-Simplizes bleiben unverändert. 
+
 	Wir werden später, in Kapitel \ref{Implementierung}, auf diese Interpretation der $1$-Simplizes zurückkommen. 
 	Doch zuerst möchten wir noch beschreiben, wie die unscharfe topologische Repräsentation für das UMAP Verfahren genutzt wird um 
 	eine niedrigdimensionale Darstellung der Daten zu finden.
@@ -225,7 +246,7 @@
 %----------------------------------------------------------------------------------------
 
 \section{Einbettung} \label{sec:einb}
-
+	In diesem Abschnitt soll eine 
 
 	Um die niedrigdimensionale Repräsentation der hochdimensionalen anzupassen wird für das UMAP Verfahren die 
 	Kreuzentropie zwischen zwei unscharfen (simplizialen) Mengen vorgeschlagen. 
@@ -238,5 +259,10 @@
 	In Abschnitt \ref{seq:numerische_formulierung} werden wir die Kreuzentropie genauer betrachten.
 
 %----------------------------------------------------------------------------------------
+
+% Zeitplan:
+% Sa: Kapitel 2,3,4 vervollständigen, Einleitun und Appendix schreiben
+% So: Plots plots plots, überarbeiten 
+
 
 
