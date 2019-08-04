@@ -237,7 +237,17 @@
 	Die für die mathematischen Grundlagen des UMAP Verfahren benötigten Definitionen 
 	werde ich mithilfe der Kategorientheorie einführen. 
 	Diese sehr abstrakte Form mathematische Objekte und Zusammenhänge zu formalisieren 
-	wurde erstmals in den vierziger Jahren von Eilenberg und Mac Lane eingeführt \cite{Eilenberg}.
+	wurde erstmals in den vierziger Jahren von Eilenberg und Mac Lane eingeführt \cite{Eilenberg}. 
+
+	Eine Kategorie ist eine Menge an Objekten und Abbildungen zwischen diesen, die Abbildungen nennt man 
+	Morphismen. Dabei können sehr unterschiedliche mathematische Konstrukte in der Sprache der Kategorientheorie 
+	formuliert werden. Zuerst möchten wir eine Kategorie definieren und einige Beispiele geben. 
+	Für das UMAP Verfahren werden wir die Kategorie der metrischen Räume und der \textit{simplizialen 
+	Mengen} betrachten. Die Formulierung eines Konstruktes, zum Beispiel der metrischen Räume, als Kategorie 
+	ist meist trivial. Eine Bedeutung erhält eine Kategorie erst, wenn sie in Verbindung mit anderen Kategorien 
+	gebracht wird. Dafür werden wir in diesem Abschnitt die \textit{Adjunktion} einführen. 
+	Die Kategorientheorie wird oft dazu genutzt Beweise zu vereinfachen, insbesondere wird dafür die 
+	relativ unscheinbare Kategorie $\Set$ verwendet, siehe dazu das \textit{Yoneda Lemma}. 
 	 
 	\begin{defn} %[Kategorie]
 	 Eine Kategorie $\C$ besteht aus folgenden Daten:
@@ -287,7 +297,7 @@
 	\end{rem}
 
 	\begin{ex}
-		\textit{Passende Beispiele von Kategorien, welche später wieder genutzt werden. $\Top, \Set, (Fin)EPMet, I$} % fürr I siehe fuzzy sets, Sets einfach definiert aber viele anwendungen
+		\textit{Passende Beispiele von Kategorien, welche später wieder genutzt werden. $\Top, \Set, (Fin)EPMet, I$} % fürr I siehe fuzzy sets
 		% Erwähne dass nicht erweiternde Abbildungen genutzt werden, da Isometrien der Räume zu restriktiv wären 
 	\end{ex}
 
@@ -306,9 +316,8 @@
 	Wir möchten nun den Begriff des Funktors zwischen zwei Kategorien einführen. Ein Funktor ordnet Objekte einer 
 	Kategorie $\C$ Objekten einer Kategorie $\D$ zu, und entsprechend für Morphismen. Insbesondere bleibt 
 	die Eigenschaft der Isomorphie zwischen zwei Objekten erhalten. 
-	%TODO: Was ist ein isomorpher Funktor?
 
-	\begin{defn}[Funktor]
+	\begin{defn} %[Funktor]
 		Es seien $\C$ und $\D$ zwei Kategorien. Ein \textit{Funktor}
 		\begin{equation*}
 			F : \C \to \D
@@ -369,6 +378,7 @@
 
 		Wir nennen $F$ und $G$ \textit{natürlich äquivalent}, wenn es natürliche Transformationen $t:F \to G, u: G \to F$ gibt, so dass 
 		$t \circ u = id_G$ und $u \circ t = id_F$.
+		Falls $t_A$ für ein beliebiges $A \in \C$ ein Isomorphismus in $\D$ ist, dann bezeichnen wir $\D$ als \textit{natürlichen Isomorphismus}.
 	\end{defn}
 
 	Die folgende Definition wird uns eine abgeschwächte Form einer Äquivalenz von Kategorien liefern. Sie ermöglicht uns  
@@ -420,7 +430,7 @@
 
 	Wir werden diese benutzen um Kategorien zu definieren, mit Objekten als Funktoren und den Morphismen die natürlichen Transformationen.
 	Eine häufig verwendete Form eines kontravarianten Funktors ist die Prägarbe (\textit{engl.: presheaf}). 
-	Wir werden diesen Funktor später verwenden um \textit{simpliziale Mengen} einzuführen. % TODO: weglassen oder genauer beschreiben?
+	Wir werden später eine Prägarbe verwenden um \textit{simpliziale Mengen} einzuführen.
 
 	\begin{defn} %[Prägarbe]
 		Eine Prägarbe auf einer kleinen Kategorie $\C$ ist ein Funktor
@@ -554,6 +564,8 @@
 
 	wobei der Limes über eine von $X$ bestimmte Indexkategorie genommen wird.
 
+	% TODO: Alternative Definition und Ex 4.7 aus Friedmann
+
 	\begin{rem}
 		Eine mathematische Definition des Limes wird in dieser Arbeit nicht gegeben, da diese einige Vorbereitungen benötigen würde. Wir verweisen den 
 		Leser auf geeignete Literatur, beispielsweise \cite{Brandenburg}.
@@ -603,10 +615,8 @@
 	In der klassischen Mengentheorie ist die Zugehörigkeit eines Elementes $x$ zu einer Menge $X$ eine binäre Funktion. Entweder gilt $x \in X \text{oder} x \notin X$. 
 	Eine \textit{unscharfe Menge} verallgemeinert die Zugehörigkeit. 
 
-	% TODO: normale und ketegorien Definition Fuzz und übersetzung von Garbe nach normal
-
 	\begin{defn} %[Unscharfe Menge]
-		Sei $A$ eine Menge und $\mu: A \to [0,1]$. Wir nennen des Paar $(A, \mu)$ \textit{unscharfe Menge}. 
+		Sei $A$ eine Menge und $\mu: A \to [0,1]$. Wir nennen des Paar $(A, \mu)$ \textit{unscharfe Menge} und $\mu$ die \textit{Zugehörigkeitsfunktion}. 
 		Für $a \in A$ nennen wir $\mu(a)$ den \textit{Zugehörigkeitsgrad von $a$}.
 	\end{defn}
 
@@ -674,6 +684,11 @@
 	auf Elementen mit Zugehörigkeitsgrad $0$ unterscheiden. Da wir Elemente mit Zugehörigkeitsgrad $0$ als Elemente interpretieren möchten, welche nicht 
 	zur Menge gehören, ist Goguens Definition problematisch. 
 
-	% TODO: Fortsetzen...
+	% TODO: Fortsetzen... Kategorien Definition und Übersetzung
+	% TODO: Kreuzentropie 
+	\begin{equation}
+		C((A,\mu), (A, \nu)) \coloneqq \sum_{a \in A} \left(\mu(a)\log\left(\frac{\mu(a)}{\nu(a)}\right) +  \left(1-\mu(a)\right)\log\left(\frac{1-\mu(a)}{1-\nu(a)}\right)  \right)
+		\label{eq:crossentropy}
+	\end{equation}
 
 %----------------------------------------------------------------------------------------

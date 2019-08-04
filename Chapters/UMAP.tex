@@ -4,6 +4,12 @@
 
 %----------------------------------------------------------------------------------------
 
+%Define math commands used in this chapter
+	\newcommand{\Yrep}{\mathcal{Y}}  % Symbol for a low dimensional topological representation
+	\newcommand{\Xrep}{\mathcal{X}}  % Symbol for a high dimensional topological representation
+
+%----------------------------------------------------------------------------------------
+
 % TODO: Wirkung des Funktors beschreiben \cite{Posada}
 
 % Zeitplan:
@@ -145,6 +151,7 @@
 
 %----------------------------------------------------------------------------------------
 
+% TODO; Wie sehen die Bilder der Morphismen aus, wenn wir einen metr. Raum einsetzen?
 \section{Topologische Repräsentation} \label{sec:repr}
 	In Satz \ref{thm:adj} haben wir gesehen, dass es eine Adjunktion zwischen topologischen Räumen und simplizialen Mengen gibt. 
 	Wir könnten die in Gleichung (\ref{eq:di}) definierten Metriken als topologische Räume mit $\{(X,\tau_i)\}_{1 \leq i \leq N}$ und 
@@ -173,6 +180,7 @@
 			 \quad d_a(x_i,x_j) &\coloneqq \begin{cases}
 			 								   0  			&\text{, falls } i = j \\
 			 								   -\log(a)		&\text{, sonst.}
+			 							  \label{eq:dlog}
 			 							  \end{cases}
 		\end{align}
 
@@ -213,12 +221,13 @@
 	Diese verknüpfen wir mittels t-Conorm und erhalten die \textit{unscharfe topologische Repräsentation} des Datensatzes $X$
 
 	\begin{align}
-		\tConorm \fSing((X, d_i)).
+		\Xrep \coloneqq \tConorm \fSing((X, d_i)). 
 		\label{eq:toprep}
 	\end{align}
 
 	%-----------------------------------
 
+	% TODO: Verwende Notation \Xrep
 	\subsection*{Intuition der Repräsentation}
 
 	Der folgende Absatz soll die Konstruktion der unscharfen topologischen Repräsentation intuitiv erklären. Dabei werden wir an einigen Stellen 
@@ -232,34 +241,62 @@
 
 	Betrachten wir nun das $1$-Skelett von $\mathcal{K}_i$, so sind die $0$-Simplizes die $\mathbf{x}_j \in X$ mit Zugehörigkeitsgrad $1$. 
 	Die $1$-Simplizes beschreiben Abstände zwischen den $\mathbf{x}_j$, wobei der Zugehörigkeitsgrad eines $1$-Simplizes aus $\mathcal{K}_i$, mit Facetten 
-	$\mathbf{x}_j, \mathbf{x}_l$, gerade $\exp(-d_i(\mathbf{x}_j, \mathbf{x}_l))$ entspricht. Der Zugehörigkeitsgrad des ersten Nachbarn von $\mathbf{x}_i$ 
+	$\mathbf{x}_j, \mathbf{x}_l$, gerade $\exp(-d_i(\mathbf{x}_j, \mathbf{x}_l))$ entspricht. Die Wahl der Transformation der $d_i$ mit $\exp(-x)$ ist aus 
+	Gleichung (\ref{eq:dlog}) ersichtlich. Der Zugehörigkeitsgrad des ersten Nachbarn von $\mathbf{x}_i$ 
 	in $\mathcal{K}_i$ ist also stets $1$ und nimmt für weiter entfernte Nachbarn exponentiell ab. Die Repräsentation erhält also metrische Informationen 
 	der $\mathbf{x}_i$, bevorzugt dabei allerdings stark die lokalen Abstände. Dies spiegelt die Aussage des Lemma \ref{lem:geod} wieder, dass wir nur lokal 
 	zu $\mathbf{x}_i$ die Geodäte bestimmen können. $2$-Simplizes würden Eigenschaften über die Fläche zwischen drei Punkten erhalten, $3$-Simplizes 
 	über das Volumen welches von 4 Punkten eingeschlossen ist. Simplizes höherer Ordnung die entsprechenden Analogon für höher dimensionale Räume. 
 
-	Um die lokal unterschiedlichen Zugehörigkeitsgrade der $1$-Simplizes % TODO:
-
-	Die Vereinigung der unscharfen simplizialen Mengen in Gleichung (\ref{eq:toprep}) lässt sich wie folgt für den stark vereinfachten Fall des $1$-Skelett 
-	der Simplizialkomplexe $\mathcal{K}_i$ beschreiben. Die $0$-Simplizes bleiben unverändert. 
-
+	Wir vereinigen die $\mathcal{K}_i$, siehe Gleichung (\ref{eq:toprep}), indem wir unterschiedliche Zugehörigkeitsgrade der unscharfen simplizialen Mengen 
+	mittels t-Conorm vereinheitlichen. % TODO: um sich die Vereinigung der simplizialen Mengen besser zu veranschaulichen hilft es an Definition ref?? zu denken und eine simpliziale Menge als Folge von $X_i$ mit Abbildungen zwischen diesen zu betrachten. Für die Vereinigung zweier simplizialer Mengen $X,X'$ vereinigen wir die Mengen $X_i$ mit $X'_i$. Es bleibt zu überprüfen, dass die d_i und s_i (siehe Definition ref??) auf $X_i \cap X'_i$ übereinstimmen. 
+	
 	Wir werden später, in Kapitel \ref{Implementierung}, auf diese Interpretation der $1$-Simplizes zurückkommen. 
-	Doch zuerst möchten wir noch beschreiben, wie die unscharfe topologische Repräsentation für das UMAP Verfahren genutzt wird um 
+	Doch zuerst möchten wir noch beschreiben, wie die unscharfe topologische Repräsentation $\Xrep$ im UMAP Verfahren genutzt wird, um 
 	eine niedrigdimensionale Darstellung der Daten zu finden.
 
 %----------------------------------------------------------------------------------------
 
-\section{Einbettung} \label{sec:einb}
-	In diesem Abschnitt soll eine 
+\section{Einbettung der Repräsentation} \label{sec:einb}
+	Die Theorie des UMAP Verfahren ist nun fast vollständig. Zu jedem $\mathbf{x}_i \in X$ konstruieren wir einen erweiterten pseudo-metrischen Raum 
+	mittels der in Gleichung (\ref{eq:di}) definierten Pseudometrik, welchen wir als unscharfe simpliziale Menge auffassen und mit den Repräsentationen 
+	der anderen $\mathbf{x}_j \in X$ vereinigen, diese Repräsentation bezeichnen wir mit $\Xrep$. 
 
-	Um die niedrigdimensionale Repräsentation der hochdimensionalen anzupassen wird für das UMAP Verfahren die 
-	Kreuzentropie zwischen zwei unscharfen (simplizialen) Mengen vorgeschlagen. 
-	
-	\begin{equation}
-		C((A,\mu), (A, \nu)) \coloneqq \sum_{a \in A} \left(\mu(a)\log\left(\frac{\mu(a)}{\nu(a)}\right) +  \left(1-\mu(a)\right)\log\left(\frac{1-\mu(a)}{1-\nu(a)}\right)  \right)
-		\label{eq:crossentropy}
-	\end{equation}
-	
-	In Abschnitt \ref{seq:numerische_formulierung} werden wir die Kreuzentropie genauer betrachten.
+	Die Mannigfaltigkeit, in welcher wir unsere Daten einbetten möchten ist typischerweise der euklidische $\R^d$. Deswegen beschränken wir uns nun auf diesen 
+	Fall, alternativ könnten wir hier allerdings auch andere erweiterte pseudo-metrische Räume wählen. 
+	Um eine Repräsentation des $\R^d$ zu konstruieren, wählen wir $N$ gleichverteilte Punkte im $\R^d$ und bezeichnen diese mit $Y = \{\mathbf{y}_i\}_{1 \leq i \leq N}$. 
+	In Kapitel \ref{Implementierung} werden wir eine Alternative zur randomisierten Wahl von $Y$ betrachten. 
+	Da unsere Mannigfaltigkeit der der $\R^d$ ist, und die $\mathbf{y}_i$ gleichverteilt sind können wir, ohne zusätzliche Normalisierung der euklidischen Metrik, 
+	die Aussage aus Lemma \ref{lem:geod} anwenden und erhalten lokal die Geodäten. Analog zur Definition in Gleichung (\ref{eq:bar}) konstruieren wir erweitere Metriken $d'_i$ % TODO: d'_i angeben?
+	für jedes $\mathbf{y}_i$ und betrachten die Vereinigung 
+
+	\begin{align}
+		\Yrep \coloneqq \tConorm \fSing((Y, d'_i)).
+		\label{eq:lowrep}
+	\end{align}
+
+	% TODO: Definition simplizialer Mengen
+	Um die beiden topologischen Repräsentationen $\Xrep, \Yrep$ zu vergleichen verwenden wir die Kreuzentropie unscharfer Mengen. Dabei nutzen wir die Definition simplizialer 
+	Mengen als Folge von Mengen mit Kompositionen der Abbildungen $d_i, s_i$. Somit erhalten wir 
+
+	\begin{align}
+		C_N(\Xrep, \Yrep) \coloneqq \sum_{i = 1}^N \lambda_i C_{\text{cross}}(\Xrep_i, \Yrep_i)
+		\label{eq:genloss}
+	\end{align}
+
+	\begin{rem}
+		$\Xrep_i$ und $\Yrep_i$ bezeichnen die unscharfen $i$-Simplizes der unscharfen topologischen Repräsentationen $\Xrep$ bzw. $\Yrep$. 
+		Wir betrachten nur Simplizes der Dimension $\leq N$, da die uns gegebenen Daten $X$ aus $N$ Datenpunkten bestehen. 
+	\end{rem}
+
+	Die Wahl der Kreuzentropie zwischen den $n$-Simplizes von $\Xrep$ und $\Yrep$, kann dabei wie folgt argumentiert werden. Man betrachtet 
+	$\Xrep_i = (A_i,\mu_i), \Yrep_i = (A_i, \nu_i)$, wobei $A_i$ die zugrundeliegenden Simplizes von $\Xrep_i$ beschreibt und $\mu_i$ bzw. $\nu_i$ die 
+	Zugehörigkeitsfunktion der $i$-Simplizes beschreiben. Dann können wir, nach Normalisierung, $\mu_i, \nu_i$ als Wahrscheinlichkeitsverteilungen 
+	auf $A$ betrachten. Die Kreuzentropie gibt dann ein Maß für die \textit{Unterschiedlichkeit} von $\mu_i$ und $\nu_i$ an. 
+
+	Somit erhalten wir eine bezüglich der $\mathbf{x}_i$ optimierte niedrigdimensionale Darstellung der $\mathbf{y}_i$ indem wir Gleichung (\ref{eq:genloss}) 
+	nach $\Yrep$, genauer gesagt nach den $\nu_i$ minimieren. 
+
+	Das nächste Kapitel wird eine leicht angepasste numerische Formulierung des Problems liefern. 
 
 %----------------------------------------------------------------------------------------

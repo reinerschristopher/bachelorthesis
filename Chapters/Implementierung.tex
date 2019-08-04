@@ -47,9 +47,9 @@
    Zunächst werden wir in Abschnitt \ref{seq:numerische_formulierung} die Notation anpassen und 
    die Formulierung der Optimierung konkretisieren.
    In Abschnitt \ref{seq:pseudo} werden wir den gesamten UMAP Algorithmus im Pseudo-Code angeben. 
-   Wir werden dann mittels Profiling die rechenintensiven Subroutinen der von uns verwendeten 
-   Implementierung \cite{cpu} identifizieren. In den darauffolgenden Abschnitten werden 
-   wir die aufwendigen Routinen genauer betrachten, in dem wir in Abschnitt \ref{seq:SGD} 
+   Wir werden dann mittels Profiling, in Abschnitt \ref{sec:profile}, die rechenintensiven Subroutinen 
+   der von uns verwendeten Implementierung \cite{cpu} identifizieren. In den darauffolgenden Abschnitten 
+   werden wir die aufwendigen Routinen genauer betrachten, in dem wir in Abschnitt \ref{seq:SGD} 
    das verwendete Verfahren zur Optimierung der Einbettung beschreiben und in Abschnitt \ref{seq:kNN} 
    zwei Verfahren zu Berechnung der $1$-Simplizes diskutieren.
    Abschnitt \ref{seq:hyper} gibt eine Beschreibung der Hyperparameter an. 
@@ -174,7 +174,7 @@
 
 %----------------------------------------------------------------------------------------
 
-\section{Profiling}
+\section{Profiling} \label{sec:profile}
    In Kapitel \ref{Experimente} werden wir genauer auf die tatsächliche Laufzeit des UMAP Algorithmus eingehen. 
    An dieser Stelle möchten wir die rechenintensiven Subroutinen des Verfahrens ausmachen. Dafür haben wir den 
    Python cProfiler verwendet, dieser misst die Laufzeit der aufgerufenen Funktionen. 
