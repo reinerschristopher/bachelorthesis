@@ -13,8 +13,9 @@
    \newcommand{\sumtups}[1]{\sum_{{#1} = 1}^N}
    \newcommand{\Xg}{\mathcal{X}_G}  % Symbol for Graph of \Xrep
    \newcommand{\Xgi}{\mathcal{X}_{{G}_i}}  % Symbol for Graph of \Xrep
-   \newcommand{\wX}{w_\mathcal{X}}  % Symbol for Graph of \Xrep
+   \newcommand{\wX}{w_\mathcal{X}}  % Symbol for weights of \Xrep
    \newcommand{\WX}{W_\mathcal{X}}  % Symbol for Graph of \Xrep
+   \newcommand{\wY}{w_\mathcal{Y}}  % Symbol for weights of \Yrep
 
 %----------------------------------------------------------------------------------------
 
@@ -111,7 +112,29 @@
       \wX(x,y) \coloneqq \text{FEHLT} %\sum_{i=1}^N w_i(x,y) - \sum_{i=2}^N w_1(x,y) \prod_{j=2}^N w_j(x,y).
    \end{align}
 
-   Wir werden nun die $\Yrep$ aus Gleichung (\ref{eq:lowrep}) konstruieren. Dazu müssen wir eine geeignete 
+   Wir werden nun die $\Yrep$ aus Gleichung (\ref{eq:lowrep}) konstruieren. Dafür setzen wir 
+
+   \begin{align}
+      \Psi(x,y) \coloneqq 
+      \begin{cases}
+         1 \quad & \text{, falls } \norm{x-y}_2 \leq \text{min-dist} \\
+         \exp(-(\norm{x-y}_2 - \text{min-dist})) \quad & \text{, sonst.}
+      \end{cases}
+      \label{eq:Psi}
+   \end{align}
+
+   Die Wahl des Hyperparameter min-dist wird später diskutiert. Dieser dient dazu, eine ähnliche Transformation wie im 
+   Gleichung (\ref{eq:di}) durchzuführen. 
+
+   $\Psi$ ist dabei allerdings bei min-dist nicht differenzierbar. Somit betrachten wir eine stetige Approximation von $\Psi$,
+
+   \begin{align}
+      \wY(x,y) \coloneqq (1 + a\norm{x-y}_2^{2b})^{-1}, 
+   \end{align}
+
+   wobei $a$ und $b$ Hyperparameter sind. Die Wahl von $a$ und $b$ kann beispielsweise mittels der Methode der kleinsten Quadrate 
+   optimiert werden. 
+
 
    % Um eine Unterscheidung zwischen der theoretischen Sichtweise auf das UMAP Verfahren, welche alle $k$-Simplizes 
    % $(1 \leq k \leq N)$ berücksichtigt, und der praktischen Implementierung zu verdeutlichen, werden wir die 
