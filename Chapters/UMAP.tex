@@ -11,6 +11,7 @@
 %----------------------------------------------------------------------------------------
 
 % TODO: Wirkung des Funktors beschreiben \cite{Posada}
+% TODO: Normalisieren mit Transformieren ersetzen
 
 % Zeitplan:
 % Sa: Kapitel 2,3,4 vervollständigen, Einleitung und Appendix schreiben
@@ -93,13 +94,13 @@
 	Sei $d$ die zu unseren Daten gehörende Metrik. Dann definieren wir für $\mathbf{x}_i \in X$ den metrischen Raum $(X, \tilde{d}_i)$ mit 
 
 	\begin{align}
-		\tilde{d}_i(x,y) \coloneqq \frac{d(x,y)}{k_{x_i}},
+		\tilde{d}_i(x,y) \coloneqq \frac{d(x,y)}{d(\mathbf{x}_i, \mathbf{x}_{i_k})},
 		\label{eq:tilde}
 	\end{align}
 	
-	dabei bezeichnet $k_{x_i}$ den $k$-ten Nachbarn von $\mathbf{x}_i$. Diese Definition der $d_i$ ist für den Kontext nicht sinnvoll, 
-	da für $\mathbf{x}_i$ mit $h$-ten Nachbarn $\mathbf{x}_h$ und $j$-ten Nachbarn $\mathbf{x}_j$, mit $h,j \leq k$, nach Lemma \ref{lem:geod} 
-	$\tilde{d}_i$ nur für die Paare $(\mathbf{x}_i, \mathbf{x}_h), (\mathbf{x}_i, \mathbf{x}_j)$ die Geodäte angibt. Wir setzen, 
+	Diese Definition der $d_i$ ist für den Kontext nicht sinnvoll, 
+	da für $\mathbf{x}_i$ mit $h$-ten Nachbarn $\mathbf{x}_h$ und $j$-ten Nachbarn $\mathbf{x}_j$, nach Lemma \ref{lem:geod} 
+	$\tilde{d}_i$ nur für die Paare $(\mathbf{x}_i, \mathbf{x}_h), (\mathbf{x}_i, \mathbf{x}_j)$, mit $h,j \leq k$, die Geodäte angibt. Wir setzen, 
 
 	\begin{align}
 		\bar{d}_i(x,y) \coloneqq \begin{cases}
@@ -267,21 +268,20 @@
 	Fall, alternativ könnten wir hier allerdings auch andere erweiterte pseudo-metrische Räume wählen. 
 	Um eine Repräsentation des $\R^d$ zu konstruieren, wählen wir $N$ gleichverteilte Punkte im $\R^d$ und bezeichnen diese mit $Y = \{\mathbf{y}_i\}_{1 \leq i \leq N}$. 
 	In Kapitel \ref{Implementierung} werden wir eine Alternative zur randomisierten Wahl von $Y$ betrachten. 
-	Da unsere Mannigfaltigkeit der der $\R^d$ ist, und die $\mathbf{y}_i$ gleichverteilt sind können wir, ohne zusätzliche Normalisierung der euklidischen Metrik, 
-	die Aussage aus Lemma \ref{lem:geod} anwenden und erhalten lokal die Geodäten. Analog zur Definition in Gleichung (\ref{eq:bar}) konstruieren wir erweitere Metriken $d'_i$ % TODO: d'_i angeben?
-	für jedes $\mathbf{y}_i$ und betrachten die Vereinigung 
+
+	Da unsere Mannigfaltigkeit der der $\R^d$ ist können wir direkt die unsichere simpliziale Menge betrachten,
 
 	\begin{align}
-		\Yrep \coloneqq \tConorm \fSing((Y, d'_i)).
+		\Yrep \coloneqq \fSing((Y, \norm{\cdot}_2)).
 		\label{eq:lowrep}
 	\end{align}
 
 	% TODO: ist verständlich, dass \Yrep_i nicht umbegint zu d'_i gehört?
-	Es ist zu beachten, dass für die $\Yrep$ $j$-Simplizes $\Yrep_j = (A_{\Yrep_j}, \nu_j)$ gilt, dass $A_{\Yrep_j}=A_{\Xrep_j}$, mit $\Xrep_i = (A_{\Xrep_j}, \mu_j)$. Somit sind die 
+	Es ist zu beachten, dass für die $j$-Simplizes $\Yrep_j = (A_{\Yrep_j}, \nu_j)$ von $\Yrep$ gilt, dass $A_{\Yrep_j}=A_{\Xrep_j}$, mit $\Xrep_i = (A_{\Xrep_j}, \mu_j)$. Somit sind die 
 	Zugehörigkeitsfunktionen $\mu_j, \nu_j$ für weitere Überlegungen entscheidend.
 	% TODO: Definition simplizialer Mengen
 	Um die beiden topologischen Repräsentationen $\Xrep, \Yrep$ zu vergleichen verwenden wir die Kreuzentropie unscharfer Mengen. Dabei nutzen wir die Definition simplizialer 
-	Mengen als Folge von Mengen mit Kompositionen der Abbildungen $d_i, s_i$. Somit erhalten wir 
+	Mengen als Folge von Mengen mit Kompositionen der Abbildungen $d_i$ und $s_i$. Somit erhalten wir 
 
 	\begin{align}
 		C_N(\Xrep, \Yrep) \coloneqq \sum_{i = 1}^N \lambda_i C_{\text{cross}}(\Xrep_i, \Yrep_i)

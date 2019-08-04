@@ -11,6 +11,10 @@
    \newcommand{\deriv}[2]{\frac{\partial {#1}}{\partial {#2}}}
    \newcommand{\sumtup}[2]{\sum_{{#1},{#2} = 1}^N}
    \newcommand{\sumtups}[1]{\sum_{{#1} = 1}^N}
+   \newcommand{\Xg}{\mathcal{X}_G}  % Symbol for Graph of \Xrep
+   \newcommand{\Xgi}{\mathcal{X}_{{G}_i}}  % Symbol for Graph of \Xrep
+   \newcommand{\wX}{w_\mathcal{X}}  % Symbol for Graph of \Xrep
+   \newcommand{\WX}{W_\mathcal{X}}  % Symbol for Graph of \Xrep
 
 %----------------------------------------------------------------------------------------
 
@@ -18,8 +22,6 @@
 % Cite Numba 24
 
 % TODO: Bem: Fehler in Kapitel 3 von UMAP wij sollten gewichte der Matrix B sein.
-
-% TODO: vij definieren.
 
 % \begin{align}
 %    \sum_{i=1}^n \exp\left(\frac{-(\text{knn-dists}_i - \rho)}{\sigma}\right) = \log_2(n)
@@ -57,75 +59,128 @@
 %----------------------------------------------------------------------------------------
 
 % TODO: !!!!!!! Kontroliere ob \mu(a) = \vij ist oder = den nicht symetrischen Werten. (dann ändere V und definiere \fij = sym(\vij))
-\section{Numerische Formulierung der Optimierung} \label{seq:numerische_formulierung}
-   Um eine Unterscheidung zwischen der theoretischen Sichtweise auf das UMAP Verfahren, welche alle $k$-Simplizes 
-   $(1 \leq k \leq N)$ berücksichtigt, und der praktischen Implementierung zu verdeutlichen, werden wir die 
-   verwendete Notation anpassen. 
+\section{Numerische Formulierung des UMAP Verfahrens} \label{seq:numerische_formulierung}
+   Um weitere Überlegungen zu vereinfachen und die praktische Implementierung zu beschreiben, werden wir nun die Notation etwas anpassen.
 
-   Die unsicheren Mengen $(A, \mu), (A, \nu)$ aus Gleichung (\ref{eq:crossentropy}) lassen sich als gewichtete Graphen, 
-   in Form einer Adjazenzmatrix darstellen. % TODO: Für den Fall, dass nur 1-Simplizes betrachtet werden
-   Das 1-Skelett der hochdimensionalen Repräsentation notieren wir als Adjazenzmatrix $V$ mit $\vij = \mu(a)$, für 
-   ein 1-Simplex $a$, mit Facetten $i$ und $j$. 
-   % TODO: Wahl von \vij
+   Dabei ist zu bemerken, dass wir uns von nun an auf die Konstruktion des $1$-Skelett der unscharfen simplizialen Mengen beschränken. 
+   Die Vereinfachung, dass wir keine Simplizes höherer Ordnungen betrachten werden wir in Abschnitt \ref{sec:ausblick} genauer betrachten 
+   und Ansätze erwähnen auch Simplizes höherer Ordnungen zu nutzen. 
 
-   Die Wahl des Zugehörigkeitsgrades für 1-Simplizes der niedrigdimensionalen Repräsentation der Daten ist wie folgt gegeben:
+   Wir werden von nun an die $0$-Simplizes einer (unscharfen) Menge als Knoten, die $1$-Simplizes als Kanten, das $1$-Skelett als Graph 
+   und den Zugehörigkeitsgrad einer Kante als Gewicht der Kante bezeichnen. 
 
-   \begin{equation}
-      \wij = (1+a(\norm{\mathbf{y}_i - \mathbf{y}_j}^2_2)^b)^{-1}, \label{eq:wij} % TODO: wie sind a, b gewählt?
-   \end{equation}
+   Sei $\Xrep$ die in Gleichung (\ref{eq:toprep}) definierte topologische Repräsentation der Daten aus $X$ und sei $k \in \N$ gegeben. 
 
-   % TODO: für a=b=1 tSNE, b=1 LargeVis
+   Das $1$-Skelett von $\Xrep$ lässt sich durch einen Graph $\Xg$ beschreiben. Dafür benötigen wir einen Zwischenschritt, in welchem wir 
+   $N$ Graphen $\Xgi$ konstruieren, diese beschreiben das Bild $\fSing((X,d_i))$. Dabei sind die Gewichte von $\Xgi$ durch,
 
-   wobei $\mathbf{y}_i, 1 \leq i \leq N$ die Vektoren der Einbettung sind. Die Wahl der Werte $a,b$ werden wir in 
-   Abschnitt \ref{seq:hyper} beschreiben.
+   \begin{align}
+      w_i(x,y) \coloneqq \begin{cases}
+                           \exp \left(\frac{-\max(0, d(x,y)-\rho_i)}{\sigma_i}\right) \quad &\text{,falls } x=\mathbf{x}_i, y=\mathbf{x}_{i_j}\\
+                           0 \quad &\text{,sonst}
+                         \end{cases}
+   \end{align}
+
+   mit $1 \leq j \leq k$, gegeben. $\mathbf{x}_{i_j}$ ist wieder der $j$-ten Nachbar von $\mathbf{x}_i$, $\rho_i$ ist die Distanz von $\mathbf{x}_i$ 
+   zum ersten Nachbarn. In Kapitel \ref{UMAP} wurde die Wahl von $\sigma_i$ als Distanz zum $k$-ten Nachbarn zu wählen. 
+   In der Praxis werden wir diese Wahl leicht modifizieren, indem wir $\sigma_i$ so wählen, dass folgende Gleichung erfüllt ist: 
+
+   \begin{align}
+      \sum_{j=1}^k \exp \left(\frac{-\max(0, d(\mathbf{x}_i,\mathbf{x}_{i_j})-\rho_i)}{\sigma_i}\right) = \log_2(k)
+   \end{align}
+
+   % TODO: warum?
+   Der gewichtete Graph $\Xgi$ besitzt also die Knotenmenge $V(\Xgi)=X$ und die Kantenmenge $E(\Xgi)=(X \times X)$ mit Kantengewichten $w_i$. 
+   Mit $W_i$ bezeichnen wir die zu $\Xgi$ gehörende gewichtete Adjazenzmatrix. 
+
+   Die Vereinigung der $\Xgi$ zu $\Xg$ lässt sich als Anwendung der t-Conorm auf die Gewichte beschreiben. Somit erhalten wir eine neue 
+   Gewichtsfunktion $\wX$, mit 
+
+   \begin{align}
+      \wX(x,y) \coloneqq w_1(x,y) \perp w_2(x,y) \perp \dots \perp w_N(x,y).
+   \end{align}
+
+   Um in Abschnitt \ref{sec:einb} die Wahl der Kreuzentropie zu begründen, haben wir 
+   argumentiert, dass man die Zugehörigkeitsfunktionen der Simplizes als Wahrscheinlichkeitsverteilung auf den Simplizes betrachten kann. 
+   Diese Argumentation kann man auch anwenden um die Wahl der t-Conorm, aus Beispiel \ref{ex:tNorm}, gegeben durch 
+   $\bot(a,b) \coloneqq a + b - ab$, zu begründen. Diese entspricht nämlich genau der Wahrscheinlichkeit der Vereinigung unabhängiger 
+   Ereignisse. 
+   Nun können wir die Gewichte von $\Xg$ wie folgt angeben, 
+
+   \begin{align}
+      \wX(x,y) \coloneqq \text{FEHLT} %\sum_{i=1}^N w_i(x,y) - \sum_{i=2}^N w_1(x,y) \prod_{j=2}^N w_j(x,y).
+   \end{align}
+
+   Wir werden nun die $\Yrep$ aus Gleichung (\ref{eq:lowrep}) konstruieren. Dazu müssen wir eine geeignete 
+
+   % Um eine Unterscheidung zwischen der theoretischen Sichtweise auf das UMAP Verfahren, welche alle $k$-Simplizes 
+   % $(1 \leq k \leq N)$ berücksichtigt, und der praktischen Implementierung zu verdeutlichen, werden wir die 
+   % verwendete Notation anpassen. 
+
+   % Die unsicheren Mengen $(A, \mu), (A, \nu)$ aus Gleichung (\ref{eq:crossentropy}) lassen sich als gewichtete Graphen, 
+   % in Form einer Adjazenzmatrix darstellen. % TODO: Für den Fall, dass nur 1-Simplizes betrachtet werden
+   % Das 1-Skelett der hochdimensionalen Repräsentation notieren wir als Adjazenzmatrix $V$ mit $\vij = \mu(a)$, für 
+   % ein 1-Simplex $a$, mit Facetten $i$ und $j$. 
+   % % TODO: Wahl von \vij
+
+   % Die Wahl des Zugehörigkeitsgrades für 1-Simplizes der niedrigdimensionalen Repräsentation der Daten ist wie folgt gegeben:
+
+   % \begin{equation}
+   %    \wij = (1+a(\norm{\mathbf{y}_i - \mathbf{y}_j}^2_2)^b)^{-1}, \label{eq:wij} % TODO: wie sind a, b gewählt?
+   % \end{equation}
+
+   % % TODO: für a=b=1 tSNE, b=1 LargeVis
+
+   % wobei $\mathbf{y}_i, 1 \leq i \leq N$ die Vektoren der Einbettung sind. Die Wahl der Werte $a,b$ werden wir in 
+   % Abschnitt \ref{seq:hyper} beschreiben.
 
 
-   Somit erhalten wir folgende Kreuzentropie zwischen den Graphen der hoch- und niedrigdimensionalen 
-   Darstellung der Daten:
+   % Somit erhalten wir folgende Kreuzentropie zwischen den Graphen der hoch- und niedrigdimensionalen 
+   % Darstellung der Daten:
 
-   \begin{alignat}{2}
-      C(V, W) &= \sumtup{i}{j} \vij \log\left(\frac{\vij}{\wij}\right) + (1-\vij) \log\left(\frac{1-\vij}{1-\wij}\right) \\
-              &= \begin{aligned}[t]
-                     &  \sumtup{i}{j} (\vij \log(\vij) + (1-\vij) \log(1-\vij)) \\
-                     &- \sumtup{i}{j} (\vij \log(\wij)) - \sumtup{i}{j} ((1-\vij) \log(1-\wij))
-                  \end{aligned} \\
-              &=  C_v - \sumtup{i}{j} (\vij \log(\wij) + (1-\vij) \log(1-\wij)) \label{eq:loss}
-   \end{alignat}
+   % \begin{alignat}{2}
+   %    C(V, W) &= \sumtup{i}{j} \vij \log\left(\frac{\vij}{\wij}\right) + (1-\vij) \log\left(\frac{1-\vij}{1-\wij}\right) \\
+   %            &= \begin{aligned}[t]
+   %                   &  \sumtup{i}{j} (\vij \log(\vij) + (1-\vij) \log(1-\vij)) \\
+   %                   &- \sumtup{i}{j} (\vij \log(\wij)) - \sumtup{i}{j} ((1-\vij) \log(1-\wij))
+   %                \end{aligned} \\
+   %            &=  C_v - \sumtup{i}{j} (\vij \log(\wij) + (1-\vij) \log(1-\wij)) \label{eq:loss}
+   % \end{alignat}
 
-   Der Term $C_v$ bleibt während der Minimierung der Funktion bezüglich der $\mathbf{y}_i$ konstant.
+   % Der Term $C_v$ bleibt während der Minimierung der Funktion bezüglich der $\mathbf{y}_i$ konstant.
    
-   Aufgrund der Wahl einer differenzierbaren Funktion für den Zugehörigkeitsgrad der 1-Simplizes, 
-   bzw. der Gewichte des niedrigdimensionalen Graphen, lässt sich nun der Gradient der Zielfunktion (\ref{eq:loss}) herleiten.
+   % Aufgrund der Wahl einer differenzierbaren Funktion für den Zugehörigkeitsgrad der 1-Simplizes, 
+   % bzw. der Gewichte des niedrigdimensionalen Graphen, lässt sich nun der Gradient der Zielfunktion (\ref{eq:loss}) herleiten.
 
-   Mittels der Kettenregel ergibt sich mit $d_{ij} \coloneqq \norm{\mathbf{y}_i - \mathbf{y}_j}_2$:
+   % Mittels der Kettenregel ergibt sich mit $d_{ij} \coloneqq \norm{\mathbf{y}_i - \mathbf{y}_j}_2$:
 
-   \begin{align}
-   \quad
-      \deriv{C}{\mathbf{y}_i} &= \sumtup{k}{l} \deriv{C}{w_{kl}} \sumtup{m}{n} \deriv{w_{kl}}{d^2_{mn}} \sumtup{p}{q} \deriv{d^2_{mn}}{d_{pq}} \deriv{d_{pq}}{\mathbf{y}_i} \\
-                     &= \sumtup{k}{l} \deriv{C}{w_{kl}} \sumtup{m}{n} \deriv{w_{kl}}{d^2_{mn}} \deriv{d^2_{mn}}{d_{mn}} \deriv{d_{mn}}{\mathbf{y}_i} \\
-                     &= 2 \sumtup{k}{l} \deriv{C}{w_{kl}} \sumtups{m} \deriv{w_{kl}}{d^2_{mi}} \deriv{d^2_{mi}}{d_{mi}} \deriv{d_{mi}}{\mathbf{y}_i} \\
-                     &= 2 \sumtups{m} \left( \sumtup{k}{l} \deriv{C}{w_{kl}} \deriv{w_{kl}}{d^2_{mi}} \right) \deriv{d^2_{mi}}{d_{mi}} \deriv{d_{mi}}{\mathbf{y}_i}  \label{eq:deriv-2}\\
-                     &= 4 \sumtups{m} \left( \sumtup{k}{l} \deriv{C}{w_{kl}} \deriv{w_{kl}}{d^2_{mi}} \right) (\mathbf{y}_i - \mathbf{y}_m) \label{eq:deriv-1}
-   \end{align}
+   % \begin{align}
+   % \quad
+   %    \deriv{C}{\mathbf{y}_i} &= \sumtup{k}{l} \deriv{C}{w_{kl}} \sumtup{m}{n} \deriv{w_{kl}}{d^2_{mn}} \sumtup{p}{q} \deriv{d^2_{mn}}{d_{pq}} \deriv{d_{pq}}{\mathbf{y}_i} \\
+   %                   &= \sumtup{k}{l} \deriv{C}{w_{kl}} \sumtup{m}{n} \deriv{w_{kl}}{d^2_{mn}} \deriv{d^2_{mn}}{d_{mn}} \deriv{d_{mn}}{\mathbf{y}_i} \\
+   %                   &= 2 \sumtup{k}{l} \deriv{C}{w_{kl}} \sumtups{m} \deriv{w_{kl}}{d^2_{mi}} \deriv{d^2_{mi}}{d_{mi}} \deriv{d_{mi}}{\mathbf{y}_i} \\
+   %                   &= 2 \sumtups{m} \left( \sumtup{k}{l} \deriv{C}{w_{kl}} \deriv{w_{kl}}{d^2_{mi}} \right) \deriv{d^2_{mi}}{d_{mi}} \deriv{d_{mi}}{\mathbf{y}_i}  \label{eq:deriv-2}\\
+   %                   &= 4 \sumtups{m} \left( \sumtup{k}{l} \deriv{C}{w_{kl}} \deriv{w_{kl}}{d^2_{mi}} \right) (\mathbf{y}_i - \mathbf{y}_m) \label{eq:deriv-1}
+   % \end{align}
 
-   Bei der Umformung von (\ref{eq:deriv-2}) nach (\ref{eq:deriv-1}) haben wir verwendet, dass $d_{mi}$ die euklidische Norm ist. 
-   Für Einbettungen in andere metrische Räume müsste der Gradient an dieser Stelle entsprechend angepasst werden. Da wir 
-   das UMAP Verfahren im wesentlichen zur Visualisierung im $\R^2$ benutzen ist die Wahl der euklidischen Norm gerechtfertigt.
-   Die übrigen Umformungen ergeben sich aus umordnen und wegfallen der Terme. 
+   % Bei der Umformung von (\ref{eq:deriv-2}) nach (\ref{eq:deriv-1}) haben wir verwendet, dass $d_{mi}$ die euklidische Norm ist. 
+   % Für Einbettungen in andere metrische Räume müsste der Gradient an dieser Stelle entsprechend angepasst werden. Da wir 
+   % das UMAP Verfahren im wesentlichen zur Visualisierung im $\R^2$ benutzen ist die Wahl der euklidischen Norm gerechtfertigt.
+   % Die übrigen Umformungen ergeben sich aus umordnen und wegfallen der Terme. 
 
-   (\ref{eq:deriv-1}) lässt sich weiter umformen, dazu nutzen wir:
+   % (\ref{eq:deriv-1}) lässt sich weiter umformen, dazu nutzen wir:
 
-   \begin{align}
-      \deriv{C}{\wij} &= - \frac{\vij}{\wij} + \frac{1-\vij}{1-\wij} = \frac{\wij - \vij}{\wij (1 - \wij)} \\
-      \deriv{\wij}{d^2_{ij}} &= -bad_{ij}^{2(b-1)} \wij^2 = - \frac{b}{d_{ij}^2} \wij (1 - \wij)
-   \end{align}
+   % \begin{align}
+   %    \deriv{C}{\wij} &= - \frac{\vij}{\wij} + \frac{1-\vij}{1-\wij} = \frac{\wij - \vij}{\wij (1 - \wij)} \\
+   %    \deriv{\wij}{d^2_{ij}} &= -bad_{ij}^{2(b-1)} \wij^2 = - \frac{b}{d_{ij}^2} \wij (1 - \wij)
+   % \end{align}
 
-   Der UMAP Gradient ist also gegeben durch:
-   % TODO: Daniel: Fehlt da nicht noch eine innere Summe aus 4.9?
-   \begin{equation}
-      \deriv{C}{\mathbf{y}_i} = 4 \sumtups{j} (\wij - \vij) \frac{b}{d_{ij}^2} (\mathbf{y}_i - \mathbf{y}_j)
-      \label{eq:umapgrad}
-   \end{equation}
+   % Der UMAP Gradient ist also gegeben durch:
+   % % TODO: Daniel: Fehlt da nicht noch eine innere Summe aus 4.9?
+   % \begin{equation}
+   %    \deriv{C}{\mathbf{y}_i} = 4 \sumtups{j} (\wij - \vij) \frac{b}{d_{ij}^2} (\mathbf{y}_i - \mathbf{y}_j)
+   %    \label{eq:umapgrad}
+   % \end{equation}
 
 %----------------------------------------------------------------------------------------
 
