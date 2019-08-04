@@ -237,10 +237,9 @@
 	Die für die mathematischen Grundlagen des UMAP Verfahren benötigten Definitionen 
 	werde ich mithilfe der Kategorientheorie einführen. 
 	Diese sehr abstrakte Form mathematische Objekte und Zusammenhänge zu formalisieren 
-	wurde erstmals in den vierziger Jahren von Samuel Eilenberg und Saunders Mac Lane eingeführt \cite{Eilenberg}. \\
-	Die Definitionen sind dem Buch von Brandenberg \cite{Brandenburg} entnommen. 
+	wurde erstmals in den vierziger Jahren von Eilenberg und Mac Lane eingeführt \cite{Eilenberg}.
 	 
-	\begin{defn}[Kategorie]
+	\begin{defn} %[Kategorie]
 	 Eine Kategorie $\C$ besteht aus folgenden Daten:
 	 	\begin{enumerate}
 	 		\item Eine Klasse $Ob(\C)$, deren Elemente wir \textit{Objekte} nennen
@@ -281,7 +280,6 @@
 	\end{rem}
 
 	\begin{rem}
-		% TODO: Besser formulieren
 		Bei Klassen kann es sich um Ansammlungen von Objekten handeln, die \enquote{größer} als Mengen sind.
 		Für eine Definition einer Klasse verweisen wir auf \cite{Levy}. 
 		In unseren Beispielen genügt die Vorstellung einer Menge.
@@ -296,22 +294,8 @@
 	Ein weiterer für die folgenden Definitionen wichtiger Begriff ist der der dualen Kategorie.
 
 	\begin{defn}[Duale Kategorie]
-		Es sei $\C$ eine Kategorie. Dann können wir eine neue Kategorie $\C^{op}$	 konstruieren: 
-		Sie besitzt dieselben Objekte wie $\C$, allerdings werden die Morphismen \enquote{umgedreht}:
-		Für $A,B \in \C$ sei
-		\begin{equation*}
-			\hom_{\C^{op}}(A, B) \coloneqq \hom_\C(B, A).
-		\end{equation*}
-		Die Identitäten verändern sich nicht. Die Komposition
-		\begin{equation*}
-			\circ^{op} : \hom_{\C^{op}}(A, B) \times \hom_{\C^{op}}(B, C) \to \hom_{\C^{op}}(A, C) 
-		\end{equation*}
-		ist durch
-		\begin{equation*}
-			\hom_\C(B, A) \times \hom_\C(C, B) \cong \times \hom_\C(C, B) \times \hom_\C(B, A) \mathring{\longrightarrow} \hom_\C(C, A)
-		\end{equation*}
-		definiert, d.h. $f \circ^{op} g \coloneqq g \circ f$. Auf diese Weise ist  $\C^{op}$ tatsächlich 
-		eine Kategorie und heißt die \textit{zu} $\C$ \textit{duale Kategorie}.
+		Es sei $\C$ eine Kategorie. Die \textit{duale Kategorie $\C{op}$} ist die Kategorie mit 
+		$Ob(\C^{op}) = Ob(\C)$ und $\hom_{\C^{op}}(A,B) = \hom_{\C}(B,A)$.
 	\end{defn}
 
 	\begin{rem}
@@ -354,8 +338,8 @@
 	\end{rem}
 
 	\begin{rem}
-		Insbesondere kann man für eine Kategorie $\C$ und Objekte $A, B, C \in \C$ den \textit{Hom-Funktor} 
-		definieren, indem man 
+		Insbesondere kann man für eine strikte kleine Kategorie $\C$ und Objekte $A, B, C \in \C$ den kontravarianten 
+		\textit{Hom-Funktor} definieren, indem man 
 
 		\begin{equation}
 			\label{Hom-Funktor}
@@ -369,45 +353,90 @@
 			\hom(h, B): \hom(C, B) \to \hom(A, B), \text{wobei } g \mapsto g \circ h \text{ für } g \in \hom(C, B)	
 		\end{equation}
 
+		Analog lässt sich der kovariante Hom-Funktor $\hom(A, -)$ definieren. 
 	\end{rem}
 
-	Eine häufig verwendete Form eines kontravarianten Funktors ist die Prägarbe 
-	(\textit{engl.: presheaf}). Wir werden diesen Funktor später verwenden um 
-	\textit{simpliziale Mengen} einzuführen. % TODO: weglassen oder genauer beschreiben?
+	Eine nützliche Definition um auf sinnvolle Weise Funktoren ineinander zu überführen und dabei die Komposition der Morphismen 
+	zu berücksichtigen sind \textit{natürliche Transformationen}. 
 
-	\begin{defn}[Prägarbe]
+	\begin{defn}
+		Seien $F,G : \C \to \D$. Eine \textit{natürliche Transformationen $t$} von $F$ nach $G$ ist eine Familie von Morphismen $t$, mit 
+
+		\begin{itemize}
+			\item für jedes $A \in \C$ gibt es einen Morphismus $t_A : F(A) \to G(A)$ zwischen Objekten in $\D$,
+			\item für beliebige Objekte $A, B$ und beliebige Morphismus $f \in Hom_\C(A, B)$ gilt: $t_A \circ F(f) = G(f) \circ t_A$.
+		\end{itemize}
+
+		Wir nennen $F$ und $G$ \textit{natürlich äquivalent}, wenn es natürliche Transformationen $t:F \to G, u: G \to F$ gibt, so dass 
+		$t \circ u = id_G$ und $u \circ t = id_F$.
+	\end{defn}
+
+	Die folgende Definition wird uns eine abgeschwächte Form einer Äquivalenz von Kategorien liefern. Sie ermöglicht uns  
+	verschiedene Kategorien miteinander zu verbinden. 
+
+	\begin{defn} %[Adjunktion]
+		Seien $\C,\C$ Kategorien und $F:\C \to \D$ und $G: \D \to \C$ Funktoren. Dann bilden $\C$ und $\D$ ein 
+		\textit{adjungiertes Funktorpaar}, wenn die Funktoren 
+
+		\begin{align}
+			\quad (A, B) \mapsto \hom_\D(A, F(Y)) \quad (A, B) \mapsto \hom_\D(G(A), Y), 
+		\end{align}
+
+		natürlich äquivalent sind. Dabei bilden die Funktoren von $\D^{op} \times \C$ in die Kategorie der Mengen $\Set$ ab. 
+		Man sagt zusammen mit den beiden Kategorien und den beiden Funktoren bildet die natürliche Äquivalenz eine \textit{Adjunktion}. 
+		Wir bezeichnen $F$ als \textit{rechtsadjungiert} zu $G$ und $G$ \textit{linksadjungiert} zu $F$.
+	\end{defn}
+
+	\begin{rem}
+		Später werden wir den Begriff des \textit{Limes} verwenden. Eine formale Definition dessen würde den Rahmen dieser Arbeit 
+		überschreiten. Wir verweisen auf \cite{Brandenburg}. Wichtig für weitere Überlegungen ist eine anschauliche Betrachtung des 
+		Limes zum verknüpfen kleinerer Strukturen zu einer Großen. 
+	\end{rem}
+
+	Wir werden nun das \textit{Yoneda Lemma} nennen. Dieses wir im Allgemeinen dazu genutzt die Struktur der 
+	Kategorie $\Set$ und einfache Begriffe welche auf dieser gegeben sind auf beliebige Kategorien zu übertragen. 
+	Das Lemma wird angewendet um die Yoneda Einbettung zu geben. In dieser Arbeit werden wir es benötigen um 
+	Aussagen über simpliziale Mengen zu zeigen. Außerdem wir es verwendet um Satz \ref{thm:umapadj} zu beweisen. 
+
+	\begin{YL}
+		Sei $\C$ eine Kategorie, $F:\C \to \Set$ ein Funktor, dann ist 
+
+		\begin{align}
+			\Phi : Nat(\hom(-,B), F) &\to F(A) \\
+			t &\mapsto t_A(id_A)
+		\end{align}
+
+		ein Isomorphismus. Wobei $Nat(G,F)$ die Menge der natürlichen Transformationen von $G$ nach $F$ angibt. 
+		Somit ist $t_A : \hom_\C(A,B) \to F(A)$. 
+	\end{YL}
+
+	\begin{rem}
+		Die Wohldefiniertheit von $\Phi$ ist sofort ersichtlich, die Injektivität und Surjektivität können mithilfe
+		der Eigenschaften der natürlichen Transformationen nachgerechnet werden. 
+		Der Beweis lässt sich auch mit dem kovarianten Hom-Funktor durchführen. 
+	\end{rem}
+
+	% TODO: Anwendungen des Lemmas	
+
+	Wir werden diese benutzen um Kategorien zu definieren, mit Objekten als Funktoren und den Morphismen die natürlichen Transformationen.
+	Eine häufig verwendete Form eines kontravarianten Funktors ist die Prägarbe (\textit{engl.: presheaf}). 
+	Wir werden diesen Funktor später verwenden um \textit{simpliziale Mengen} einzuführen. % TODO: weglassen oder genauer beschreiben?
+
+	\begin{defn} %[Prägarbe]
 		Eine Prägarbe auf einer kleinen Kategorie $\C$ ist ein Funktor
 		\begin{equation*}
-			F: \C^{op} \to \Set
+			\mathcal{P}: \C^{op} \to \Set
 		\end{equation*}
 		von der dualen Kategorie $\C^{op}$ von $\C$ in die Kategorie $\Set$ von Mengen.
 	\end{defn}
 
-	\begin{defn}[Prägarbenkategorie]
-		Sei $\widehat{\C}$ die Prägarbenkategorie einer Kategorie $\C$ : Objekte sind die 
-		Funktoren $F: \C^{op} \to \Set$, und Morphismen sind natürliche 
+	\begin{defn} %[Prägarbenkategorie]
+		Sei $\widehat{\C}$ die Prägarbenkategorie einer Kategorie $\C$ : Objekte sind Prägarben, also 
+		Funktoren $\mathcal{P}: \C^{op} \to \Set$, und Morphismen sind natürliche 
 		Transformationen der Funktoren.
 	\end{defn}
 
-	% TODO: wird dies benötigt?
-	\begin{rem}
-		Allgemeiner kann man auch die Kategorie $[\C, \D]$ einführen, deren Objekte 
-		Funktoren $F: \C \to \D$ sind und deren Morphismen ebenfalls natürliche 
-		Transformationen der Funktoren sind.
-	\end{rem}
-
-
-	% TODO: Definiere natürliche Transformationen. 
-	% https://ncatlab.org/nlab/show/natural+transformation
-
-	\begin{YL}
-		Random Text
-		% TODO: add Yoneda lemma
-	\end{YL}
-
-	\begin{defn}[Adjunktion]
-		% TODO: füge Definition einer Adjunktion ein
-	\end{defn}
+	% TODO: Begriffe zusammenführen und Zusammenfassung
 
 %----------------------------------------------------------------------------------------
 
@@ -495,8 +524,8 @@
 		Die Simplizes dürfen dabei nur entlang ihrer Facetten \textit{zusammengefügt} werden. 
 	\end{rem}
 
-	Ein Simplizialkomplex kann dabei helfen einen topologischen Raum zu beschreiben, die kombinatorische Struktur des 
-	Simplizialkomplexes kann dann dazu genutzt werden Aussagen über den zugrundeliegenden topologischen Raum zu treffen. 
+	Simplizialkomplexe können dabei helfen topologische Räume zu beschreiben, die kombinatorische Struktur des 
+	Simplizialkomplexes kann dann dazu genutzt werden, Aussagen über den zugrundeliegenden topologischen Raum zu treffen. 
 	Dabei sind die genauen räumlichen Lagebeziehungen der Simplizes oft zu vernachlässigen und es kann folgende Verallgemeinerung gemacht werden:  
 
 	\begin{defn} %[Abstrakter Simplizialkomplex]
@@ -504,6 +533,7 @@
 		wir \textit{Knoten}, eine nichtleere Teilmenge $\sigma' \subset \sigma$ ist wieder ein abstrakter Simplex und wird \textit{Facette} von $\sigma$ genannt. 
 		Die \textit{Dimension} eines abstrakten Simplex $\sigma$ welcher aus einer $k+1$-Elementigen Menge besteht ist $k$, oft nennen wir $\sigma$ dann einen 
 		(abstrakten) $k$-Simplex. 
+
 		Ein \textit{abstrakter Simplizialkomplex} $\mathcal{K}$ ist eine Menge von Simplizes mit der Eigenschaft, dass jede Facette $\sigma' \subset \sigma$ 
 		eines Simplizes $\sigma \in \mathcal{K}$ wieder zu $\mathcal{K}$ gehört, also $\sigma' \in \mathcal{K}$. 
 		Das \textit{$k$-Skelett} eines Simplizialkomplex $\mathcal{K}$ ist die Menge aller seiner Simplizes der Dimension $\leq k$.
@@ -515,21 +545,22 @@
 
 	Eine hilfreiche Eigenschaft (abstrakter) Simplizialkomplexe ist, dass sich diese aus den einfach zu beschreibenden geometrischen $n$-Simplizes zusammensetzen. 
 	Diese Eigenschaft lässt sich auf simpliziale Mengen mittels Yoneda Lemma übertragen. Sei $X$ eine simpliziale Menge, dann gibt es für alle $x \in X_n$ 
-	einen Morphismus $x:\Delta^n \to X$.  Eine Anwendung von \cite{maclane} (§7, Thm. 1) liefert uns:  %TODO: prüfe Quelle
+	einen Morphismus $x:\Delta^n \to X$.  Eine Anwendung von \cite{maclane} (Kap.7, Thm.1) liefert uns:  %TODO: prüfe Quelle
 
 	\begin{equation}
 		X \simeq \varinjlim \Delta^n,
 		\label{eq:colimit}
 	\end{equation}
 
-	wobei der Kolimit über eine von $X$ bestimmte Indexkategorie genommen wird.
+	wobei der Limes über eine von $X$ bestimmte Indexkategorie genommen wird.
 
 	\begin{rem}
-		Eine mathematische Definition des Kolimes wird in dieser Arbeit nicht gegeben, da diese einige Vorbereitungen benötigen würde. Wir verweisen den 
+		Eine mathematische Definition des Limes wird in dieser Arbeit nicht gegeben, da diese einige Vorbereitungen benötigen würde. Wir verweisen den 
 		Leser auf geeignete Literatur, beispielsweise \cite{Brandenburg}.
+		In der englischen Literatur wird der Limes oft als colim geschrieben und der \textit{inverse Limes} als $\lim$.
 	\end{rem}
 
-	Dennoch soll kurz erläutert werden wie der Kolimes zu verstehen ist. Er ist das duale Konstrukt zum Limes, deshalb operiert er auf der dualen Kategorie. 
+	Dennoch soll kurz erläutert werden wie der Limes zu verstehen ist. Er ist das duale Konstrukt zum Limes, deshalb operiert er auf der dualen Kategorie. 
 	Anschaulich werden die Objekte (hier die $\Delta^n$) in einer passenden Weise \textit{zusammengefügt}. 
 	In Gleichung (\ref{eq:colimit}) bedeutet dies also, dass sich eine simpliziale Menge aus den Standardsimplizes zusammensetzt.
 
@@ -642,5 +673,7 @@
 	Goguen \cite{Goguen}. Diese Definition hat laut \cite{Barr} den Nachteil, dass zwei Morphismen unscharfer Mengen nicht gleich sind, wenn sie sich nur 
 	auf Elementen mit Zugehörigkeitsgrad $0$ unterscheiden. Da wir Elemente mit Zugehörigkeitsgrad $0$ als Elemente interpretieren möchten, welche nicht 
 	zur Menge gehören, ist Goguens Definition problematisch. 
+
+	% TODO: Fortsetzen...
 
 %----------------------------------------------------------------------------------------
