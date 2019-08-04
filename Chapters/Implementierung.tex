@@ -146,7 +146,7 @@
       \State $L \gets D^{1/2} (D-V) D^{1/2}$ \Comment{Symmetrische normalisierte Laplace-Matrix}
       \State $evec \gets \text{sortierte Eigenvektoren von } L$
       \State $Y \gets evec[1,\dots,d\text{+}1]$ \label{alg:spec}
-      \State $Y \gets \textsc{OptimiereEinbettung}(Y, min\_dist, n\_epochs)$ \Comment{siehe Algorithmus \ref{algorithm:optimize}}
+      \State $Y \gets \textsc{OptimiereEinbettung}(Y, min\_dist, n\_epochs)$ \Comment{siehe Alg. \ref{algorithm:optimize}}
       \State \textbf{return} $Y$
    \EndFunction
    \end{algorithmic}

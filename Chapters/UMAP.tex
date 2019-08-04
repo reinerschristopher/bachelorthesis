@@ -241,11 +241,12 @@
 
 	Betrachten wir nun das $1$-Skelett von $\mathcal{K}_i$, so sind die $0$-Simplizes die $\mathbf{x}_j \in X$ mit Zugehörigkeitsgrad $1$. 
 	Die $1$-Simplizes beschreiben Abstände zwischen den $\mathbf{x}_j$, wobei der Zugehörigkeitsgrad eines $1$-Simplizes aus $\mathcal{K}_i$, mit Facetten 
-	$\mathbf{x}_j, \mathbf{x}_l$, gerade $\exp(-d_i(\mathbf{x}_j, \mathbf{x}_l))$ entspricht. Die Wahl der Transformation der $d_i$ mit $\exp(-x)$ ist aus 
-	Gleichung (\ref{eq:dlog}) ersichtlich. Der Zugehörigkeitsgrad des ersten Nachbarn von $\mathbf{x}_i$ 
+	$\mathbf{x}_j, \mathbf{x}_l$, gerade $\exp(-d_i(\mathbf{x}_j, \mathbf{x}_l))$ entspricht. Die Wahl der Transformation der $d_i$ mit $\exp(-d_i)$ um den 
+	Zugehörigkeitsgrad des $1$-Simplex zu erhalten ist aus Gleichung (\ref{eq:dlog}) ersichtlich. Der Zugehörigkeitsgrad des ersten Nachbarn von $\mathbf{x}_i$ 
 	in $\mathcal{K}_i$ ist also stets $1$ und nimmt für weiter entfernte Nachbarn exponentiell ab. Die Repräsentation erhält also metrische Informationen 
-	der $\mathbf{x}_i$, bevorzugt dabei allerdings stark die lokalen Abstände. Dies spiegelt die Aussage des Lemma \ref{lem:geod} wieder, dass wir nur lokal 
-	zu $\mathbf{x}_i$ die Geodäte bestimmen können. $2$-Simplizes würden Eigenschaften über die Fläche zwischen drei Punkten erhalten, $3$-Simplizes 
+	der $\mathbf{x}_i$, bevorzugt dabei allerdings stark die lokalen Abstände. 
+	% Dies spiegelt die Aussage des Lemma \ref{lem:geod} wieder, dass wir nur lokal zu $\mathbf{x}_i$ die Geodäte bestimmen können. % TODO: Ersetzen?
+	$2$-Simplizes würden Eigenschaften über die Fläche zwischen drei Punkten erhalten, $3$-Simplizes 
 	über das Volumen welches von 4 Punkten eingeschlossen ist. Simplizes höherer Ordnung die entsprechenden Analogon für höher dimensionale Räume. 
 
 	Wir vereinigen die $\mathcal{K}_i$, siehe Gleichung (\ref{eq:toprep}), indem wir unterschiedliche Zugehörigkeitsgrade der unscharfen simplizialen Mengen 
@@ -275,6 +276,9 @@
 		\label{eq:lowrep}
 	\end{align}
 
+	% TODO: ist verständlich, dass \Yrep_i nicht umbegint zu d'_i gehört?
+	Es ist zu beachten, dass für die $\Yrep$ $j$-Simplizes $\Yrep_j = (A_{\Yrep_j}, \nu_j)$ gilt, dass $A_{\Yrep_j}=A_{\Xrep_j}$, mit $\Xrep_i = (A_{\Xrep_j}, \mu_j)$. Somit sind die 
+	Zugehörigkeitsfunktionen $\mu_j, \nu_j$ für weitere Überlegungen entscheidend.
 	% TODO: Definition simplizialer Mengen
 	Um die beiden topologischen Repräsentationen $\Xrep, \Yrep$ zu vergleichen verwenden wir die Kreuzentropie unscharfer Mengen. Dabei nutzen wir die Definition simplizialer 
 	Mengen als Folge von Mengen mit Kompositionen der Abbildungen $d_i, s_i$. Somit erhalten wir 
