@@ -16,6 +16,13 @@
    \newcommand{\wX}{w_\mathcal{X}}  % Symbol for weights of \Xrep
    \newcommand{\WX}{W_\mathcal{X}}  % Symbol for Graph of \Xrep
    \newcommand{\wY}{w_\mathcal{Y}}  % Symbol for weights of \Yrep
+   \newcommand{\Yg}{\mathcal{Y}_G}  % Symbol for Graph of \Xrep
+   \newcommand{\xxi}{\mathbf{x}_i}
+   \newcommand{\xxj}{\mathbf{x}_j}
+   \newcommand{\xij}{\mathbf{x}_{i_j}}
+   \newcommand{\wXi}{w_{\mathcal{X}_i}}  % Symbol for weights of \Xrep
+   \newcommand{\yyi}{\mathbf{y}_i}
+   \newcommand{\yyj}{\mathbf{y}_j}
 
 %----------------------------------------------------------------------------------------
 
@@ -49,7 +56,6 @@
 
    Zunächst werden wir in Abschnitt \ref{seq:numerische_formulierung} die Notation anpassen und 
    die Formulierung der Optimierung konkretisieren.
-   In Abschnitt \ref{seq:pseudo} werden wir den gesamten UMAP Algorithmus im Pseudo-Code angeben. 
    Wir werden dann mittels Profiling, in Abschnitt \ref{sec:profile}, die rechenintensiven Subroutinen 
    der von uns verwendeten Implementierung \cite{cpu} identifizieren. In den darauffolgenden Abschnitten 
    werden wir die aufwendigen Routinen genauer betrachten, in dem wir in Abschnitt \ref{seq:SGD} 
@@ -61,11 +67,11 @@
 
 % TODO: !!!!!!! Kontroliere ob \mu(a) = \vij ist oder = den nicht symetrischen Werten. (dann ändere V und definiere \fij = sym(\vij))
 \section{Numerische Formulierung des UMAP Verfahrens} \label{seq:numerische_formulierung}
-   Um weitere Überlegungen zu vereinfachen und die praktische Implementierung zu beschreiben, werden wir nun die Notation etwas anpassen.
+   Um weitere Überlegungen zu vereinfachen und die praktische Implementierung zu beschreiben, werden wir nun die Notation anpassen.
 
    Dabei ist zu bemerken, dass wir uns von nun an auf die Konstruktion des $1$-Skelett der unscharfen simplizialen Mengen beschränken. 
-   Die Vereinfachung, dass wir keine Simplizes höherer Ordnungen betrachten werden wir in Abschnitt \ref{sec:ausblick} genauer betrachten 
-   und Ansätze erwähnen auch Simplizes höherer Ordnungen zu nutzen. 
+   Die Vereinfachung, dass wir keine Simplizes höherer Ordnungen betrachten werden wir in Abschnitt \ref{sec:ausblick} betrachten 
+   und Ansätze erwähnen, um Simplizes höherer Ordnungen zu nutzen. 
 
    Wir werden von nun an die $0$-Simplizes einer (unscharfen) Menge als Knoten, die $1$-Simplizes als Kanten, das $1$-Skelett als Graph 
    und den Zugehörigkeitsgrad einer Kante als Gewicht der Kante bezeichnen. 
@@ -76,29 +82,28 @@
    $N$ Graphen $\Xgi$ konstruieren, diese beschreiben das Bild $\fSing((X,d_i))$. Dabei sind die Gewichte von $\Xgi$ durch,
 
    \begin{align}
-      w_i(x,y) \coloneqq \begin{cases}
-                           \exp \left(\frac{-\max(0, d(x,y)-\rho_i)}{\sigma_i}\right) \quad &\text{,falls } x=\mathbf{x}_i, y=\mathbf{x}_{i_j}\\
+      \wXi(x,y) \coloneqq \begin{cases}
+                           \exp \left(\frac{-\max(0, d(x,y)-\rho_i)}{\sigma_i}\right) \quad &\text{,falls } x=\xxi, y=\mathbf{x}_{i_j}\\
                            0 \quad &\text{,sonst}
                          \end{cases}
    \end{align}
 
-   mit $1 \leq j \leq k$, gegeben. $\mathbf{x}_{i_j}$ ist wieder der $j$-ten Nachbar von $\mathbf{x}_i$, $\rho_i$ ist die Distanz von $\mathbf{x}_i$ 
-   zum ersten Nachbarn. In Kapitel \ref{UMAP} wurde die Wahl von $\sigma_i$ als Distanz zum $k$-ten Nachbarn zu wählen. 
-   In der Praxis werden wir diese Wahl leicht modifizieren, indem wir $\sigma_i$ so wählen, dass folgende Gleichung erfüllt ist: 
+   mit $1 \leq j \leq k$, gegeben. $\mathbf{x}_{i_j}$ ist wieder der $j$-te Nachbar von $\xxi$, $\rho_i$ ist die Distanz von $\xxi$ 
+   zum ersten Nachbarn. In Kapitel \ref{UMAP} wurde $\sigma_i$ als Distanz zum $k$-ten Nachbarn gewählt. 
+   In der Praxis werden wir diese Wahl leicht modifizieren, indem wir $\sigma_i$ so wählen, dass folgende Gleichung erfüllt ist: % TODO: warum?
 
    \begin{align}
-      \sum_{j=1}^k \exp \left(\frac{-\max(0, d(\mathbf{x}_i,\mathbf{x}_{i_j})-\rho_i)}{\sigma_i}\right) = \log_2(k)
+      \sum_{j=1}^k \exp \left(\frac{-\max(0, d(\xxi,\mathbf{x}_{i_j})-\rho_i)}{\sigma_i}\right) = \log_2(k)
    \end{align}
 
-   % TODO: warum?
-   Der gewichtete Graph $\Xgi$ besitzt also die Knotenmenge $V(\Xgi)=X$ und die Kantenmenge $E(\Xgi)=(X \times X)$ mit Kantengewichten $w_i$. 
-   Mit $W_i$ bezeichnen wir die zu $\Xgi$ gehörende gewichtete Adjazenzmatrix. 
+   Der gewichtete Graph $\Xgi$ besitzt also die Knotenmenge $V(\Xgi)=X$ und die Kantenmenge $E(\Xgi)=(X \times X)$ mit Kantengewichten $\wXi$. 
+   % Mit $W_i$ bezeichnen wir die zu $\Xgi$ gehörende gewichtete Adjazenzmatrix. 
 
-   Die Vereinigung der $\Xgi$ zu $\Xg$ lässt sich als Anwendung der t-Conorm auf die Gewichte beschreiben. Somit erhalten wir eine neue 
+   Die Vereinigung der $\Xgi$ zu $\Xg$ lässt sich als Anwendung der t-Conorm auf die Gewichte beschreiben. Somit erhalten wir, für $x,y \in X$ eine neue 
    Gewichtsfunktion $\wX$, mit 
 
    \begin{align}
-      \wX(x,y) \coloneqq w_1(x,y) \perp w_2(x,y) \perp \dots \perp w_N(x,y).
+      \wX(x,y) \coloneqq w_{\mathcal{X}_1}(x,y) \perp w_{\mathcal{X}_2}(x,y) \perp \dots \perp w_{\mathcal{X}_N}(x,y).
    \end{align}
 
    Um in Abschnitt \ref{sec:einb} die Wahl der Kreuzentropie zu begründen, haben wir 
@@ -106,13 +111,13 @@
    Diese Argumentation kann man auch anwenden um die Wahl der t-Conorm, aus Beispiel \ref{ex:tNorm}, gegeben durch 
    $\bot(a,b) \coloneqq a + b - ab$, zu begründen. Diese entspricht nämlich genau der Wahrscheinlichkeit der Vereinigung unabhängiger 
    Ereignisse. 
-   Nun können wir die Gewichte von $\Xg$ wie folgt angeben, 
+   Nun können wir die Gewichte von $\Xg$ explizit angeben, 
 
    \begin{align}
-      \wX(x,y) \coloneqq \text{FEHLT} %\sum_{i=1}^N w_i(x,y) - \sum_{i=2}^N w_1(x,y) \prod_{j=2}^N w_j(x,y).
+      \wX(x,y) \coloneqq \text{FEHLT} %\sum_{i=1}^N \wXi(x,y) - \sum_{i=2}^N w_1(x,y) \prod_{j=2}^N w_j(x,y). % TODO: ergänzen
    \end{align}
 
-   Wir werden nun die $\Yrep$ aus Gleichung (\ref{eq:lowrep}) konstruieren. Dafür setzen wir 
+   Wir werden nun $\Yg$ aus Gleichung (\ref{eq:lowrep}) konstruieren. Dafür setzen wir 
 
    \begin{align}
       \Psi(x,y) \coloneqq 
@@ -124,131 +129,73 @@
    \end{align}
 
    Die Wahl des Hyperparameter min-dist wird später diskutiert. Dieser dient dazu, eine ähnliche Transformation wie im 
-   Gleichung (\ref{eq:di}) durchzuführen. 
+   Gleichung (\ref{eq:di}) durchzuführen. Um später die Kreuzentropie zwischen $\Xg$ und $\Yg$ zu minimieren muss die 
+   Gewichtsfunktion von $\Yg$ differenzierbar sein. Offensichtlich ist $\Psi$ bei min-dist nicht differenzierbar. 
+   Somit betrachten wir eine stetige Approximation von $\Psi$,
 
-   $\Psi$ ist dabei allerdings bei min-dist nicht differenzierbar. Somit betrachten wir eine stetige Approximation von $\Psi$,
-
-   \begin{align}
+   \begin{align} % TODO: Plot
       \wY(x,y) \coloneqq (1 + a\norm{x-y}_2^{2b})^{-1}, 
+      \label{eq:wY}
    \end{align}
 
    wobei $a$ und $b$ Hyperparameter sind. Die Wahl von $a$ und $b$ kann beispielsweise mittels der Methode der kleinsten Quadrate 
-   optimiert werden. 
+   bezüglich $\Psi$ optimiert werden. 
 
+   Die Kreuzentropie lässt sich auf gewichtete Graphen übertragen, wenn wir die Gewichte als Zugehörigkeitsgrade interpretieren,
 
-   % Um eine Unterscheidung zwischen der theoretischen Sichtweise auf das UMAP Verfahren, welche alle $k$-Simplizes 
-   % $(1 \leq k \leq N)$ berücksichtigt, und der praktischen Implementierung zu verdeutlichen, werden wir die 
-   % verwendete Notation anpassen. 
+   \begin{alignat}{2}
+      C_\text{cross}(\Xg, \Yg) &\coloneqq \sum_{e \in X \times X} \wX(e) \log\left(\frac{\wX(e)}{\wY(e)}\right) + (1-\wX(e)) \log\left(\frac{1-\wX(e)}{1-\wY(e)}\right) \\
+                               &= \begin{aligned}[t]
+                                    & \sum_{e \in X \times X} \wX(e) \log(\wX(e)) + (1-\wX(e)) \log(1-\wX(e)) \\
+                                    &- \sum_{e \in X \times X} \wX(e) \log(\wY(e)) + (1-\wX(e)) \log(1-\wY(e))
+                                  \end{aligned} \\
+                               &= C_\mathcal{X} - \sum_{e \in X \times X} \wX(e) \log(\wY(e)) + (1-\wX(e)) \log(1-\wY(e)) \label{eq:loss}
+   \end{alignat}
 
-   % Die unsicheren Mengen $(A, \mu), (A, \nu)$ aus Gleichung (\ref{eq:crossentropy}) lassen sich als gewichtete Graphen, 
-   % in Form einer Adjazenzmatrix darstellen. % TODO: Für den Fall, dass nur 1-Simplizes betrachtet werden
-   % Das 1-Skelett der hochdimensionalen Repräsentation notieren wir als Adjazenzmatrix $V$ mit $\vij = \mu(a)$, für 
-   % ein 1-Simplex $a$, mit Facetten $i$ und $j$. 
-   % % TODO: Wahl von \vij
+   Dabei ist $C_\mathcal{X}$ von $\Yrep$ unabhängig und somit bei der Minimierung der Kreuzentropie nicht von Relevanz. 
+   Eine Modifizierung des stochastischen Gradienten Verfahrens zur Minimierung von Gleichung (\ref{eq:loss}) werden wir in Abschnitt \ref{seq:SGD} betrachten.
 
-   % Die Wahl des Zugehörigkeitsgrades für 1-Simplizes der niedrigdimensionalen Repräsentation der Daten ist wie folgt gegeben:
+   Die Überlegungen können wir nun im Pseudo-Code zusammenfassen. 
 
-   % \begin{equation}
-   %    \wij = (1+a(\norm{\mathbf{y}_i - \mathbf{y}_j}^2_2)^b)^{-1}, \label{eq:wij} % TODO: wie sind a, b gewählt?
-   % \end{equation}
-
-   % % TODO: für a=b=1 tSNE, b=1 LargeVis
-
-   % wobei $\mathbf{y}_i, 1 \leq i \leq N$ die Vektoren der Einbettung sind. Die Wahl der Werte $a,b$ werden wir in 
-   % Abschnitt \ref{seq:hyper} beschreiben.
-
-
-   % Somit erhalten wir folgende Kreuzentropie zwischen den Graphen der hoch- und niedrigdimensionalen 
-   % Darstellung der Daten:
-
-   % \begin{alignat}{2}
-   %    C(V, W) &= \sumtup{i}{j} \vij \log\left(\frac{\vij}{\wij}\right) + (1-\vij) \log\left(\frac{1-\vij}{1-\wij}\right) \\
-   %            &= \begin{aligned}[t]
-   %                   &  \sumtup{i}{j} (\vij \log(\vij) + (1-\vij) \log(1-\vij)) \\
-   %                   &- \sumtup{i}{j} (\vij \log(\wij)) - \sumtup{i}{j} ((1-\vij) \log(1-\wij))
-   %                \end{aligned} \\
-   %            &=  C_v - \sumtup{i}{j} (\vij \log(\wij) + (1-\vij) \log(1-\wij)) \label{eq:loss}
-   % \end{alignat}
-
-   % Der Term $C_v$ bleibt während der Minimierung der Funktion bezüglich der $\mathbf{y}_i$ konstant.
-   
-   % Aufgrund der Wahl einer differenzierbaren Funktion für den Zugehörigkeitsgrad der 1-Simplizes, 
-   % bzw. der Gewichte des niedrigdimensionalen Graphen, lässt sich nun der Gradient der Zielfunktion (\ref{eq:loss}) herleiten.
-
-   % Mittels der Kettenregel ergibt sich mit $d_{ij} \coloneqq \norm{\mathbf{y}_i - \mathbf{y}_j}_2$:
-
-   % \begin{align}
-   % \quad
-   %    \deriv{C}{\mathbf{y}_i} &= \sumtup{k}{l} \deriv{C}{w_{kl}} \sumtup{m}{n} \deriv{w_{kl}}{d^2_{mn}} \sumtup{p}{q} \deriv{d^2_{mn}}{d_{pq}} \deriv{d_{pq}}{\mathbf{y}_i} \\
-   %                   &= \sumtup{k}{l} \deriv{C}{w_{kl}} \sumtup{m}{n} \deriv{w_{kl}}{d^2_{mn}} \deriv{d^2_{mn}}{d_{mn}} \deriv{d_{mn}}{\mathbf{y}_i} \\
-   %                   &= 2 \sumtup{k}{l} \deriv{C}{w_{kl}} \sumtups{m} \deriv{w_{kl}}{d^2_{mi}} \deriv{d^2_{mi}}{d_{mi}} \deriv{d_{mi}}{\mathbf{y}_i} \\
-   %                   &= 2 \sumtups{m} \left( \sumtup{k}{l} \deriv{C}{w_{kl}} \deriv{w_{kl}}{d^2_{mi}} \right) \deriv{d^2_{mi}}{d_{mi}} \deriv{d_{mi}}{\mathbf{y}_i}  \label{eq:deriv-2}\\
-   %                   &= 4 \sumtups{m} \left( \sumtup{k}{l} \deriv{C}{w_{kl}} \deriv{w_{kl}}{d^2_{mi}} \right) (\mathbf{y}_i - \mathbf{y}_m) \label{eq:deriv-1}
-   % \end{align}
-
-   % Bei der Umformung von (\ref{eq:deriv-2}) nach (\ref{eq:deriv-1}) haben wir verwendet, dass $d_{mi}$ die euklidische Norm ist. 
-   % Für Einbettungen in andere metrische Räume müsste der Gradient an dieser Stelle entsprechend angepasst werden. Da wir 
-   % das UMAP Verfahren im wesentlichen zur Visualisierung im $\R^2$ benutzen ist die Wahl der euklidischen Norm gerechtfertigt.
-   % Die übrigen Umformungen ergeben sich aus umordnen und wegfallen der Terme. 
-
-   % (\ref{eq:deriv-1}) lässt sich weiter umformen, dazu nutzen wir:
-
-   % \begin{align}
-   %    \deriv{C}{\wij} &= - \frac{\vij}{\wij} + \frac{1-\vij}{1-\wij} = \frac{\wij - \vij}{\wij (1 - \wij)} \\
-   %    \deriv{\wij}{d^2_{ij}} &= -bad_{ij}^{2(b-1)} \wij^2 = - \frac{b}{d_{ij}^2} \wij (1 - \wij)
-   % \end{align}
-
-   % Der UMAP Gradient ist also gegeben durch:
-   % % TODO: Daniel: Fehlt da nicht noch eine innere Summe aus 4.9?
-   % \begin{equation}
-   %    \deriv{C}{\mathbf{y}_i} = 4 \sumtups{j} (\wij - \vij) \frac{b}{d_{ij}^2} (\mathbf{y}_i - \mathbf{y}_j)
-   %    \label{eq:umapgrad}
-   % \end{equation}
-
-%----------------------------------------------------------------------------------------
-
-\section{Pseudo-Code} \label{seq:pseudo}
-   Nun können wir das UMAP Verfahren für die 1-Skelette der topologischen Repräsentation angeben.
-
-   \begin{algorithm} %TODO: Verändere x zu x_i (y zu y_j) um Notation konsistent zu halten
+   \begin{algorithm}
    \caption{UMAP Algorithmus}
    \label{algorithm:umap}
    \begin{algorithmic}[1]
-   \Function{UMAP}{$X, N, D, d, min\_dist, n\_epochs$}  %description
-      \For{$x \in X$}
-         \State $knn(x) \gets k\text{-nächste-Nachbarn}(x)$ \label{alg:kNN}
-         \State $graph(x) \gets \bot_{y \in knn(x)} (\{x, y\}, exp(-d_{x,y})) \ \bot \ \bot_{y \in X \setminus \{x\}} (\{x, y\}, 0)$ \label{alg:graph}
+   \Function{UMAP}{$X, N, D, d, \code{min-dist}, \code{n-epochs}$}  %description
+      \For{$\xxi \in X$}
+         \State $knn(\xxi) \gets k\text{-nächste-Nachbarn}(\xxi)$ \label{alg:kNN}
+         \State $graph(\xxi) \gets (\Xgi, \wXi)$ \label{alg:graph}
       \EndFor
-      \State $V \gets \text{gewichtete Adjazenzmatrix}(\bigcup_{x \in X} graph(x))$ \label{alg:adj}
-      \State $D \gets \text{Grad-Matrix des Graphen } V$ \label{alg:grad}
-      \State $L \gets D^{1/2} (D-V) D^{1/2}$ \Comment{Symmetrische normalisierte Laplace-Matrix}
-      \State $evec \gets \text{sortierte Eigenvektoren von } L$
+      \State $\Xg \gets \text{gewichtete Adjazenzmatrix}(\tConorm graph(\xxi))$ \label{alg:adj}
+      \State $D \gets \text{Grad-Matrix des Graphen } \Xg$ \label{alg:grad}
+      \State $L \gets D^{1/2} (D-\Xg) D^{1/2}$ \Comment{Symmetrische normalisierte Laplace-Matrix}\label{alg:lapl}
+      \State $evec \gets \text{sortierte Eigenvektoren von } L$ \label{alg:evec}
       \State $Y \gets evec[1,\dots,d\text{+}1]$ \label{alg:spec}
-      \State $Y \gets \textsc{OptimiereEinbettung}(Y, min\_dist, n\_epochs)$ \Comment{siehe Alg. \ref{algorithm:optimize}}
+      \State $Y \gets \textsc{OptimiereEinbettung}(Y, \code{min-dist}, \code{n-epochs})$ \Comment{siehe Alg. \ref{algorithm:optimize}} \label{alg:opt}
       \State \textbf{return} $Y$
    \EndFunction
    \end{algorithmic}
    \end{algorithm}
 
    In Abschnitt \ref{seq:kNN} werden zwei effiziente Verfahren für die k-nächste-Nachbarn Suche (Zeile \ref{alg:kNN}) angeben. 
-   
-   %TODO: wahl von d_xy
 
-   Der in Zeile \ref{alg:graph} verwendete $\bot$ Operator verdeutlicht, dass wir die Kantengewichte mittels wahrscheinlichkeitstheoretischer 
-   t-Conorm vereinigen. % TODO: Referenzen t-Conorm einfügen
-   In den von uns verwendeten Implementierung des UMAP Verfahrens \cite{cpu,GPUUMAP} wird ein zusätzlicher Hyperparameter verwendet, welcher 
-   eine Verallgemeinerung der Vereinigung darstellt (siehe: \code{set\_op\_mix\_ratio} in Abschnitt \ref{seq:hyper}). %TODO: Verweis auf set_op_mix_ratio
-   Zusätzlich ist zu beachten, dass die Vereinigung in Zeile \ref{alg:graph} ungerichtete Kanten betrachtet. Der so erhaltene ungerichtete Graph 
-   besitzt aufgrund der Symmetrie der t-Conorm wohldefinierte Kantengewichte.
+   Die in Zeile \ref{alg:graph} beschriebene Form die Graphen der $\xxi$ zu konstruieren scheint auf den ersten Blick sehr viel Speicher zu benötigen, 
+   nämlich $\mathcal{O}(N^3)$. Dabei wird anstatt $N$ nur eine Adjazenzmatrix $A$ benötigt, in $A$ mit $a_{ij} = \wXi(\xxi,\xxj)$. Wir haben zuvor 
+   die Notation mit $N$ Adjazenzmatrizen gewählt, um die Verbindung mit der Konstruktion des UMAP Verfahrens aus Kapitel \ref{UMAP} zu verdeutlichen. 
+   Das betrachten von $A$ ermöglicht uns eine effiziente Implementierung der t-Conorm in Zeile \ref{alg:adj}, dabei gilt $\Xg = A + A^\top - A \circ A^\top$, 
+   wobei $\circ$ das elementweise Produkt ist.
 
-   Die Grad-Matrix $D$ (Zeile \ref{alg:grad}) ist eine Diagonalmatrix, wobei  $d_{ii} \coloneqq  \sum_{1 \leq k \leq N} v_{ik}, (1 \leq i \leq N)$. 
-   Für den Spezialfall, der ungewichteten Adjazenzmatrix, beschreibt $d_{ii}$ also den Grad des Knoten $i$. 
+   Die Zeilen \ref{alg:grad} - \ref{alg:spec} beschreiben eine Alternative Initialisierung von $Y$ mit der spektralen Einbettung der symmetrischen Laplace-Matrix. 
+   Die Grad-Matrix $D$ in Zeile \ref{alg:grad} ist eine Diagonalmatrix, wobei  
+   $d_{ii} \coloneqq  \sum_{1 \leq j \leq N} \wX(\xxi, \xxj), (1 \leq i \leq N)$. 
+   Für den Spezialfall, einer ungewichteten Adjazenzmatrix, beschreibt $d_{ii}$ also den Grad des Knoten $i$. Die in Zeile \ref{alg:lapl} 
+   beschriebene Matrix $L$ nennt man symmetrische normalisierte Laplace-Matrix. Die Eigenwerte einer Adjazenzmatrix nennt man das \textit{Spektrum des Graphen}. 
+   Dabei wählt man den Spektrale Einbettung der Laplace-Matrix, da diese eine diskrete Form des Laplace-Beltrami Operators ist \cite{Chung}. 
+   Der Laplace-Beltrami Operator ist eine Erweiterung des Laplace Operators auf Riemannsche Mannigfaltigkeiten. % TODO: Überarbeiten
+   Dabei ist zu beachten, dass eine Lösung des Eigenwertproblems nur von der Größe der Einbettungsdimension abhängig ist. Da wird stets $d \ll D$ 
+   betrachten ist eine effiziente Implementierung mittels sukzessiver Eigenwertsuche möglich. 
 
-   % TODO: Spektrale Einbettung beschreiben
-   Die Initialisierung der niedrigdimensionalen Repräsentation $Y$ in Zeile \ref{alg:spec} ist die spektrale Einbettung des Graphen. 
-   Eine genauere Beschreibung warum die so gewählte Initialisierung sinnvoll ist findet sich in Abschnitt \dots. Dabei ist 
-   zu beachten, dass eine Lösung des Eigenwertproblems nur von der Größe der Einbettungsdimension abhängig ist. Da wird stets $d \ll D$ 
-   betrachten ist eine effiziente Implementierung mittels sukzessiver Eigenwertsuche möglich. % TODO: Referenz für sukkzesive suche % TODO: Verschieben in section unten.
+   Eine Beschreibung der Optimierung in Zeile \ref{alg:opt} liefern wir in Abschnit \ref{seq:SGD}.
 
 %----------------------------------------------------------------------------------------
 
@@ -299,8 +246,8 @@
 
 
 \section{Gradientenverfahren} \label{seq:SGD}
-   Um die Zielfunktion (\ref{eq:loss}) zu optimieren bietet sich die Wahl eines Gradientenverfahrens an, da eine differenzierbare 
-   Approximation des Zugehörigkeitsgrades (siehe Gleichung \ref{eq:wij}) gegeben ist.
+   Um die Zielfunktion aus GLeichung (\ref{eq:loss}) zu minimieren bietet sich die Wahl eines Gradientenverfahrens an, da eine differenzierbare 
+   Approximation des Zugehörigkeitsgrades (siehe Gleichung \ref{eq:wY}) gegeben ist.
 
    In den vergangenen Jahren gab es viele Weiterentwicklungen, insbesondere bezüglich der Konvergenzgeschwindigkeit, 
    von Gradientenverfahren. Diese werden unter anderem für das trainieren neuronaler Netzwerke bei der Backpropgation genutzt. 
@@ -308,51 +255,51 @@
 
    Um den Rechenaufwand im Gradientenverfahren zu verringern, wird der Gradient in zwei Summanden aufgeteilt. Dabei wird folgende Beobachtung 
    genutzt:
-   Für Kanten $\{i,j\}$ mit einem hohen Zugehörigkeitsgrad $(\vij \approx 1)$ ist der Term $(1-\vij) \log(1-\wij)$ aus Gleichung (\ref{eq:loss}) 
-   nahe Null, deshalb ist es sinnvoll nur den Gradienten des Terms $\vij \log(\wij)$ zu betrachten. Für Kanten mit $\vij \approx 0)$ sollte 
-   hingegen der Gradient des Terms $(1-\vij) \log(1-\wij)$ betrachtet werden. 
+   Für Kanten $\{i,j\}$ mit einem hohen Zugehörigkeitsgrad $(\wX \approx 1)$ ist der Term $(1-\wX) \log(1-\wY)$ aus Gleichung (\ref{eq:loss}) 
+   nahe Null, deshalb ist es sinnvoll nur den Gradienten des Terms $\wX \log(\wY)$ zu betrachten. Für Kanten mit $\wX \approx 0)$ sollte 
+   hingegen der Gradient des Terms $(1-\wX) \log(1-\wY)$ betrachtet werden. 
    Für das UMAP Verfahren wird deswegen folgende Implementierung vorgeschlagen:
 
    \begin{algorithm}
       \caption{Optimiere die Einbettung mittels modifiziertem SGD}
       \label{algorithm:optimize}
       \begin{algorithmic}[1]
-      \Function{OptimiereEinbettung}{$Y, V, W, \text{n\_epochs}$}
+      \Function{OptimiereEinbettung}{$Y, V, W, \text{n-epochs}$}
          \State $\alpha \gets 1.0$
-         \For{$e \gets 1,\dots,\text{n\_epochs}$}
-            \ForAll{$\vij $} % TODO: !! stimmt das?
-               \If{$\text{Random()} \leq \vij$} \label{alg:rand}
-                  \State $\mathbf{y}_i \gets \mathbf{y}_i + \alpha \cdot \nabla (\log(\wij))$ \label{alg:up1}
-                  \For{$l \gets 1,\dots,\text{n\_neg\_samples}$}
+         \For{$e \gets 1,\dots,\text{n-epochs}$}
+            \ForAll{$\{\yyi, \yyj\}$} % TODO: !! stimmt das?
+               \If{$\text{Random()} \leq \wX(\yyi, \yyj)$} \label{alg:rand}
+                  \State $\yyi \gets \yyi + \alpha \cdot \nabla (\log(\wY))(\yyi, \yyj)$ \label{alg:up1}
+                  \For{$l \gets 1,\dots,\text{n-neg-samples}$}
                      \State $m \gets \mathcal{U}\text{nif}((0,N))$
-                     \State $\mathbf{y}_i \gets \mathbf{y}_i + \alpha \gamma \cdot \nabla (\log(1-w_{im}))$ \label{alg:up2}
+                     \State $\yyi \gets \yyi + \alpha \cdot \gamma \cdot \nabla (\log(1-\wY))(\yyi, \mathbf{y}_m)$ \label{alg:up2}
                   \EndFor
                \EndIf
             \EndFor
          \EndFor
-         \State $\alpha \gets 1.0 - e/\text{n\_epochs}$
+         \State $\alpha \gets 1.0 - e/\text{n-epochs}$
          \State \textbf{return} $Y$
       \EndFunction
       \end{algorithmic}
       \end{algorithm}
 
    Die in Zeile \ref{alg:rand} beschriebene Ziehung der Stichprobe dient dazu in Zeile \ref{alg:up1} keine zusätzliche Multiplikation 
-   mit $\vij$ zu machen. Diese Idee entstammt \cite{LINE}. Dadurch wird der Gradient nicht durch den Wert von $\vij$ beeinflusst. % TODO: !! Besser begründen siehe 4.2.1 in LINE
+   mit $\wX$ zu machen. Diese Idee entstammt \cite{LINE}. Dadurch wird der Gradient nicht durch den Wert von $\wX$ beeinflusst. % TODO: !! Besser begründen siehe 4.2.1 in LINE
 
    Das in jedem Durchlauf des modifizierten SGD mehrere \textit{negative samples} betrachtet werden geht auch \cite{Mikolov} zurück. 
    Im wesentlichen verhindert dies, das sich die Vektoren der niedrigdimensionalen Darstellung häufen. Die dabei $(0,N)$-gleichverteilt 
-   gezogene Stichprobe ist eine Modifizierung von \cite{Tang}. % TODO: besser begründen.
+   gezogene Stichprobe ist eine Modifizierung von \cite{Tang}. Die Wahl des Hyperparameter n-neg-samples soll laut \cite{Mikolov} zwischen zwei und $20$ liegen.  % TODO: besser begründen.
 
    Der Gradient in Zeile \ref{alg:up1} ist gegeben durch: 
 
    \begin{equation}
-      \nabla (\log(\wij)) = \frac{-2 a b \norm{\mathbf{y}_i - \mathbf{y}_j}^{2(b-1)}_2 }{(1+a(\norm{\mathbf{y}_i - \mathbf{y}_j}^2_2)^b)^{-1}} (\mathbf{y}_i - \mathbf{y}_j)
+      \nabla (\log(\wY))(\yyi, \yyj) = \frac{-2 a b \norm{\mathbf{y}_i - \mathbf{y}_j}^{2(b-1)}_2 }{(1+\norm{\mathbf{y}_i - \mathbf{y}_j}^{2}_2)} (\mathbf{y}_i - \mathbf{y}_j)
    \end{equation}
 
    und der Gradient in Zeile \ref{alg:up2} durch: 
  
    \begin{equation}
-      \nabla (1-\log(\wij)) = \frac{2 b}{(\epsilon + \norm{\mathbf{y}_i - \mathbf{y}_j}^{2}_2)(1 + a\norm{\mathbf{y}_i - \mathbf{y}_j}^{2b}_2)} (\mathbf{y}_i - \mathbf{y}_j),
+      \nabla (1-\log(\wY))(\yyi, \yyj) = \frac{2 b}{(\epsilon + \norm{\mathbf{y}_i - \mathbf{y}_j}^{2}_2)(1 + a\norm{\mathbf{y}_i - \mathbf{y}_j}^{2b}_2)} (\mathbf{y}_i - \mathbf{y}_j),
    \end{equation}
 
    wobei der $\epsilon$-Parameter eine Division mit Null vermeidet.
@@ -381,12 +328,12 @@
    %    \caption{OptimiereEinbettung}
    %    \label{algorithm:optimize}
    %    \begin{algorithmic}[1]
-   %    \Function{OptimiereEinbettung}{$Y, V, W, \text{n\_epochs}$}
+   %    \Function{OptimiereEinbettung}{$Y, V, W, \text{n-epochs}$}
    %       \State $\alpha \gets 1.0$
-   %       \For{$e \gets 1,\dots,\text{n\_epochs}$}
+   %       \For{$e \gets 1,\dots,\text{n-epochs}$}
    %          \State $x \gets \dots$ % TODO: ergänze
    %       \EndFor
-   %       \State $\alpha \gets 1.0 - e/\text{n\_epochs}$
+   %       \State $\alpha \gets 1.0 - e/\text{n-epochs}$
    %       \State \textbf{return} $Y$
    %    \EndFunction
    %    \end{algorithmic}
@@ -458,6 +405,7 @@
 
 %----------------------------------------------------------------------------------------
 
+% TODO: Complete this.
 \section{Hyperparameter} \label{seq:hyper}
 
    \begin{itemize}
@@ -470,7 +418,7 @@
         % values should be in the range 2 to 100.
       \item $\code{metric}$
          Text
-      \item $\code{n\_epochs}$
+      \item $\code{n-epochs}$
          Text
       \item \code{set\_op\_mix\_ratio}
         % Interpolate between (fuzzy) union and intersection as the set operation
@@ -491,7 +439,7 @@
          % being given to negative samples.
       \item \code{a, b}:
             Erwähne wie a und b standardmäßig gewählt werden, zeige Plot von a, b
-            Erwähne \code{min\_dist} und \code{spread}
+            Erwähne \code{min-dist} und \code{spread}
       \item \code{negative\_sample\_weight}
    \end{itemize}
 

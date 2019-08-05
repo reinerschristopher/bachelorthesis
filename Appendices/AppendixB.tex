@@ -1,0 +1,76 @@
+%!TEX root = ../main.tex
+
+\chapter{Appendix B} \label{AppendixB}
+
+
+%----------------------------------------------------------------------------------------
+
+
+   % Um eine Unterscheidung zwischen der theoretischen Sichtweise auf das UMAP Verfahren, welche alle $k$-Simplizes 
+   % $(1 \leq k \leq N)$ berücksichtigt, und der praktischen Implementierung zu verdeutlichen, werden wir die 
+   % verwendete Notation anpassen. 
+
+   % Die unsicheren Mengen $(A, \mu), (A, \nu)$ aus Gleichung (\ref{eq:crossentropy}) lassen sich als gewichtete Graphen, 
+   % in Form einer Adjazenzmatrix darstellen. % TODO: Für den Fall, dass nur 1-Simplizes betrachtet werden
+   % Das 1-Skelett der hochdimensionalen Repräsentation notieren wir als Adjazenzmatrix $V$ mit $\vij = \mu(a)$, für 
+   % ein 1-Simplex $a$, mit Facetten $i$ und $j$. 
+   % % TODO: Wahl von \vij
+
+   % Die Wahl des Zugehörigkeitsgrades für 1-Simplizes der niedrigdimensionalen Repräsentation der Daten ist wie folgt gegeben:
+
+   % \begin{equation}
+   %    \wij = (1+a(\norm{\mathbf{y}_i - \mathbf{y}_j}^2_2)^b)^{-1}, \label{eq:wij} % TODO: wie sind a, b gewählt?
+   % \end{equation}
+
+   % % TODO: für a=b=1 tSNE, b=1 LargeVis
+
+   % wobei $\mathbf{y}_i, 1 \leq i \leq N$ die Vektoren der Einbettung sind. Die Wahl der Werte $a,b$ werden wir in 
+   % Abschnitt \ref{seq:hyper} beschreiben.
+
+
+   % Somit erhalten wir folgende Kreuzentropie zwischen den Graphen der hoch- und niedrigdimensionalen 
+   % Darstellung der Daten:
+
+   % \begin{alignat}{2}
+   %    C(V, W) &= \sumtup{i}{j} \vij \log\left(\frac{\vij}{\wij}\right) + (1-\vij) \log\left(\frac{1-\vij}{1-\wij}\right) \\
+   %            &= \begin{aligned}[t]
+   %                   &  \sumtup{i}{j} (\vij \log(\vij) + (1-\vij) \log(1-\vij)) \\
+   %                   &- \sumtup{i}{j} (\vij \log(\wij)) - \sumtup{i}{j} ((1-\vij) \log(1-\wij))
+   %                \end{aligned} \\
+   %            &=  C_v - \sumtup{i}{j} (\vij \log(\wij) + (1-\vij) \log(1-\wij)) \label{eq:loss}
+   % \end{alignat}
+
+   % Der Term $C_v$ bleibt während der Minimierung der Funktion bezüglich der $\mathbf{y}_i$ konstant.
+   
+   % Aufgrund der Wahl einer differenzierbaren Funktion für den Zugehörigkeitsgrad der 1-Simplizes, 
+   % bzw. der Gewichte des niedrigdimensionalen Graphen, lässt sich nun der Gradient der Zielfunktion (\ref{eq:loss}) herleiten.
+
+   % Mittels der Kettenregel ergibt sich mit $d_{ij} \coloneqq \norm{\mathbf{y}_i - \mathbf{y}_j}_2$:
+
+   % \begin{align}
+   % \quad
+   %    \deriv{C}{\mathbf{y}_i} &= \sumtup{k}{l} \deriv{C}{w_{kl}} \sumtup{m}{n} \deriv{w_{kl}}{d^2_{mn}} \sumtup{p}{q} \deriv{d^2_{mn}}{d_{pq}} \deriv{d_{pq}}{\mathbf{y}_i} \\
+   %                   &= \sumtup{k}{l} \deriv{C}{w_{kl}} \sumtup{m}{n} \deriv{w_{kl}}{d^2_{mn}} \deriv{d^2_{mn}}{d_{mn}} \deriv{d_{mn}}{\mathbf{y}_i} \\
+   %                   &= 2 \sumtup{k}{l} \deriv{C}{w_{kl}} \sumtups{m} \deriv{w_{kl}}{d^2_{mi}} \deriv{d^2_{mi}}{d_{mi}} \deriv{d_{mi}}{\mathbf{y}_i} \\
+   %                   &= 2 \sumtups{m} \left( \sumtup{k}{l} \deriv{C}{w_{kl}} \deriv{w_{kl}}{d^2_{mi}} \right) \deriv{d^2_{mi}}{d_{mi}} \deriv{d_{mi}}{\mathbf{y}_i}  \label{eq:deriv-2}\\
+   %                   &= 4 \sumtups{m} \left( \sumtup{k}{l} \deriv{C}{w_{kl}} \deriv{w_{kl}}{d^2_{mi}} \right) (\mathbf{y}_i - \mathbf{y}_m) \label{eq:deriv-1}
+   % \end{align}
+
+   % Bei der Umformung von (\ref{eq:deriv-2}) nach (\ref{eq:deriv-1}) haben wir verwendet, dass $d_{mi}$ die euklidische Norm ist. 
+   % Für Einbettungen in andere metrische Räume müsste der Gradient an dieser Stelle entsprechend angepasst werden. Da wir 
+   % das UMAP Verfahren im wesentlichen zur Visualisierung im $\R^2$ benutzen ist die Wahl der euklidischen Norm gerechtfertigt.
+   % Die übrigen Umformungen ergeben sich aus umordnen und wegfallen der Terme. 
+
+   % (\ref{eq:deriv-1}) lässt sich weiter umformen, dazu nutzen wir:
+
+   % \begin{align}
+   %    \deriv{C}{\wij} &= - \frac{\vij}{\wij} + \frac{1-\vij}{1-\wij} = \frac{\wij - \vij}{\wij (1 - \wij)} \\
+   %    \deriv{\wij}{d^2_{ij}} &= -bad_{ij}^{2(b-1)} \wij^2 = - \frac{b}{d_{ij}^2} \wij (1 - \wij)
+   % \end{align}
+
+   % Der UMAP Gradient ist also gegeben durch:
+   % % TODO: Daniel: Fehlt da nicht noch eine innere Summe aus 4.9?
+   % \begin{equation}
+   %    \deriv{C}{\mathbf{y}_i} = 4 \sumtups{j} (\wij - \vij) \frac{b}{d_{ij}^2} (\mathbf{y}_i - \mathbf{y}_j)
+   %    \label{eq:umapgrad}
+   % \end{equation}

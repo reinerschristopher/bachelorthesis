@@ -81,7 +81,7 @@
 	Ein Ball $B(\mathbf{x}_i)$ welcher die $k$-nächsten-Nachbarn von $\mathbf{x}_i$ enthält hat somit ein festes Volumen. 
 	Wir skalieren $g$ mit der inversen Distanz zum $k$-ten Nachbarn, dann gilt für das Volumen von $B$, 
 	$V(B(\mathbf{x}_i)) = \frac{\pi^{\frac{n}{2}}}{\Gamma(\frac{n}{2}+1)}$, somit ist auch die zweite Bedingung aus Lemma \ref{lem:geod} 
-	für unsere Daten $X$ erfüllt. 
+	für unsere Daten $X$ erfüllt. % TODO: können g konstruieren, so dass gleichberteilimf gegeben ist
 
 	\begin{rem}
 		Dabei ist der \textit{$j$-te Nachbar von $\mathbf{x}_i$ bzgl. $d$} gegeben durch $\mathbf{x}_{i_j}$, so dass 
@@ -128,7 +128,8 @@
 		\label{fig:Curse}
 	\end{figure}
 
-	Unter anderem kann man dem \textit{Fluch entfliehen}, in dem die Distanzen mit der Distanz zum ersten Nachbarn normalisiert werden. %TODO: füge Grafik ein 
+	Unter anderem kann man dem \textit{Fluch entfliehen}, in dem die Distanzen mit der Distanz zum ersten Nachbarn subtrahiert werden, somit werden die 
+	relativen Distanzen zwischen den Nachbarn eines Punktes $\mathbf{x}_i$ vergrößert. %TODO: füge Grafik ein 
 	Dies wenden wir auf unsere erweiterten Metriken $\bar{d}_i$ an und erhalten erweiterte Pseudometriken, 
 	
 	\begin{align}
@@ -269,7 +270,7 @@
 	Um eine Repräsentation des $\R^d$ zu konstruieren, wählen wir $N$ gleichverteilte Punkte im $\R^d$ und bezeichnen diese mit $Y = \{\mathbf{y}_i\}_{1 \leq i \leq N}$. 
 	In Kapitel \ref{Implementierung} werden wir eine Alternative zur randomisierten Wahl von $Y$ betrachten. 
 
-	Da unsere Mannigfaltigkeit der der $\R^d$ ist können wir direkt die unsichere simpliziale Menge betrachten,
+	Da unsere Mannigfaltigkeit der $\R^d$ ist können wir direkt die unsichere simpliziale Menge betrachten,
 
 	\begin{align}
 		\Yrep \coloneqq \fSing((Y, \norm{\cdot}_2)).
@@ -278,15 +279,17 @@
 
 	% TODO: ist verständlich, dass \Yrep_i nicht umbegint zu d'_i gehört?
 	Es ist zu beachten, dass für die $j$-Simplizes $\Yrep_j = (A_{\Yrep_j}, \nu_j)$ von $\Yrep$ gilt, dass $A_{\Yrep_j}=A_{\Xrep_j}$, mit $\Xrep_i = (A_{\Xrep_j}, \mu_j)$. Somit sind die 
-	Zugehörigkeitsfunktionen $\mu_j, \nu_j$ für weitere Überlegungen entscheidend.
+	Zugehörigkeitsfunktionen $\mu_j$ und $\nu_j$ für weitere Überlegungen entscheidend.
 	% TODO: Definition simplizialer Mengen
-	Um die beiden topologischen Repräsentationen $\Xrep, \Yrep$ zu vergleichen verwenden wir die Kreuzentropie unscharfer Mengen. Dabei nutzen wir die Definition simplizialer 
+	Um die beiden topologischen Repräsentationen $\Xrep, \Yrep$ zu vergleichen verwenden wir die Kreuzentropie $C_{\text{cross}}$ unscharfer Mengen. Dabei nutzen wir die Definition simplizialer 
 	Mengen als Folge von Mengen mit Kompositionen der Abbildungen $d_i$ und $s_i$. Somit erhalten wir 
 
 	\begin{align}
-		C_N(\Xrep, \Yrep) \coloneqq \sum_{i = 1}^N \lambda_i C_{\text{cross}}(\Xrep_i, \Yrep_i)
+		C_N(\Xrep, \Yrep) \coloneqq \sum_{i = 1}^N \lambda_i C_{\text{cross}}(\Xrep_i, \Yrep_i),
 		\label{eq:genloss}
 	\end{align}
+
+	mit $\lambda_i \in \R$. 
 
 	\begin{rem}
 		$\Xrep_i$ und $\Yrep_i$ bezeichnen die unscharfen $i$-Simplizes der unscharfen topologischen Repräsentationen $\Xrep$ bzw. $\Yrep$. 
@@ -299,7 +302,8 @@
 	auf $A$ betrachten. Die Kreuzentropie gibt dann ein Maß für die \textit{Unterschiedlichkeit} von $\mu_i$ und $\nu_i$ an. 
 
 	Somit erhalten wir eine bezüglich der $\mathbf{x}_i$ optimierte niedrigdimensionale Darstellung der $\mathbf{y}_i$ indem wir Gleichung (\ref{eq:genloss}) 
-	nach $\Yrep$, genauer gesagt nach den $\nu_i$ minimieren. 
+	nach $\Yrep$, genauer gesagt nach den $\nu_i$ minimieren. Die optimierte Repräsentation von $\Yrep$ können wir mittels modifiziertem Realisierungsfunktor 
+	$\fReal$ als metrischen Raum auffassen. 
 
 	Das nächste Kapitel wird eine leicht angepasste numerische Formulierung des Problems liefern. 
 
