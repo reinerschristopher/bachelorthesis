@@ -275,14 +275,22 @@
 		\label{fig:cartoon_cluster}
 	\end{figure}
 
-	\begin{figure} % Lokale struktur der Punkte in den Verfahren. cmap=nhair_color
+	\begin{figure} % Lokale struktur der Punkte in den Verfahren. cmap=nhair_color and cmap=nface_color. übergänge in TriMap fließender, tSNE weniger gehäuft/dicht als umap
 		%\centering
-		\includegraphics[width=400px, height=131px]{Figures/cartoon_local}
+		\includegraphics[width=400px, height=272px]{Figures/cartoon_local}
 		%\decoRule
 		\caption[Cluster des Cartoon Set]{(v.l.n.r) UMAP, t-SNE, TriMap auf dem Cartoon Set, mit $N=\num{10000}, D=\num{360000}$. 
-										Dabei entsprechen die Punkte des blauen Gebiets dem oberen Drittel der PCA Einbettung, 
-										das gelbe Gebiet dem unteren Drittel der PCA Einbettung und die Punkte außerhalb eines Gebietes dem mittleren Teil der PCA Einbettung}
+										blablabla}
 		\label{fig:cartoon_local}
+	\end{figure}
+
+	\begin{figure} % Lokale struktur der Punkte in den Verfahren, cluster sehr ähnlich. cmap=nhair_color
+		%\centering
+		\includegraphics[width=400px, height=134px]{Figures/cartoon_local_local}
+		%\decoRule
+		\caption[Cluster des Cartoon Set]{(v.l.n.r) UMAP, t-SNE, TriMap auf dem Cartoon Set, mit $N=\num{10000}, D=\num{360000}$. 
+										blablabla}
+		\label{fig:cartoon_local_local}
 	\end{figure}
 
 	\begin{figure}
@@ -303,7 +311,7 @@
 	% Beispielsweise sollten die Cluster welche die Ziffern 1 und 7 darstellen näher zueinander liegen als die Cluster der Ziffern 1 und 6. 
 %----------------------------------------------------------------------------------------
 
-\subsection*{FMNIST} \label{sec:FMNIST}
+\section*{FMNIST} \label{sec:FMNIST}
 	% Fließender Übergang zwischen Clustern, "Fehler" sind begründet
 
 %----------------------------------------------------------------------------------------
@@ -318,11 +326,8 @@
 
 %----------------------------------------------------------------------------------------
 
-\section{Stabilität unter sub-sampling}
-	% Siehe 5.2 von UMAP
-
-%----------------------------------------------------------------------------------------
-
 \section{Zusammenfassung der Ergebnisse}
+	Die Ergebnisse haben gezeigt, dass alle drei verwendeten DR Verfahren lokale Strukturen der 
+	Bilddatensätze erkannt haben. 
 
 %----------------------------------------------------------------------------------------

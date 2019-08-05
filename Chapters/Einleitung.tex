@@ -1,19 +1,36 @@
 %!TEX root = ../main.tex
 
-\chapter{Einleitung} 
-
-\label{Einleitung}
+\chapter{Einleitung} \label{Einleitung}
 
 % Relevanz, Übersicht, UMAP, Struktur
 
 %----------------------------------------------------------------------------------------
 
 %Define math commands used in this chapter
-\newcommand{\R}{\mathbb{R}}  % Symbol for real numbers
-\newcommand{\seqx}{\{\mathbf{x}_i\}_{i=1}^N, \ (\mathbf{x}_i \in \mathbb{R}^D)}  % Sequence of x_i
-\newcommand{\seq}[1][\mathbf{x}]{\{{#1}_i\}_{i=1}^N, \ ({#1}_i \in \mathbb{R}^D)}  % Sequence of input
-\providecommand{\abs}[1]{\lvert#1\rvert}  % produces | x |
-\providecommand{\norm}[1]{\lVert#1\rVert}  % produces || x ||
+	\newcommand{\R}{\mathbb{R}}  % Symbol for real numbers
+	\newcommand{\seqx}{\{\mathbf{x}_i\}_{i=1}^N, \ (\mathbf{x}_i \in \mathbb{R}^D)}  % Sequence of x_i
+	\newcommand{\seq}[1][\mathbf{x}]{\{{#1}_i\}_{i=1}^N, \ ({#1}_i \in \mathbb{R}^D)}  % Sequence of input
+	\providecommand{\abs}[1]{\lvert#1\rvert}  % produces | x |
+	\providecommand{\norm}[1]{\lVert#1\rVert}  % produces || x ||
+
+	\newcommand{\indexij}[1][v]{{#1}_{ij}}  % Symbol for inp_{ij}
+	\newcommand{\vij}{v_{ij}}  % Symbol for b_{ij}
+	\newcommand{\wij}{w_{ij}}  % Symbol for w_{ij}
+	\newcommand{\deriv}[2]{\frac{\partial {#1}}{\partial {#2}}}
+	\newcommand{\sumtup}[2]{\sum_{{#1},{#2} = 1}^N}
+	\newcommand{\sumtups}[1]{\sum_{{#1} = 1}^N}
+	\newcommand{\Xg}{\mathcal{X}_G}  % Symbol for Graph of \Xrep
+	\newcommand{\Xgi}{\mathcal{X}_{{G}_i}}  % Symbol for Graph of \Xrep
+	\newcommand{\wX}{w_\mathcal{X}}  % Symbol for weights of \Xrep
+	\newcommand{\WX}{W_\mathcal{X}}  % Symbol for Graph of \Xrep
+	\newcommand{\wY}{w_\mathcal{Y}}  % Symbol for weights of \Yrep
+	\newcommand{\Yg}{\mathcal{Y}_G}  % Symbol for Graph of \Xrep
+	\newcommand{\xxi}{\mathbf{x}_i}
+	\newcommand{\xxj}{\mathbf{x}_j}
+	\newcommand{\xij}{\mathbf{x}_{i_j}}
+	\newcommand{\wXi}{w_{\mathcal{X}_i}}  % Symbol for weights of \Xrep
+	\newcommand{\yyi}{\mathbf{y}_i}
+	\newcommand{\yyj}{\mathbf{y}_j}
 
 %----------------------------------------------------------------------------------------
 
@@ -51,26 +68,114 @@
 %----------------------------------------------------------------------------------------
 
 %\section{Einleitung}
-Wer eine Tageszeitung aufschlägt, wird nicht vermeiden können, mindestens einen Artikel 
-über die \enquote{Algorithmen der Zukunft}, \enquote{Daten hungrigen Konzerne}, \dots zu lesen. 
-Fakt ist heutzutage werden mehr Daten generiert und gespeichert als je zuvor in der 
-Geschichte der Menschheit und wir benötigen aussagekräftige, schnelle und zuverlässige 
-Verfahren um die gesammelten Daten auszuwerten, zu strukturieren und einen Mehrwert für die 
-Gesellschaft zu generieren.
+	\textit{DREI SÄTZE ÜBER DIE RELEVANZ VON HOCHDIMENSIONALEN DATEN IN DER HEUTIGEN GESELLSCHAFT.}
+	Die Aufgabe effiziente Verfahren zur Datenanalyse zu entwerfen ist somit von hoher Relevanz. 
 
-% hochdimensional ist nicht menschlich verständlich
+	Um einen Überblick der Aufgabenbereiche der Datenanalyse zu erhalten kann man diese in Felder 
+	unterteilen \footnote{\url{https://wirtschaftslexikon.gabler.de/definition/datenanalyse-30331/version-164492}}.
+	Die deskriptive Datenanalyse beschreibt Daten, beispielsweise durch graphische Visualisierung. 
+	Damit ist sie verbunden mit der explorativen Datenanalyse. Diese 
+	dient zum Entdecken neuer Zusammenhänge, oft werden dazu graphische Methoden genutzt. 
+	Die inferenzielle Datenanalyse nutzt gegebene Stichproben, um auf nicht erhobene Stichproben 
+	zu schließen. Dieser Bereich hat in den vergangenen Jahren stark an Bedeutung gewonnen, 
+	insbesondere aufgrund der sehr guten Resultate erzielt durch neuronale Netzwerke. 
 
-Wir werden uns in dieser Arbeit mit einer Klasse an Verfahren befassen, welche hochdimensionale Daten 
-visualisiert. Insbesondere werden wir das UMAP (Uniform Manifold Approximation and Projection) 
-Verfahren 
+	In dieser Arbeit möchten wir uns mit \textit{Verfahren zur Dimensionsreduktion} beschäftigen. 
+	Diese dienen der deskriptiven Datenanalyse und der explorativen Datenanalyse. Zusätzlich 
+	lassen sie sich dazu nutzen Verfahren zur inferenziellen Datenanalyse zu verbessern. 
+	Wir werden etwas später auf die Anwendungen zurückkommen. Doch zu erst möchten wir 
+	die Problemstellung formulieren. 
 
-%----------------------------------------------------------------------------------------
+	\subsection*{Dimensionsreduktion}
+	Sei $X$ eine Menge an Daten. Dabei betrachten wir von nun an Daten welche uns in Form von 
+	$D$-dimensionalen reellen Vektoren geben sind, somit ergibt sich für $N$ Datenpunkte, 
+	$X = \{\xxi\}_{1 \leq i \leq N}$ mit $\xxi \in \R^D$. 
+	Wenn $D > 10$ sprechen wir meist von \textit{hochdimensionalen Daten}.
+	Dabei ist Beschränkung auf Daten, welche als Vektoren beschreiben lassen sinnvoll, da 
+	uns die Darstellung einerseits die mathematische Formulierung des Problems erleichtert. 
+	Andererseits können sehr verschiedene Daten in dieser Form angegeben werden. 
+	So kann man ein digitales Bild als Vektor auffassen indem die Dimension der Anzahl 
+	an Pixeln entspricht und die Farbwerte der Pixel die Einträge der Vektoren geben. 
+	Wörter können ebenfalls als Vektoren gegeben werden indem beispielsweise die Dimension der 
+	Gesamtzahl der Wörter entspricht und die Wörter durch Einheitsvektoren darstellt werden. 
+	Wir sehen, das die Anzahl an Dimensionen sehr groß werden kann. Eine moderne Kamera 
+	macht Bilder mit meist mehr als $1920 \times 1080$ Pixeln, dies entspricht $D = \num{2073600}$. 
+	Die deutsche Sprache hat circa 23 Millionen unterschiedliche Wörter, somit wäre $D = \num{23000000}$. 
+	Wir sprechen von einer \textit{Dimensionsreduktion} von $X$, wenn wir eine \textit{Einbettung} $Y$ angeben, 
+	mit $Y = \{\yyi\}_{1 \leq i \leq N}$ und $\yyi \in \R^d$, wobei $d \ll D$, so dass 
+	sich $X$ und $Y$ \textit{ähnlich} sind. 
 
-\subsection*{Aufgabenstellung}
+	Wir möchten nun zurück auf die Ziele der Datenanalyse kommen. Die Einbettung $Y$ kann dazu 
+	dienen die Daten $X$ zu visualisieren, wenn $d \in {1,2,3}$. Da $X$ und $Y$ ähnlich sind, 
+	können durch die Visualisierung von $Y$ Rückschlüsse auf $X$ gemacht werden. Oft lassen sich 
+	in der Visualisierung sogenannte Cluster erkennen, siehe dazu Abbildung \ref{fig:umap_mnist}. 
+	Neben der Visualisierung kann die Einbettung $Y$ zur Vorverarbeitung genutzt werden, also als 
+	Eingabe für einen anderen Algorithmus der Datenanalyse. So werden Dimensionsreduktionen 
+	beispielsweise für die Gesichtserkennung genutzt. 
+	Die Einbettung von $X$ benötigt zudem aufgrund der deutlich kleineren Dimension weniger physischen 
+	Speicherplatz, dieser Aspekt ist zwar nicht entscheidend für die Datenanalyse, dennoch erwähnenswert, 
+	insbesondere dann, wenn nur begrenzt viel Speicher zur Verfügung steht. 
 
-%----------------------------------------------------------------------------------------
+	\begin{figure}
+		\centering
+		\includegraphics[width=200px, height=200px]{Figures/umap_mnist}
+		%\decoRule
+		\caption[UMAP auf MNIST]{Einbettung von Bildern mit $D = 784, N=\num{70000}$ (MNIST Datensatz). Die Farben markieren unterschiedliche 
+								Ziffern von $0$ bis $9$. Eine genauere Beschreibung findet sich in Kapitel \ref{Experimente}.}
+		\label{fig:umap_mnist}
+	\end{figure}
 
-\subsection*{Datenanalyse}
+	Eine häufig getroffene Annahme ist, dass die Daten $X$ auf einer niedrigdimensionalen 
+	Struktur liegen. In der Literatur ist diese Annahme als Mannigfaltigkeit-Hypothese 
+	(\textit{engl.: manifold hypothesis}) bekannt \cite{Mitter,Rifai}. Dabei kann sich eine 
+	Mannigfaltigkeit als Raum vorgestellt welcher lokal einem niedrigdimensionalen Raum gleicht. 
+	So ist Beispielsweise der Erdball eine $2$-dimensionale Mannigfaltigkeit, da sie lokal gesehen 
+	flach ist. Die Intuition, welche diese Annahme gerechtfertigt ist somit, dass wir Daten messen, 
+	welche nicht relevant sind. Beispielsweise ist der Hintergrund in einem Bild von einem Gesicht 
+	bei der Gesichtserkennung nicht relevant. 
+
+	Wir müssen nun den Begriff der \textit{Ähnlichkeit} von $X$ und $Y$ präzisieren und angeben 
+	wie wir $Y$ systematisch finden können. 
+	Dabei lässt sich die Frage nach der \textit{Ähnlichkeit} mathematisch unterschiedlich formulieren. 
+	Wir verweisen den Leser auf \cite{Lee2009,Rieck2015}. 
+
+	\subsection*{Verfahren zur Dimensionsreduktion}
+	Um für hochdimensionale Daten $X$ eine niedrigdimensionale Einbettung zu finden, wendet 
+	man \textit{Dimensionsreduktionsverfahren} (kurz: \textit{DR Verfahren}) an. 
+	Dabei gibt es DR Verfahren, welche bei der Einbettung globale Distanzen bevorzugen. 
+	Bekannte Verfahren dabei sind PCA, MDS und Sammon Mapping. Zu den Verfahren, welche 
+	die lokalen Distanzen bevorzugen gehören Isomap, Laplacian Eigenmaps und t-SNE. 
+	Die Begriffe \textit{lokal} und \textit{global} sind dabei nicht fest definiert. 
+	Wir werden später genauer auf einige Verfahren eingehen. 
+
+	\subsection*{UMAP}
+	Der Fokus dieser Arbeit liegt auf der Darstellung und Analyse des UMAP Verfahrens \cite{UMAP}. 
+	UMAP ist ein Verfahren zur Dimensionsreduktion und kommt aus dem Bereich der 
+	\textit{topologischen Datenanalyse}, diese nutzt mathematische Instrumente der Topologie 
+	um Daten zu beschreiben. 
+	Das Verfahren nimmt die Mannigfaltigkeit-Hypothese an. Im ersten Schritt des Verfahrens 
+	betrachtet man von jedem Datenpunkt die Distanz zu seinen benachbarten Punkten und nutzt diese 
+	und zusammen mit einer Aussage der Riemannschen Geometrie um lokale Distanzen, auf der Mannigfaltigkeit, 
+	zwischen den Datenpunkten zu bestimmen. Diese Konstruktion liefert uns für jeden Datenpunkt 
+	einen \textit{metrischen Raum}, wobei die \textit{Metriken} zwischen den Räumen a priori 
+	nicht miteinander kompatibel sind. Um dieses Problem zu lösen werden wir für jeden metrischen Raum eine 
+	\textit{unscharfe simpliziale Menge} konstruieren, diese erhält die wichtigen Informationen des 
+	metrischen Raumes. Die simplizialen Mengen können wir miteinander vereinigen. Ähnlich konstruieren wir 
+	für eine initiale Einbettung $Y$ eine zugehörige simpliziale Menge. Wir werden dann einen Abstandsbegriff 
+	zwischen den simplizialen Mengen nutzen um die Darstellung von $Y$ zu optimieren. 
+
+	\subsection*{Eigene Beiträge}
+
+
+
+
+
+
+
+
+
+
+
 % Einordnung verschiedener DR Algorithmen. (Geometrie, Stochastik, Topologie)
 % Was ist eine gute Repräsentation der Daten?
 % Sollte unabhängig von Transformationen weniger wichtiger Eigenschaften sein und 
@@ -78,142 +183,59 @@ Verfahren
 % Früher 'feature engineering' jetzt lernen der wichtigen Eigenschaften (siehe Bengio 2013)
 % Welche Formen von Datenanalyse (statistische, geometrische,...)
 
-%-----------------------------------
+	% % TODO: ergänzend siehe Oudot, Ch.4
 
-	% \subsection{Topologische Datenanalyse}
-	Eine neuere Form der Datenanalyse - die topologische Datenanalyse (\textit{kurz: TDA}) - 
-	nutzt mathematische Instrumente des Teilgebiets der Topologie 
-	(\textit{griechisch: Lehre vom Ort/Platz}) um Daten zu beschreiben und zu strukturieren.
+	% % Ganz ursprünglich Chernoff feces, dimensionen und knoten sie tSNE p.1
 
-	Wir beschreiben die Situation einen Datensatz $X$ zu analysieren wie folgt. Wir betrachten 
-	einen $D$-dimensionalen Raum und ein Objekt $K$. In unserem Fall werden wir uns größtenteils 
-	mit dem euklidischen Raum $\R^D$ versehen mit der euklidischen Norm $\norm{\cdot}$ beschäftigen.
-
-	$K$ kann beispielsweise eine abgeschlossene Menge sein. Die genaue Struktur von $K$ bleibt uns allerdings unbekannt. 
-	Später werden wir argumentieren, dass $K$ gewisse Regularitätseigenschaften erfüllt und 
-	in vielen Fällen lokal einem niedrigdimensionalen Raum $\R^d, (d \ll D)$ gleicht. 
-
-	Statt $K$ ist uns eine endliche Menge an $N$ Punkten $X=\seqx$, gegeben. 
-	$X$ wird als \textit{Punktwolke} bezeichnet und beschreibt in einem Experiment gemessene Daten, 
-	beispielsweise Sensormessdaten, biologische Informationen oder Bilddatensätze. 
-
-	In Kapitel \ref{Experimente} werden wir uns mit einem 
-	Bilddatensatz mit \num{100000} Farbbildern mit einer Auflösung von $300 \times 300$ Pixeln 
-	beschäftigen. Wir können diesen Datensatz als $N = \num{100000}$-elementige Punktwolke im 
-	$\R^{300 \times 300 \times 4}$ auffassen, wobei wir die vier Farbkanäle der Bilder berücksichtigen.
-
-	Wir gehen dabei davon aus, dass $K$ und $X$ in einem gewissen Sinne \enquote{ähnlich} sind. 
-	Nun ist es Ziel der TDA mittels Methoden der Topologie Aussagen über die Struktur von $X$ zu treffen, 
-	welche, aufgrund der Ähnlichkeit, auch für $K$ gelten sollen. Die $K$ zugrundeliegende Struktur 
-	kann uns dann dabei helfen Aussagen über weitere gemessene Daten zu treffen, 
-	da diese auch in der uns unbekannten Menge $K$ liegen sollten. Zusätzlich hilft
-	% TODO: ergänzend siehe Oudot, Ch.4
-
-%-----------------------------------
-%----------------------------------------------------------------------------------------
-
-% (Eher später in Kap2) Simpliziale Mengen sind einer Form um topologische Räume kombinatoricsh darzustellen 
-% deshalb eignen sie sich besonders für Berechnungen.
-
-%----------------------------------------------------------------------------------------
-
-\subsection*{Dimensionsreduktion / Problemstellung}
-	% hoch dimensionale Daten: Bilder, Word-count Vektoren, Zell Daten
-
-	% Ganz ursprünglich Chernoff feces, dimensionen und knoten sie tSNE p.1
-
-	Sei $X=\seqx$. Wir bezeichnen $D$ als die Dimension unserer Daten, beziehungsweise als die Anzahl 
-	der gemessenen Eigenschaften. $N$ ist die Anzahl der verfügbaren Datenpunkte. In der Praxis können $D$ und $N$ 
-	sehr groß sein. So gilt für den Bilddatensatz welchen wir in Kapitel \ref{Experimente} betrachten werden, 
-	$N=\num{100000}, D=\num{360000}$. %TODO: betrachten wir cartoonset100k oder cartoonset10k?
-
-	% Wahrscheinlichkeitstheorie:      |  Geometrie:
-	% Probabilistic PCA, VAEs, GANs    |  tSNE  (lt. Posada)
-	Eine Herangehensweise die $d$-dimensionale Repräsentation zu finden ist es eine $N \times N$ Matrix $M$ 
-	aufzustellen, die ersten $d$ Eigenvektoren von $M$, wobei die Eigenvektoren absteigend nach der Größe der 
-	zugehörigen Eigenvektoren geordnet sind, geben 
+	% % Wahrscheinlichkeitstheorie:      |  Geometrie:
+	% % Probabilistic PCA, VAEs, GANs    |  tSNE  (lt. Posada)
+	% Eine Herangehensweise die $d$-dimensionale Repräsentation zu finden ist es eine $N \times N$ Matrix $M$ 
+	% aufzustellen, die ersten $d$ Eigenvektoren von $M$, wobei die Eigenvektoren absteigend nach der Größe der 
+	% zugehörigen Eigenvektoren geordnet sind, geben 
 
 
-	% Erwähne Graph embedding Verfahren und verweise auf Kapitel 3
-	% https://www.ncbi.nlm.nih.gov/pubmed/17108382
+	% % Erwähne Graph embedding Verfahren und verweise auf Kapitel 3
+	% % https://www.ncbi.nlm.nih.gov/pubmed/17108382
 
-	% Dann überleiten zu UMAP
+	% % TODO: betone Gleichverteilung auf Mannigfaltigkeit bei UMAP
 
-	\textit{Hier sollen die zwei Arten an DR Algorithmen vorgestellt werden (Matrix-Faktorisierung 
-	und Graph Layout). Zusätzlich sollen PCA, Isomap, Laplacian Eigenmaps und t-SNE vorgestellt werden.} \\
+	% % TODO: warum ist Topologie sinnvoll?
 
-	Die meisten Verfahren zur Dimensionsreduktion beruhen auf der Annahme, das reale hochdimensionale Daten 
-	sich in der Umgebung einer niedrigdimensionalen Mannigfaltigkeit konzentrieren. 
-	In der Literatur ist diese Annahme als Mannigfaltigkeit-Hypothese (\textit{engl.: manifold hypothesis})
-	bekannt \cite{Mitter,Rifai}. 
-	Ansätze um einen gegebenen Datensatz auf diese Annahme zu testen 
-	finden sich in \cite{Fefferman}.  % TODO: zu konkret?
+	% % TODO: Betrachte Oudot s.67
 
-	% TODO: betone Gleichverteilung auf Mannigfaltigkeit bei UMAP
+	% % TODO: Anwendungen von persistence Oudot s.8
 
-	% TODO: warum ist Topologie sinnvoll?
+% \subsection*{Eigene Beiträge}
+% 	% Daniel: Zussamen mit Ziele der Arbeit
+% 	Wir möchten nun die Ziele dieser Arbeit formulieren.
 
-	% TODO: Betrachte Oudot s.67
+% 	\begin{itemize}
+% 		\item Einführung in die grundlegenden Werkzeuge der topologischen Datenanalyse
+% 		\item Mögliche Schritte wie die Lücke zwischen Theorie und Praxis des UMAP Verfahrens 
+% 			  geschlossen werden kann
+% 		\item UMAP anhand sinnvoller Datensätze mit anderen Dimensionsreduktionsverfahren vergleichen
+% 		\item 
+% 	\end{itemize}
 
-	% TODO: Anwendungen von persistence Oudot s.8
+% 	Insbesondere werden wir die in Kapitel 2 von \cite{UMAP} beschriebene Theorie ausführlicher 
+% 	beschreiben und in einen allgemeineren Kontext setzen.
 
-%----------------------------------------------------------------------------------------
+% %----------------------------------------------------------------------------------------
 
-\subsection*{Ziele der Arbeit}
+% \subsection*{Aufbau der Arbeit}
+% 	In Kapitel \ref{Grundlagen} werden wir die theoretische Grundlage des UMAP Verfahrens erklären. 
+% 	Dies wird einige Definitionen und Grundlagen aus der Kategorientheorie und der 
+% 	(algebraischen) Topologie erfordern. Wir haben uns bemüht diese möglichst vollständig darzustellen.
+% 	Für zusätzliche Informationen empfiehlt sich \cite{Brandenburg,Barr,Munkres}.
 
-%----------------------------------------------------------------------------------------
+% 	Kapitel \ref{UMAP} wird die Theorie des UMAP Verfahrens darstellen. Dabei werden wir 
+% 	auf die in Kapitel \ref{Grundlagen} gelegten Grundlagen zurückgreifen. Zusätzlich soll argumentiert 
+% 	werden, dass eine praktische Implementierung wie sie in der Theorie beschrieben ist zu 
+% 	rechenaufwendig ist und somit wenig praktischen nutzen hat. Deshalb 
 
-\subsection*{Eigene Beiträge}
-	% Daniel: Zussamen mit Ziele der Arbeit
-	Wir möchten nun die Ziele dieser Arbeit formulieren.
+% 	Wir möchten anmerken, das die Einbettung abhängig von der Vorverarbeitung der Daten ist, deswegen 
+% 	ist für die Bewertung der Ergebnisse ein gutes Verständnis der Daten wichtig. Bei der Wahl der 
+% 	Datensätze haben wir uns in dieser Arbeit auf Bilddaten beschränkt. Dabei sind die Bilder für 
+% 	Menschen leicht interpretierbar und somit visuell gut zu bewerten.
 
-	\begin{itemize}
-		\item Einführung in die grundlegenden Werkzeuge der topologischen Datenanalyse
-		\item Mögliche Schritte wie die Lücke zwischen Theorie und Praxis des UMAP Verfahrens 
-			  geschlossen werden kann
-		\item UMAP anhand sinnvoller Datensätze mit anderen Dimensionsreduktionsverfahren vergleichen
-		\item 
-	\end{itemize}
-
-	Insbesondere werden wir die in Kapitel 2 von \cite{UMAP} beschriebene Theorie ausführlicher 
-	beschreiben und in einen allgemeineren Kontext setzen.
-
-%----------------------------------------------------------------------------------------
-
-\subsection*{Aufbau der Arbeit}
-	In Kapitel \ref{Grundlagen} werden wir die theoretische Grundlage des UMAP Verfahrens erklären. 
-	Dies wird einige Definitionen und Grundlagen aus der Kategorientheorie und der 
-	(algebraischen) Topologie erfordern. Wir haben uns bemüht diese möglichst vollständig darzustellen.
-	Für zusätzliche Informationen empfiehlt sich \cite{Brandenburg,Barr,Munkres}.
-
-	Kapitel \ref{UMAP} wird die Theorie des UMAP Verfahrens darstellen. Dabei werden wir 
-	auf die in Kapitel \ref{Grundlagen} gelegten Grundlagen zurückgreifen. Zusätzlich soll argumentiert 
-	werden, dass eine praktische Implementierung wie sie in der Theorie beschrieben ist zu 
-	rechenaufwendig ist und somit wenig praktischen nutzen hat. Deshalb 
-
-	Wir möchten anmerken, das die Einbettung abhängig von der Vorverarbeitung der Daten ist, deswegen 
-	ist für die Bewertung der Ergebnisse ein gutes Verständnis der Daten wichtig. Bei der Wahl der 
-	Datensätze haben wir uns in dieser Arbeit auf Bilddaten beschränkt. Dabei sind die Bilder für 
-	Menschen leicht interpretierbar und somit visuell gut zu bewerten.
-
-%----------------------------------------------------------------------------------------
-
-\subsection*{Vergleich mit Original Paper}
-	% Sec 3 wird nicht wiedergegeben, andere ergänzt und erweitert
-	% Eventuell in 'Aufbau der Arbeit' erwähnen
-
-%----------------------------------------------------------------------------------------
-
-% \subsection*{Danksagung}
-% 	An dieser Stelle möchte ich gerne Prof. Dr. Jochen Garcke, für die Vergabe dieses sehr interessanten 
-% 	und spannenden Themas, danken. Besonderer Dank gilt Leland McInnes für das persönliche Gespräch in Ottawa, Kanada. 
-% 	So konnte ich die Motivation, welche er für das UMAP Verfahren hatte, aus erster Hand erfahren.
-
-% 	Gerne möchte ich auch meinen Freunden danken welche mich im Laufe der Studienzeit, besonders 
-% 	während der Bachelorarbeit, begleitet haben. Anna für die vielen Eispause und die lustige Unterhaltung 
-% 	auch spät in der Nacht, Tobi, Hendrik und Lennard für die Motivation und den mathematischen Austausch und Lukas 
-% 	für die hilfreichen Gespräche. Ohne euch wäre diese Arbeit nicht entstanden. 
-
-% 	Zum Schluss meiner Familie für Ihre bedingungslose Unterstützung, trotz Einsilbigkeit meiner Antworten 
-% 	in den letzten Wochen meiner Arbeit.
-
+% %----------------------------------------------------------------------------------------

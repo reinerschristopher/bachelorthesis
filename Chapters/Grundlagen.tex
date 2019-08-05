@@ -26,14 +26,13 @@
 
 %----------------------------------------------------------------------------------------
 
-% category Set, Top, duale Kategorie kurz (morphismen umkehren)
-
-% Zusammenfassen der bisherigen Konstruktion und das man einen Schritt weiter geht
-% Ausblicke auf das was man später mit einer Definition macht
-% Wofür war die gerade gemachte Definition sinnvoll
-% Die Definition einer Adjunktion ist dafür wichtig einen zwischen metrischen Räumen und 
-% unscharfen simplizialen Mengen zu übersetzen.
-% Typische Verwendungen für die Definition
+% N O T I Z E N
+	% Zusammenfassen der bisherigen Konstruktion und das man einen Schritt weiter geht
+	% Ausblicke auf das was man später mit einer Definition macht
+	% Wofür war die gerade gemachte Definition sinnvoll
+	% Die Definition einer Adjunktion ist dafür wichtig einen zwischen metrischen Räumen und 
+	% unscharfen simplizialen Mengen zu übersetzen.
+	% Typische Verwendungen für die Definition
 
 %----------------------------------------------------------------------------------------
 %----------------------------------------------------------------------------------------
@@ -103,26 +102,20 @@
 		zu einer erweiterten Metrik $d$. Eine formale Definition der Äquivalenz zweier metrischer Räume soll hier nicht gegeben werden. 
 		Es genügt zu wissen, dass wichtige topologische Eigenschaften erhalten zwischen den beiden Räumen übertragen werden können.
 		Hier gilt $x + \infty = \infty + x = \infty, x \in [0,\infty]$.
-	\end{rem}
-
-	% https://math.stackexchange.com/questions/399722/metric-assuming-the-value-infinity#399759 erweiterte metriken beitzten gute eigenschaften
-
-	% TODO: n-dim euklidischer Raum als Beispiel
-
-	% nichtexpansive Abbildung
+	\end{rem} % https://math.stackexchange.com/questions/399722/metric-assuming-the-value-infinity#399759 erweiterte metriken beitzten gute eigenschaften
 
 	\begin{rem}
 		Für einen metrischen Raum $(X, d)$, ist ein offener \textit{Ball mit Radius $r > 0)$} und Mittelpunkt $p$ mit $p$ aus $X$ gegeben durch: 
 		
-		\begin{align}
+		\begin{equation}
 			B_r(p) \coloneqq \{x \in X | d(x,p) < r\}.
-		\end{align}
+		\end{equation}
 
 		Für den Fall, das $X$ der $n$-dimensionale euklidische Raum ist, ist das $n$-dimensionale Volumen bezüglich der euklidischen Metrik:
 
-		\begin{align}
+		\begin{equation}
 			V_n(B_r(p)) = \frac{\pi^{\frac{n}{2}}}{\Gamma(\frac{n}{2}+1)}r^n
-		\end{align}
+		\end{equation}
 	\end{rem}
 
 	In der Einleitung bereits erwähnt, werden wir Annehmen, dass unsere Daten $X=\{\mathbf{x}_i\}_{i=1}^N, (\mathbf{x}_i \in \R^D)$ mit $D$ 
@@ -180,56 +173,82 @@
 		Man nennt einen Atlas \textit{$C^k$-differenzierbar} mit $k \geq 1$, wenn alle seine Kartenwechsel $C^k$-Diffeomorphismen sind.
 	\end{defn}
 
-	Karten werden genutzt um zwischen der Mannigfaltigkeit und dem $\R^d$ zu übersetzen. 
+	Karten werden genutzt um zwischen der Mannigfaltigkeit und dem $\R^d$ zu übersetzen, siehe Abbildung \ref{fig:Atlas}. 
 
 	\begin{figure}
 		%\centering
 		\includegraphics[width=400px, height=125px]{Figures/Atlas}
 		%\decoRule
-		\caption[Atlas einer Mannigfaltigkeit]{Atlas einer Mannigfaltigkeit.}
+		\caption[Atlas einer Mannigfaltigkeit]{Zwei Karten einer Mannigfaltigkeit.}
 		\label{fig:Atlas}
 	\end{figure}
 
 	\begin{defn}
-
-		Eine \textit{differenzierbare} Mannigfaltigkeit ist eine...
+		Eine \textit{differenzierbare} Mannigfaltigkeit ist ein Paar $(\M, \mathcal{A}=(U_i,\phi_i)_{i \in I}$, wobei $\M$ eine 
+		$n$-dimensionale Mannigfaltigkeit und $\mathcal{A}$ ein $C^1$-Atlas auf $\M$ ist. Man nennt den Atlas oft $C^1$-Struktur auf $\M$. 
 	\end{defn}
 
-	\begin{ex}
-		$S^n$ ist eine $n$-dimensionale Mannigfaltigkeit im $\R^{n+1}$.
-	\end{ex}
+	% \begin{ex}
+	% 	$S^n$ ist eine $n$-dimensionale Mannigfaltigkeit im $\R^{n+1}$.
+	% \end{ex}
 
 	% TODO: weiteres Beispiel
 
 	Nun können wir im Fall der Dimensionsreduktion die Vermutung aufstellen, dass unsere Daten $X$ auf einer 
 	$d$--dimensionale Mannigfaltigkeit $\M$ im $\R^D$ liegen. Zusätzlich gehen wir davon aus, dass unsere Daten 
-	einen Abstandsbegriff erlauben. Somit lässt sich die Definition der Mannigfaltigkeit erweitern.
+	einen Abstandsbegriff erlauben. Somit lässt sich die Definition der Mannigfaltigkeit auf die Riemannschen 
+	Mannigfaltigkeiten erweitern.
 
 	% TODO: Definition riemannsche Mannigfaltigkeit, erwähne matrix darstellungs
-	\begin{defn}[Riemannsche Mannigfaltigkeit]
-		Sei $g$,...
+	\begin{defn} %[Riemannsche Mannigfaltigkeit]
+		Ein differenzierbares Vetorfeld $X$ auf $\Sigma \subset \R^n$ ist eine Abbildung, welche jedem Punkt $p \in \Sigma$ 
+		einen Vektor $v(p) \in \R^n$ zuordnet. Ist $X$ differenzierbar, so ist $X$ ein differenzierbares Vektorfeld.
 
-		Ein Tupel $(\M, g)$, wobei $\M$ eine Mannigfaltigkeit und $g$ eine riemannsche Metrik ist heißt
-		\textit{riemannsche Mannigfaltigkeit}.
+		Sei $\M$ eine $n$-dimensionale differenzierbare Mannigfaltigkeit. Eine \textit{Riemannsche Metrik g} auf $\M$ ist eine 
+		Familie positive-definieter innerer Produkte $g_p : T_p\M \times T_p\M \to \R$, für $p \in \M$, so dass für jedes Paar 
+		differenzierbare Vektorfelder $X, Y$ auf $\M$, 
+		\begin{equation}
+			\M \to \R, \quad p \mapsto g_p(X|_p, Y|_p)
+		\end{equation}
+		eine glatte Funktion ist. 
+
+		Wir nennen das Paar $\M, g$ eine \textit{Riemannsche Mannigfaltigkeit}.
 	\end{defn} 
 
-	% TODO: Metrisierbarkeit riemannsche Mannigfaltigkeit
 	\begin{rem}
-		Eine riemannsche Mannigfaltigkeit ist stets metrisierbar im Sinne, das ...
+		Eine bekannte Aussage der Riemannschen Geometrie ist, dass jede differenzierbare Mannigfaltigkeit eine riemannsche Metrik 
+		besitzt. Somit ist die Definition der riemannschen Mannigfaltigkeit keine starke Einschränkung. 
 	\end{rem}
+
+	% TODO: Metrisierbarkeit riemannsche Mannigfaltigkeit
+	% \begin{rem}
+	% 	Eine riemannsche Mannigfaltigkeit ist stets metrisierbar im Sinne, das ...
+	% \end{rem}
 
 	% TODO: Beispiele riemannsche Mannigfaltigkeit
 
-	Die Riemannmetrik beschreibt eine Distanz auf der Mannigfaltigkeit. Die Länge eines kürzesten Weges auf $\M$ 
-	zwischen zwei Punkten $p, q \in \M$ wird als Geodäte bezeichnet und ist definiert als 
+	Nun möchten wir den Begriff der Abstandsfunktion einer Riemannschen Mannigfaltigkeit geben. Dieser wird uns erlauben 
+	die kürzesten Wege auf einer riemannschen Mannigfaltigkeit zu betrachten. 
 
-	\begin{defn}[Geodäte]
-		Seien $p, q \in \M$ ...
+	\begin{defn} %[Geodäte]
+		Sei $(\M,g)$ eine Riemannsche Mannigfaltigkeit. Die \textit{Abstandsfunktion} auf $(\M,g)$ ist gegeben durch
+
+		\begin{equation}
+			d(x,y) \coloneqq \inf{L(\gamma) | \gamma:[0,1] \to \M, \gamma(0)=x, \gamma(1)=y, \gamma \text{ ist stückweise differenzierbar}},
+		\end{equation}
+
+		wobei 
+
+		\begin{equation}
+			L(\gamma) \coloneqq \int_0^1 \sqrt{g_{\gamma(t)}(\dot{\gamma}(t), \dot{\gamma}(t))} \ dt
+		\end{equation}
 	\end{defn}
 
-	Der Begriff der riemannschen Mannigfaltigkeit ermöglicht es uns unsere zentrale Annahme, das $X \subseteq \R^D$ 
-	einer niedrigdimensionalen Struktur entnommen ist, zu formalisieren.
-	Wir möchten nun diese niedrigdimensionale Struktur genauer beschreiben.
+	Wenn $\gamma$ ein Weg mit konstanter durchlaufender Geschwindigkeit ist welcher lokal die kürzeste Verbindung realisiert, heißt \textit{Geodäte}. 
+	Eine formale Definition dieser Aussage benötigt einige Vorarbeit und es muss die \textit{Levi-Civita-Ableitung} definiert werden. Dies 
+	würde den Rahmen der Arbeit überschreiten und wir verweisen den interessierten Leser auf ein Lehrbuch der Riemannschen Geometrie. 
+	Wichtig für weitere Überlegungen wird sein, dass eine Geodäte die kürzeste Distanz zwischen zwei Punkten einer Riemannschen Mannigfaltigkeit 
+	definiert. 
 
 %----------------------------------------------------------------------------------------
 
@@ -281,6 +300,12 @@
 					f \circ id_A =  f = id_A \circ f
 				\end{equation*}
 		\end{enumerate}
+
+		Eine \textit{Unterkategorie} einer Kategorie $\C$ besitzt als Objekte und Morphismen je eine Teilmenge der Objekte bzw. 
+		Morphismen von $\C$.
+
+		Die \textit{duale Kategorie $\C{op}$} einer Kategorie $\C$ ist gegeben durch $Ob(\C^{op}) = Ob(\C)$ und 
+		$\hom_{\C^{op}}(A,B) = \hom_{\C}(B,A)$.
 	\end{defn}
 
 	\begin{rem}
@@ -296,22 +321,43 @@
 		Meist ist $Ob(\C)$ sogar eine Menge. Dann spricht man formal von einer strikten kleinen Kategorie.
 	\end{rem}
 
+	Wir werden nun einige Beispiele von Kategorien geben. Dabei soll später auf diese Beispiele zurückgegriffen 
+	werden um die Theorie des UMAP Verfahrens weiter aufzubauen. Die Beispiele sollten also als Definitionen aufgefasst werden. % TODO: raus?
+
 	\begin{ex}
-		\textit{Passende Beispiele von Kategorien, welche später wieder genutzt werden. $\Top, \Set, (Fin)EPMet, I$} % fürr I siehe fuzzy sets
-		% Erwähne dass nicht erweiternde Abbildungen genutzt werden, da Isometrien der Räume zu restriktiv wären 
+		Die Kategorie der Mengen $\Set$ hat als Objekte Mengen und als Morphismen Funktionen. 
+		Diese sehr einfache Definition scheint auf den ersten Blick etwas nutzlos. Es wird sich im Laufe des 
+		Abschnitts zeigen, dass $\Set$ in der Kategorientheorie eine zentrale Rolle spielt.
 	\end{ex}
 
-	Ein weiterer für die folgenden Definitionen wichtiger Begriff ist der der dualen Kategorie.
+	\begin{ex}
+		$\Top$ bezeichnet die Kategorie der topologischen Räume, wobei die Objekte topologische Räume sind und 
+		Morphismen stetige Funktionen.
+	\end{ex}
 
-	\begin{defn}[Duale Kategorie]
-		Es sei $\C$ eine Kategorie. Die \textit{duale Kategorie $\C{op}$} ist die Kategorie mit 
-		$Ob(\C^{op}) = Ob(\C)$ und $\hom_{\C^{op}}(A,B) = \hom_{\C}(B,A)$.
-	\end{defn}
+	\begin{ex}
+		Die Kategorie $\EPMet$ hat als Objekte erweiterte pseudo-metrische Räume und für Morphismen 
+		$\phi \in \hom_{\EPMet}((X,d),(X',d'))$ gilt, $d'(\phi(x),\phi(y)) \leq d(x,y)$, die Morphismen 
+		nennen wir \textit{nicht erweiternde Abbildungen}.
+		Die Unterkategorie der endlichen erweiterten pseudo-metrischen Räume bezeichnen wir mit $\fEPMet$. 
+		Diese Kategorie wird in Kapitel \ref{UMAP} verwendet um unsere Daten $X$ zu beschreiben. 
+	\end{ex}
 
-	\begin{rem}
-		Eine Eigenschaft der dualen Kategorie ist, dass Aussagen, 
-		welche für alle Kategorien bewiesen wurden, auch für alle dualen Kategorien gelten. 
-	\end{rem}
+	% \begin{ex}
+	% 	Jede Gruppe $(G,\cdot)$ kann als Kategorie mit einem Objekt und Morphismen den Elementen aus $G$. Ein 
+	% 	Funktor $F: G \to \Set$ ist dann die Wirkung von G auf einer Menge. Allgemeiner sagt man dies in manchen 
+	% 	Fällen auch für einen Funktor einer Gruppe in eine beliebige Kategorie. 
+	% \end{ex}
+
+	% Wir können bereits sehen, dass die Wahl der Morphismen nicht immer offensichtlich ist. So wären zum Beispiel die 
+	% Wahl der Homöomorphismen als Morphismen in $\Top$ oder die Wahl der Isometrien metrischer Räume als Morphismen in $\EPMet$ 
+	% zu restriktiv. 
+
+	\begin{ex}
+		Die \textit{Kategorie der offenen Teilmengen $\mathbf{Op}(X)$} eines topologischen Raumes $(X,\tau)$ hat als 
+		Objekte die offenen Mengen, also $U \subset \tau$ und als Morphismen die Inklusionsabbildungen, also 
+		$f: U \hookrightarrow V$ für $U \subset U \subset \tau$. 
+	\end{ex}
 
 	Wir möchten nun den Begriff des Funktors zwischen zwei Kategorien einführen. Ein Funktor ordnet Objekte einer 
 	Kategorie $\C$ Objekten einer Kategorie $\D$ zu, und entsprechend für Morphismen. Insbesondere bleibt 
@@ -339,11 +385,14 @@
 							F(g \circ_{\C} f) = F(g) \circ_{\D} F(f)
 						\end{equation*}
 		\end{enumerate}
+
+		In manchen Fällen spricht man von der \textit{Wirkung} des Funktors auf Morphismen und bezeichnet 
+		damit das Bild von $f$ unter $F$.
 	\end{defn}
 
 	\begin{rem}
 		Bezüglich der Kategorie $\C$ ist ein Funktor $F : \C \to \D$ kovariant, während 
-		$F : \C^{op} \to \D$ kontravariant (bzgl. $\C$) ist.
+		$F : \C^{op} \to \D$ kontravariant (bzgl. $\C$) ist. 
 	\end{rem}
 
 	\begin{rem}
@@ -388,9 +437,9 @@
 		Seien $\C,\C$ Kategorien und $F:\C \to \D$ und $G: \D \to \C$ Funktoren. Dann bilden $\C$ und $\D$ ein 
 		\textit{adjungiertes Funktorpaar}, wenn die Funktoren 
 
-		\begin{align}
+		\begin{equation}
 			\quad (A, B) \mapsto \hom_\D(A, F(Y)) \quad (A, B) \mapsto \hom_\D(G(A), Y), 
-		\end{align}
+		\end{equation}
 
 		natürlich äquivalent sind. Dabei bilden die Funktoren von $\D^{op} \times \C$ in die Kategorie der Mengen $\Set$ ab. 
 		Man sagt zusammen mit den beiden Kategorien und den beiden Funktoren bildet die natürliche Äquivalenz eine \textit{Adjunktion}. 
@@ -410,11 +459,12 @@
 
 	\begin{YL}
 		Sei $\C$ eine Kategorie, $F:\C \to \Set$ ein Funktor, dann ist 
-
-		\begin{align}
+		\begin{equation}
+		\begin{aligned}
 			\Phi : Nat(\hom(-,B), F) &\to F(A) \\
 			t &\mapsto t_A(id_A)
-		\end{align}
+		\end{aligned}
+		\end{equation}
 
 		ein Isomorphismus. Wobei $Nat(G,F)$ die Menge der natürlichen Transformationen von $G$ nach $F$ angibt. 
 		Somit ist $t_A : \hom_\C(A,B) \to F(A)$. 
@@ -497,8 +547,7 @@
 	Das Bild von $[n]$ unter $\abs{\cdot}$ ist somit ein geometrischer $n$-Simplex.
 
 	\begin{defn}
-		Eine \textit{simpliziale Menge} ist ein Funktor 
-		$X : \Delta^{op} \to \Set$. Üblicherweise wird 
+		Eine \textit{simpliziale Menge} ist ein Funktor $X : \Delta^{op} \to \Set$. Üblicherweise wird 
 		$X([n])$ als $X_n$ geschrieben, und wir bezeichnen die Elemente $x \in X_n$ als n-Simplizes. 
 		Der n-dimensionale \textit{Standardsimplex} ist 
 		
@@ -552,6 +601,29 @@
 	Abstrakte Simplizialkomplexe besitzen im Allgemeinen also keine Informationen über die relative räumliche Lage der Knoten, insbesondere können die 
 	Knoten beliebige Objekte sein. Ähnlich sind simpliziale Mengen zu verstehen, allerdings enthalten diese noch \textit{mehr} Informationen über die 
 	Simplizes, siehe dazu \cite{Friedman}. 
+
+	Ähnlich zum abstrakten Simplizialkomplex können wir für eine simpliziale Menge $X \in \sSet$ die $n$-Simplizes als geometrische $n$-Simplizes auffassen. 
+	Wobei die niedrigdimensionalen Simplizes die Facetten sind und die $0$-Simplizes geordnet werden können. Allerdings müssen die $0$-Simplizes nicht nötigerweise 
+	unterschiedlich sein, diese Anschauung ist \cite{Riehl} entnommen und wird dort genauer ausgeführt. 
+	Eine äquivalente zu der Definition simpliziale Mengen als Prägarbe auf $\Delta$ zu betrachten ist wie folgt gegeben.
+
+	\begin{defn}
+		Eine \textit{simpliziale Menge} $X$ ist eine Familie von Mengen $X_n, n \geq 0$ zusammen mit Abbildungen $d_i:X_n \to X_{n-1}$ und $s_i:X_n \to X_{n+1}$ für 
+		alle $0 \leq i \leq n$, so dass folgende Bedingungen erfüllt sind, 
+		\begin{equation}
+		\begin{aligned}
+			d_i d_j &= d_{j-1}d_i, \qquad i<j \\
+			s_i s_j &= s_{j+1}s_i,  \qquad i \leq j \\
+			d_i s_j &=  \begin{cases}
+							1, & i = j, j+1\\
+							s_{j-1}d_i, &i < j \\
+							s_j d_{i-1}, &i > j+1.
+						\end{cases}
+		\end{aligned}
+		\end{equation}
+	\end{defn}
+
+	Diese Definition verdeutlicht die Verbindung von simplizialen Mengen und Simplizialkomplexen. 
 
 	Eine hilfreiche Eigenschaft (abstrakter) Simplizialkomplexe ist, dass sich diese aus den einfach zu beschreibenden geometrischen $n$-Simplizes zusammensetzen. 
 	Diese Eigenschaft lässt sich auf simpliziale Mengen mittels Yoneda Lemma übertragen. Sei $X$ eine simpliziale Menge, dann gibt es für alle $x \in X_n$ 
