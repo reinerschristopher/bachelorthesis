@@ -1,0 +1,31 @@
+Kapitel 1:
+Einleitung: Beim Satz: ...werden wir das UMAP Verfahren (da fehlt noch ein Satzende)
+Unter der Überschrift Aufgabenstellung steht im Moment nichts.
+Unter Datenanalyse, letzer Satz : Zusatzlich hilft... (hier fehlt noch ein Satzende)
+Unter Dimensionsreduktion, der Satz: Eine Herangehensweise die d-dimensionale ... ist nicht vollständig.
+Unter der Überschrift Ziele der Arbeit steht im Moment nichts.
+Unter Eigene Beiteräge ist ein item Element zu viel.
+Unter Aufbau der Arbeit steht im letzen Satz ein einzelnes Deshalb
+Unter der Überschrift Vergleich mit Original Paper steht im Moment nichts
+
+Kapitel 2:
+Die Definitionen von differenzierbaren Mannigfaltigkeiten und riemannschen Mannigfaltigkeiten sind noch nicht vollständig.
+Das gleiche gilt für die Bemerkung über metrisierbarkeit von riemannschen Mannigfaltigkeiten und die Definition von Geodäten.
+Beispiel 2.2 ist nicht vollständig.
+Es gibt zwei Bemerkungen in denen du schreibst, dass du den Limes in dieser Arbeit nicht einführst, einmal auf Seite 8 und einmal auf Seite 11 (weiß nicht ob das Absicht ist)
+Bei der Bemerkung über unscharfe Mengen: Eine klassische Menge ... mu(a) = 1 für alle a in A statt mu(A) = 1
+Ganz zum Schluss des Kapitels steht der Term der Kreuzentropie ohne Kommentar.
+
+Kapitel 4:
+Gleichung 4.4 muss noch aufgeschrieben werden.
+Bei Abschnitt 4.3 steht im ersten Satz GLeichung statt Gleichung
+Unter FAISS: Die FAISS Bibliothek statt Das FAISS Bibliothek.
+Bei den Hypeparametern fehlt noch beschreibender Text.
+
+Kapitel 5:
+Alternative Verfahren, im ersten Satz: das UMAP Verfahren mit folgenden Verfahren zu vergleichen: (aber dann werden keine Verfahren genannt)
+Abschnitt 5.2 Der Satz: Eine weitere Methodik um die Qualität der Einbettung... ist nicht vollständig.
+
+
+
+
