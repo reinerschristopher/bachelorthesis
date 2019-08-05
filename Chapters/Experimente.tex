@@ -7,59 +7,55 @@
 %----------------------------------------------------------------------------------------
 
 % A U F B A U
-% Welche Verfahren
-% Welche Daten
-% Welche Ergebnisse unter welchen Parametern
-% Welche Laufzeit
-% Welche Schlussfolgerungen
+	% Welche Verfahren
+	% Welche Daten
+	% Welche Ergebnisse unter welchen Parametern
+	% Welche Laufzeit
+	% Welche Schlussfolgerungen
 
-% N O T I Z E N
-% Cartoonset, MNIST, (WIND)
-% PCA, UMAP, t-SNE, LargeVis
+	% N O T I Z E N
+	% Cartoonset, MNIST, (WIND)
+	% PCA, UMAP, t-SNE, LargeVis
 
-% Test transform function
+	% Test transform function
 
-% Google News für n_samples Dimension
+	% Google News für n_samples Dimension
 
-% Outlier, add completly different images 
+	% Outlier, add completly different images 
 
-% Erwähne analytische Bewertungen der Einbettungen
-% trustworthiness-continuity (Kaski et al., 2003)
-% mean (smoothed) precision-recall (Venna et al., 2010)
-% nearest-neighbor accuracy (Van Der Maaten et al., 2009)
+	% Erwähne analytische Bewertungen der Einbettungen
+	% trustworthiness-continuity (Kaski et al., 2003)
+	% mean (smoothed) precision-recall (Venna et al., 2010)
+	% nearest-neighbor accuracy (Van Der Maaten et al., 2009)
 
-% Stabilität der Ergebnisse
+	% Stabilität der Ergebnisse
 
-% Komplett neue Gesichter
+	% Komplett neue Gesichter
 
-% Cluster on FMNIST, Scores on MNIST (Costfunction and SVD)
+	% Cluster on FMNIST, Scores on MNIST (Costfunction and SVD)
 
-% CUDA tSNE
-% https://github.com/CannyLab/tsne-cuda
-% https://arxiv.org/abs/1807.11824s
+	% Auswirkung von sampling auf kleinen Datensätzen
 
-% Auswirkung von sampling auf kleinen Datensätzen
+	% T E X T B A U S T E I N E
+	% 'Empirisches testen der Hypothesen/ Annahmen'
+	% 'UMAP auf realen/echten Daten'
+	% In \cite{UMAP} wurde bereits die Stabilität des Verfahrens getestet.
+	% Insbesondere verweisen wir auf Abbildung 3,4 in Abschnitt 5.
+	% Die Stabilität des UMAP Verfahrens ist 
 
-% T E X T B A U S T E I N E
-% 'Empirisches testen der Hypothesen/ Annahmen'
-% 'UMAP auf realen/echten Daten'
-% In \cite{UMAP} wurde bereits die Stabilität des Verfahrens getestet.
-% Insbesondere verweisen wir auf Abbildung 3,4 in Abschnitt 5.
-% Die Stabilität des UMAP Verfahrens ist 
+	% Mehr Datenpunkte, dann höhere perplexität für gleichen Ausgang, ähnlich zu n_neighbor
+	% tSNE vergrößert Regionen mit höherer Dichte
 
-% Mehr Datenpunkte, dann höhere perplexität für gleichen Ausgang, ähnlich zu n_neighbor
-% tSNE vergrößert Regionen mit höherer Dichte
+	% Bei cartoonpca784 bleibt 99,842% der Varianz erhalten.
+	% Bei cartoonpca10k weniger als 10^-5 * 2 verlust der Varianz 
 
-% Bei cartoonpca784 bleibt 99,842% der Varianz erhalten.
-% Bei cartoonpca10k weniger als 10^-5 * 2 verlust der Varianz 
+	% Um eine gute Interpretation der Daten zu geben ist es wichtig ein sehr gutes Verständnis 
+	% der Datensätze zu besitzen, deshalb haben wir uns auf leicht interpretierbare Daten beschränkt
 
-% Um eine gute Interpretation der Daten zu geben ist es wichtig ein sehr gutes Verständnis 
-% der Datensätze zu besitzen, deshalb haben wir uns auf leicht interpretierbare Daten beschränkt
+	% Verweise auf Daten und erwähne deutlich feinere Struktur von UMAP
+	% https://www.biorxiv.org/content/biorxiv/early/2018/04/10/298430.full.pdf
 
-% Verweise auf Daten und erwähne deutlich feinere Struktur von UMAP
-% https://www.biorxiv.org/content/biorxiv/early/2018/04/10/298430.full.pdf
-
-% Keine Wordembeddings, da die Vorvererbeitung sehr wichtig ist.
+	% Keine Wordembeddings, da die Vorvererbeitung sehr wichtig ist.
 
 %----------------------------------------------------------------------------------------
 %----------------------------------------------------------------------------------------
@@ -70,25 +66,30 @@
 	Wir werden eine möglichst vollständige Darstellung der Ergebnisse in dieser Arbeit präsentieren. 
 	Allerdings ist es zu empfehlen die Ergebnisse in einem interaktiven Jupyter notebook zu betrachten. 
 	Dieses befindet sich auf der beigelegten CD oder auf GitHub
-	\footnote{\url{https://github.com/reinerschristopher/bachelorthesis}}. %TODO: korrigiere link
+	\footnote{\url{https://github.com/reinerschristopher/bachelorthesis}}. %!!! TODO: korrigiere link
+ 	
+ 	% TODO: schreibe Aufbau
 
 %----------------------------------------------------------------------------------------
 
-\section{Alternative Verfahren}
-	% TODO: Liste mit t-SNE, Fit-SNE, PCA, ISOMAP, LargeVis. 
-	% Kurz was macht das verfahren aus; Link; wichtige Hyperparameter
-	Wir haben uns dazu entschieden UMAP mit folgenden Verfahren zu vergleichen:
+\section{Alternative Verfahren} \label{sec:verfahren}
+	Wir haben uns dazu entschieden UMAP mit t-SNE, TriMap und PCA zu vergleichen. Die ersten beiden 
+	Verfahren sollen kurz eingeführt werden, wobei wir insbesondere die wichtigen Hyperparameter der 
+	Verfahren angeben. Eine Kenntnis des PCA Verfahrens setzen wir voraus. 
+	An dieser Stelle ist zu bemerken, dass in den letzten Jahren zahlreiche neue DR Verfahren entwickelt wurden. 
+	Aufgrund dessen können wir in dieser Arbeit nur eine kleine Teilmenge der DR Verfahren betrachten. 
+	Ein sehr ausführlicher Vergleich findet sich in \cite{Maaten2008}. %, dieser berücksichtigt allerdings keine neueren Verfahren, da er 2008 publiziert wurde. 
 
 
 	Da die Implementierungen des Laplacian Eigenmaps Verfahrens und Isomap Verfahrens schlecht für große 
 	Datensätze skalieren, haben wir uns bewusst dazu entschieden, diese nicht mit in die Analyse aufzunehmen. 
 
-%-----------------------------------
+	%-----------------------------------
 
 	\subsection{t-SNE}
 	% TODO: wichtige Terme einfügen?
 	Das t-SNE Verfahren \cite{tSNE} ist zur Zeit eines der bekanntesten und meistgenutzten 
-	nicht-linearen Dimensionsreduktionsverfahren. Dabei wird UMAP fast ausschließlich 
+	nicht-linearen Dimensionsreduktionsverfahren. Dabei wird t-SNE fast ausschließlich 
 	zur Visualisierung genutzt, da die Laufzeit für höhere Einbettungsdimensionen schlecht ist. 
 	% TODO: Wie wir später sehen werden. (oder unten?)
 
@@ -110,10 +111,9 @@
 	von zwischen $P$ und $Q$ bezüglich der $y_i$ minimiert. % TODO: werden y_i in Einleitung erwähnt?
 
 	Seit der Veröffentlichung des Verfahrens wurden zahlreiche Verbesserungen, 
-	insbesondere für die Laufzeit, vorgeschlagen \cite{tSNEmod1,tSNEmod3}. %TODO: zwei weitere Erweiterungen/Verbesserungen
+	insbesondere für die Laufzeit, vorgeschlagen \cite{tSNEmod1,tSNEmod3}. 
 	Dabei ist besonders Barnes-Hut-SNE \cite{tSNEmod2} zu erwähnen, allerdings sollte hier beachtet werden, 
 	dass aufgrund der Konstruktion einer speziellen Datenstruktur die Laufzeit für $d>3$ sehr schlecht ist.
-
 
 	Die von t-SNE produzierte Repräsentation der Daten ist vom \code{perplexity} Parameter abhängig. 
 	Dabei kann man festhalten, je größer die \code{perplexity} ist, desto größer ist die Varianz  % TODO: Verweise auf die Gleichungen oben 
@@ -131,9 +131,8 @@
 
 	Wir werden reale Datensätze analysieren und das Verhalten der Hyperparameter beschreiben, um 
 	ein zusätzliches Verständnis für die von t-SNE genutzten Hyperparameter zu bekommen 
-	empfiehlt sich \cite{tSNEparam} - zeigt interaktiv auf künstlich erzeugten Datensätzen 
-	die Auswirkung der Parameter.
-
+	empfiehlt sich \cite{tSNEparam}, dort werden interaktiv auf künstlich erzeugten Datensätzen 
+	die Auswirkung der Parameter gezeigt.
 
 	Für unsere Experimente haben wir die scikit Implementierung des t-SNE Verfahren genutzt \cite{scikit-learn}.
 	Zusätzlich haben wir die openTSNE \cite{opentSNE} Implementierung genutzt. Diese beschleunigt 
@@ -141,15 +140,20 @@
 	Die openTSNE Implementierung besitzt im Vergleich zur scikit Implementierung die Möglichkeit 
 	den \code{late-exaggeration} Parameter zu spezifizieren. % TODO: später sehen wir die 
 
-%-----------------------------------
+	Um einen Laufzeitvergleich mit der GPU Implementierung des UMAP Verfahrens zu ermöglichen, 
+	werden wir eine GPU Implementierung von t-SNE betrachten \cite{tSNEGPUcode}. 
+	Eine Beschreibung findet sich in \cite{tSNEGPUpaper}.
+
+	%-----------------------------------
 
 	\subsection{TriMap}
 	Das TriMap Verfahren \cite{TriMap} soll eine globalere Repräsentation der Daten finden als 
-	beispielsweise t-SNE, das nicht nur paarweise die Ähnlichkeit zweier Objekte $i, j$ betrachtet wird, 
+	beispielsweise t-SNE, da nicht nur paarweise die Ähnlichkeit zweier Objekte $i, j$ betrachtet wird, 
 	sondern stets Triple $i, j, k$. Die so erhaltene globale Struktur der Daten soll die 
-	Cluster-Abstände der Daten repräsentieren. 
+	Cluster-Abstände der Daten repräsentieren. Die von uns gewählte Implementierung des Verfahrens findet 
+	sich in \cite{trimapcode}.
 
-
+	% TODO: TriMap besser beschreiben. 
 
 	Wir haben diesem Algorithmus gewühlt, da die Tripletts Ähnlichkeiten mit 2-Simplizes des UMAP Verfahren haben.
 	Die Tripletts sind vergleichbar mit den 2-Simplizes des UMAP Verfahrens. 
@@ -158,32 +162,26 @@
 
 %----------------------------------------------------------------------------------------
 
-\section{Bewertung der Ergebnisse}
+% TODO: !!! Komplett überarbeiten
+\section{Bewertung der Ergebnisse} \label{sec:bwertung}
 	Um die $d$-dimensionalen Repräsentationen der Daten zu bewerten gibt es verschiedene Ansätze. 
-	Diese sollen nun vorgestellt und verglichen werden. 
-
+	Diese sollen nun vorgestellt und verglichen werden. % !!TODO: entweder scores ergänzen oder text ändern
 
 	Ein DR-Verfahren, welches die statistischen Eigenschaften der zugrundeliegenden Daten erfasst, 
 	sollte invariant bezüglich Rauschen der Daten sein. Hingegen sollte eine schlechte Einbettung 
-	wenig stabil sein, wenn zusätzliches Rauschen in den Daten auftritt. 
-
-	Eine weitere Methodik um die Qualität der Einbettung zu erfassen, erhält man dadurch, 
-	dass  
+	wenig stabil sein, wenn zusätzliches Rauschen in den Daten auftritt. % TODO: Score angeben
 
 	In \cite{Harmeling} werden zwei Methoden zur Auswahl eines geeigneten DR-Verfahrens verglichen. 
-	
 
 	Um die lokale Qualität der Algorithmen zu analysieren haben wir uns die \textit{Cluster} in der 
 	$2$-dimensionalen Repräsentation angeschaut, wobei wir als Cluster eine Teilmenge der Daten bezeichnen, 
 	welche deutlich von den anderen Datenpunkten getrennt ist. % TODO: 'Stetigkeit' innerhalb der Cluster?
-	Insbesondere bei der Analyse des Cartoon Set \ref{cartoonset} konnten wir gut lokale Strukturen 
+	Insbesondere bei der Analyse des Cartoon Set \ref{sec:cartoonset} konnten wir gut lokale Strukturen 
 	erkennen, da jeder Datenpunkt mehrere Eigenschaften gegeben hat -- im Vergleich zum MNIST und FMNIST 
 	Datensatz, wo uns nur ein \textit{Label} pro Datenpunkt gegeben ist. 
 
 	Die globale Struktur der Repräsentation qualitativ zu bewerten ist subjektiv. Dabei ist insbesondere 
 	die Frage -- \enquote{Wie \textit{stark} unterscheiden sich die Cluster?} -- zu beantworten. 
-	Beispielsweise sollten die Cluster welche die Ziffern 1 und 7 darstellen näher zueinander liegen als 
-	die Cluster der Ziffern 1 und 6. 
 
 	Für die qualitative Analyse wird die Fähigkeit des Gehirns genutzt Strukturen zu erkennen. 
 	Nachteile der qualitativen Analyse sind, (1) die Subjektivität und somit Abhängigkeit vom Betrachter, 
@@ -195,11 +193,9 @@
 	meistgenutzte Art die Repräsentation in der Praxis zu bewerten. Zusätzlich bietet die Wahl der 
 	Datensätze eine gute Gelegenheit die Repräsentationen visuell zu bewerten. 
 
-
 %----------------------------------------------------------------------------------------
 
-\section{Cartoon Set} 
-\label{cartoonset}
+\section{Cartoon Set} \label{sec:cartoonset}
 	In diesem Abschnitt werden wir den \textit{Cartoon Set} Datensatz analysieren \cite{cartoon}. 
 	Dabei werden wir:
 	\begin{itemize}
@@ -225,29 +221,26 @@
 		\label{fig:Cartoon_Sample}
 	\end{figure}
 
-	Die Bilder wurden aus 16 Komponenten zusammengesetzt (u.a. Gesichtsform, Gesichtsfarbe, Frisur, Haarfarbe), 
-	dabei variiert die Anzahl der Möglichkeiten pro Komponente zwischen zwei (Augenlid, Wimpern,\dots) und 
-	111 (Anzahl mögliche Frisuren). 
-	Die Farben der Komponenten wurden aus einem diskreten RGB Raum gewählt. Insgesamt ergibt sich eine mögliche 
-	Anzahl von $10^{13}$ Gesichtern.
-
-	Für die Analyse haben wir verschiedene Eigenschaften zusammengefasst um einen besseren Überblick zu haben. 
+	Die Bilder wurden aus 16 Labels zusammengesetzt (u.a. Gesichtsform, Gesichtsfarbe, Frisur, Haarfarbe), 
+	dabei variiert die Anzahl der Möglichkeiten pro Label zwischen zwei (Augenlid, Wimpern,\dots) und 
+	111 (Anzahl mögliche Frisuren). Die Farben der Komponenten wurden aus einem diskreten RGB Raum gewählt. 
+	Insgesamt ergibt sich eine mögliche Anzahl von $10^{13}$ Gesichtern. Für die Analyse haben wir verschiedene 
+	Eigenschaften zusammengefasst um einen besseren Überblick zu haben. 
 	Beispielsweise haben wir die 111 Frisuren, nach qualitativer Analyse, zu 19 Frisurformen zusammengefasst. 
-
-	Wir haben uns für diesen Datensatz entschieden um UMAP auf Daten mit einer komplexeren Struktur zu testen 
-	als dies in \cite{UMAP} gemacht wird. Dabei ist auch zu beachten, dass es aufgrund der 16 Komponenten aus 
-	welchen die Gesichter bestehen kein richtige oder falsche Einbettung der Daten gibt. 
-
-	Wir haben die Bewertung der Einbettung unter der Annahme gemacht, dass \textit{ähnliche} Gesichter 
-	\textit{ähnliche} Hautfarben, Frisuren, Haarfarben, Brillen und Bärte haben. Diese fünf Eigenschaften 
-	möchten wir besonders hervorheben, da sie die dominantesten Merkmale des Gesichts beschreiben.
 
 	Die ursprüngliche Größe eines Bildes betrug $500 \times 500$ Pixel mit vier Farbkanälen 
 	(CYMK-Darstellung der Farben). Aufgrund des großen Randes haben wir uns dazu entschieden die Größe der 
-	Bilder auf $300 \times 300$ ohne nennenswerten Informationsverlust zu verringern. Weiterhin haben wir uns 
-	für die Bewertung der Einbettung auf \num{10000} Bilder beschränkt. % TODO: Bewertung für 100000 samples?
-	Somit beträgt die Dimension 
-	des Cartoon Set $D = \num{360000}$ und die Anzahl an Beispielen $N = \num{100000}$.
+	Bilder auf $300 \times 300$ ohne nennenswerten Informationsverlust zu verringern. Somit beträgt die Dimension 
+	des Cartoon Set $D = \num{360000}$ und die Anzahl an Beispielen $N$ variiert zwischen $\num{10000}$ und $\num{100000}$.
+
+	Wir haben uns für diesen Datensatz entschieden um UMAP auf Daten mit einer komplexeren Struktur zu testen 
+	als dies in \cite{UMAP} gemacht wird. Dabei ist auch zu beachten, dass aufgrund der 16 Labels aus 
+	welchen die Gesichter bestehen, die Qualität einer Einbettung schwieriger zu beurteilen ist als beispielsweise 
+	im MNIST Datensatz (siehe Abschnitt \ref{sec:MNIST}). Wir haben die Bewertung der Einbettung unter der Annahme 
+	gemacht, dass \textit{ähnliche} Gesichter \textit{ähnliche} Hautfarben, Frisuren, Haarfarben, Brillen und Bärte 
+	besitzen. Diese fünf Eigenschaften möchten wir besonders hervorheben, da sie die dominantesten Merkmale des Gesichts 
+	beschreiben. Somit werden wir eine Einbettung des Cartoon Set als \textit{gut} bewerten, wenn sie zwischen 
+	diesen fünf Merkmalen unterscheidet.
 
 	% Histogram über Verteilung der Frisuren
 
@@ -263,29 +256,59 @@
 		% Globale Struktur sehr gut erhalten und lokale auch, wenig abhängig von Parametern
 
 
-		\begin{figure}
-			%\centering
-			\includegraphics[width=400px, height=278px]{Figures/umap_10k_vs_50k}
-			%\decoRule
-			\caption[UMAP auf 50k und 10k Daten]{TODO: Beschreibung des Bildes}
-			\label{fig:umap_10k_vs_50k}
-		\end{figure}
+	\begin{figure} % PCA als Startwert, global sind hair, face_color und hair_color, nicht faicial_hair und glasses
+		%\centering
+		\includegraphics[width=400px, height=200px]{Figures/pca_cartoon}
+		%\decoRule
+		\caption[PCA auf Cartoon Set]{PCA auf dem Cartoon Set, mit $N=\num{50000}, D=\num{360000}$. 
+									Dabei sind die Punkte bezüglich der folgenden Attribute gekennzeichnet (v.l.n.r): Frisurtyp, Gesichtsfarbe, Haarfarbe.}
+		\label{fig:pca_cartoon}
+	\end{figure}
+
+	\begin{figure} % Globale struktur der Punkte in den Verfahren. cmap=nhair
+		%\centering
+		\includegraphics[width=400px, height=131px]{Figures/cartoon_cluster}
+		%\decoRule
+		\caption[Cluster des Cartoon Set]{(v.l.n.r) UMAP, t-SNE, TriMap auf dem Cartoon Set, mit $N=\num{10000}, D=\num{360000}$. 
+										Dabei entsprechen die Punkte des blauen Gebiets dem oberen Drittel der PCA Einbettung, 
+										das gelbe Gebiet dem unteren Drittel der PCA Einbettung und die Punkte außerhalb eines Gebietes dem mittleren Teil der PCA Einbettung}
+		\label{fig:cartoon_cluster}
+	\end{figure}
+
+	\begin{figure} % Lokale struktur der Punkte in den Verfahren. cmap=nhair_color
+		%\centering
+		\includegraphics[width=400px, height=131px]{Figures/cartoon_local}
+		%\decoRule
+		\caption[Cluster des Cartoon Set]{(v.l.n.r) UMAP, t-SNE, TriMap auf dem Cartoon Set, mit $N=\num{10000}, D=\num{360000}$. 
+										Dabei entsprechen die Punkte des blauen Gebiets dem oberen Drittel der PCA Einbettung, 
+										das gelbe Gebiet dem unteren Drittel der PCA Einbettung und die Punkte außerhalb eines Gebietes dem mittleren Teil der PCA Einbettung}
+		\label{fig:cartoon_local}
+	\end{figure}
+
+	\begin{figure}
+		%\centering
+		\includegraphics[width=400px, height=278px]{Figures/umap_10k_vs_50k}
+		%\decoRule
+		\caption[UMAP auf 50k und 10k Daten]{TODO: Beschreibung des Bildes}
+		\label{fig:umap_10k_vs_50k}
+	\end{figure}
+
 
 
 %----------------------------------------------------------------------------------------
 
-\section{MNIST}
+\section{MNIST} \label{sec:MNIST}
 	% Lokal gut Einbettung vergleichbar mit anderen Verfahren
 	% variiere set_opt_mix
-
+	% Beispielsweise sollten die Cluster welche die Ziffern 1 und 7 darstellen näher zueinander liegen als die Cluster der Ziffern 1 und 6. 
 %----------------------------------------------------------------------------------------
 
-\subsection*{FMNIST}
+\subsection*{FMNIST} \label{sec:FMNIST}
 	% Fließender Übergang zwischen Clustern, "Fehler" sind begründet
 
 %----------------------------------------------------------------------------------------
 
-\section{Laufzeitanalyse}
+\section{Laufzeitanalyse} \label{sec:runtime}
 	Die praktischen Tests der Verfahren wurden auf Rechnern mit einer Linux-Architektur ausgeführt. 
 	Die CPU Tests haben wir auf Intel Xeon 6136 CPUs mit 48 Kernen und 384 GB RAM ausgeführt. 
 	Für die Verfahren welche mittels Berechnungen auf einer Graphikkarte verbessert wurden, haben 
@@ -302,4 +325,4 @@
 
 \section{Zusammenfassung der Ergebnisse}
 
-
+%----------------------------------------------------------------------------------------

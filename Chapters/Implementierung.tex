@@ -161,7 +161,7 @@
    \caption{UMAP Algorithmus}
    \label{algorithm:umap}
    \begin{algorithmic}[1]
-   \Function{UMAP}{$X, N, D, d, \code{min-dist}, \code{n-epochs}$}  %description
+   \Function{UMAP}{$X, N, D, d, \code{min-dist}, \code{n-epochs}$}
       \For{$\xxi \in X$}
          \State $knn(\xxi) \gets k\text{-nächste-Nachbarn}(\xxi)$ \label{alg:kNN}
          \State $graph(\xxi) \gets (\Xgi, \wXi)$ \label{alg:graph}
@@ -389,7 +389,7 @@
    %-----------------------------------
 
    \subsection*{FAISS}
-      Das FAISS Bibliothek \cite{FAISS} nutzt die Architektur einer GPU aus. Dabei baut FAISS eine effiziente Datenstruktur, 
+      Die FAISS Bibliothek \cite{FAISS} nutzt die Architektur einer GPU aus. Dabei baut FAISS eine effiziente Datenstruktur, 
       welche für die Vektoren die nächsten Nachbarn speichert. Somit ist eine sehr schnelle Implementierung 
       für das aufstellen des k-NN-Graphen möglich. 
 
