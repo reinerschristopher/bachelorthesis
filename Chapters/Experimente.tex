@@ -66,7 +66,12 @@
 	Dieses befindet sich auf der beigelegten CD oder auf GitHub
 	\footnote{\url{https://github.com/reinerschristopher/review_DR_algorithms}}. 
  	
- 	% TODO: schreibe Aufbau
+ 	In diesem Kapitel werden wir in Abschnitt \ref{sec:verfahren} zwei alternative Verfahren beschreiben.
+ 	Wir werden in Abschnitt \ref{sec:bwertung} beschreiben, wie wir die Einbettungen bewertet haben. 
+ 	Abschnitt \ref{sec:cartoonset} wird einen neuen Datensatz, das Cartoon Set vorstellen. Dieses besitzt eine 
+ 	komplexere Struktur und bietet uns somit mehr Raum für eine Analyse der Einbettungen.
+ 	In Abschnitt \ref{sec:FMNIST} werden wir die Einbettungen verschiedener Verfahren auf dem bekannten 
+ 	MNIST Datensatz betrachten. Dieses Kapitel werden wir mit der Betrachtung der Laufzeiten abschließen. 
 
 %----------------------------------------------------------------------------------------
 
@@ -160,17 +165,7 @@
 
 %----------------------------------------------------------------------------------------
 
-% TODO: !!! Komplett überarbeiten
 \section{Bewertung der Ergebnisse} \label{sec:bwertung}
-	Um die $d$-dimensionalen Repräsentationen der Daten zu bewerten gibt es verschiedene Ansätze. 
-	Diese sollen nun vorgestellt und verglichen werden. % !!TODO: entweder scores ergänzen oder text ändern
-
-	Ein DR-Verfahren, welches die statistischen Eigenschaften der zugrundeliegenden Daten erfasst, 
-	sollte invariant bezüglich Rauschen der Daten sein. Hingegen sollte eine schlechte Einbettung 
-	wenig stabil sein, wenn zusätzliches Rauschen in den Daten auftritt. % TODO: Score angeben
-
-	In \cite{Harmeling} werden zwei Methoden zur Auswahl eines geeigneten DR-Verfahrens verglichen. 
-
 	Um die lokale Qualität der Algorithmen zu analysieren haben wir uns die \textit{Cluster} in der 
 	$2$-dimensionalen Repräsentation angeschaut, wobei wir als Cluster eine Teilmenge der Daten bezeichnen, 
 	welche deutlich von den anderen Datenpunkten getrennt ist. % TODO: 'Stetigkeit' innerhalb der Cluster?
@@ -186,10 +181,11 @@
 	(2) dass sie nur im $d$-dimensionalen $(d \leq 3)$ möglich ist. 
 	% und (3) die Problematik, dass es (noch) keine mathematische Formulierung der Bewertung gibt.
 
+	Wir verweisen den Leser auf \cite{Harmeling,Lee2009,Rieck2015} für verschiedene Ansätze 
+	DR Verfahren auf eine quantitative Weise zu bewerten.
+
 	In den folgenden Experimenten haben wir uns auf eine qualitative Analyse der Daten beschränkt.
-	Einerseits ist dies unserer Erfahrung nach (und Einträgen in Internetforen, \ldots) die 
-	meistgenutzte Art die Repräsentation in der Praxis zu bewerten. Zusätzlich bietet die Wahl der 
-	Datensätze eine gute Gelegenheit die Repräsentationen visuell zu bewerten. 
+
 
 %----------------------------------------------------------------------------------------
 
@@ -234,7 +230,7 @@
 	Wir haben uns für diesen Datensatz entschieden um UMAP auf Daten mit einer komplexeren Struktur zu testen 
 	als dies in \cite{UMAP} gemacht wird. Dabei ist auch zu beachten, dass aufgrund der 16 Labels aus 
 	welchen die Gesichter bestehen, die Qualität einer Einbettung schwieriger zu beurteilen ist als beispielsweise 
-	im MNIST Datensatz (siehe Abschnitt \ref{sec:MNIST}). Wir haben die Bewertung der Einbettung unter der Annahme 
+	im MNIST Datensatz (siehe Abschnitt \ref{sec:FMNIST}). Wir haben die Bewertung der Einbettung unter der Annahme 
 	gemacht, dass \textit{ähnliche} Gesichter \textit{ähnliche} Hautfarben, Frisuren, Haarfarben, Brillen und Bärte 
 	besitzen. Diese fünf Eigenschaften möchten wir besonders hervorheben, da sie die dominantesten Merkmale des Gesichts 
 	beschreiben. Somit werden wir eine Einbettung des Cartoon Set als \textit{gut} bewerten, wenn sie zwischen 
@@ -253,6 +249,8 @@
 	% Globale Struktur sehr gut erhalten und lokale auch, wenig abhängig von Parametern
 	\subsection*{Qualitative Analyse der Ergebnisse}
 	Wir werden nun die Einbettungen bewerten. 
+	Für die Einbettung des Cartoon Set haben wir die voreingestellten Hyperparameter gewählt. Für das UMAP Verfahren haben wir nur den Parameter $\code{n\_neighbors}=50$ 
+	und für t-SNE den Parameter $\code{perplexity}=40$ gewählt, kleinere Parameter der Wert haben Einbettungen mit zu vielen Clustern ergeben. 
 	Abbildung \ref{fig:pca_cartoon} zeigt eine Einbettung des Cartoon Set mittels PCA. Dies dient als Startwert unserer Analyse. 
 	Im linken Plot sind dabei zwei Linien eingezeichnet. Diese verdeutlichen, dass mittels PCA die Gesichter in 3 Klassen eingeteilt werden können. 
 	Die Farben des Punkte in diesem Plot stellen die Frisurtypen dar. 
@@ -278,65 +276,82 @@
 	In Abbildung \ref{fig:cartoon_cluster} betrachten wir Einbettungen von UMAP, t-SNE und TriMap. Durch das einzeichnen der Cluster möchten wir untersuchen, 
 	wie gut die Verfahren eine \textit{globale} Struktur erhalten. Die Ergebnisse der Einbettungen unterscheiden sich stark von der PCA Einbettung. 
 	Alle drei Verfahren erkennen die globale Einteilung der Daten in verschiedene Frisurtypen. Dabei unterscheiden sie zusätzlich zu PCA innerhalb der drei Klassen, 
-	kurze, mittellange und lange, in feinere Klassen. Diese entsprechen den verschiedenen labels der Frisurtypen, wie man an den Farben der Cluster erkennen kann. 
+	kurze, mittellange und lange, in feinere Klassen. Diese entsprechen den verschiedenen Labels der Frisurtypen, wie man an den Farben der Cluster erkennen kann. 
 	Dabei scheint UMAP die globale Struktur auf den ersten Blick am besten zu erkennen, da die langen und kurzen Haartypen global große Abstände aufweisen. Allerdings 
 	kann auch argumentiert werden, dass TriMap die globale Struktur am besten darstellt, da das gelbe und blaue Cluster zwar durch Haartypen mittellanger Haare getrennt 
 	sind aber die Distanzen zwischen den Clustern eher fließend sind, analog zu PCA. 
-	Dies weist auf die Schwierigkeit hin ein Maß der globalen Qualität einer Einbettung zu definieren.
+	Dies weist auf die Schwierigkeit hin, ein Maß der globalen Qualität einer Einbettung zu definieren.
 
 	\begin{figure} % Globale struktur der Punkte in den Verfahren. cmap=nhair
 		%\centering
 		\includegraphics[width=400px, height=131px]{Figures/cartoon_cluster}
 		%\decoRule
-		\caption[Cluster des Cartoon Set]{(v.l.n.r) UMAP, t-SNE, TriMap auf dem Cartoon Set, mit $N=\num{10000}, D=\num{360000}$. 
+		\caption[Cluster des Cartoon Set]{(v.l.n.r) UMAP, t-SNE, TriMap auf dem Cartoon Set, mit $N=\num{50000}, D=\num{360000}$. 
 										Dabei entsprechen die Punkte des gelben Gebiets dem oberen Drittel der PCA Einbettung, 
 										das blaue Gebiet dem unteren Drittel der PCA Einbettung und die Punkte außerhalb eines Gebietes dem mittleren Teil der PCA Einbettung}
 		\label{fig:cartoon_cluster}
 	\end{figure}
 
-	% TODO: beschreiben
+	Wir möchten uns nun den lokalen Eigenschaften der Einbettungen zu wenden. Dafür betrachten wir die gleiche Einbettung allerdings haben wir die Farben der Punkte diesmal 
+	bezüglich der Haarfarbe, beziehungsweise der Hautfarbe gewählt. Den Verlauf der Farben bezüglich dieser Attribute haben wir bereits oben beschrieben. 
+	Abbildung \ref{fig:cartoon_local} zeigt die von UMAP, t-SNE und TriMap erzeugte Einbettung eines Teils der Daten. 
+	Wir sehen, dass alle drei Verfahren lokal die Cluster, welche die Frisurtypen 
+	darstellen, als zweidimensionale Mannigfaltigkeiten auffassen. Dabei ist eine Dimension die Haarfarbe und die zweite Dimension die Hautfarbe. 
+	Alle drei Plots der oberen Reihe weisen ein Cluster auf, welches anscheinend keine Struktur bezüglich der Haarfarbe aufweist. Diese Punkte beschreiben allerdings Gesichter 
+	ohne Haare. 
+	Die Einbettung des t-SNE Verfahrens zeigt lokal keine deutlichen Unterschiede in der Dichte. 
+	Die Übergänge zwischen den lokalen Eigenschaften in der TriMap Einbettung sind fließender als in der t-SNE und UMAP Einbettung. 
 
 	\begin{figure} % Lokale struktur der Punkte in den Verfahren. cmap=nhair_color and cmap=nface_color. übergänge in TriMap fließender, tSNE weniger gehäuft/dicht als umap
 		%\centering
 		\includegraphics[width=400px, height=272px]{Figures/cartoon_local}
 		%\decoRule
 		\caption[Cluster des Cartoon Set]{(v.l.n.r) UMAP, t-SNE, TriMap auf dem Cartoon Set, mit $N=\num{10000}, D=\num{360000}$. 
-										blablabla}
+										Die Datenpunkte der oberen Reihe sind nach der Haarfarbe und die der unteren Reihe nach der Hautfarbe gefärbt.
+										Es wurde nur ein Teil des Datensatzes betrachtet.}
 		\label{fig:cartoon_local}
 	\end{figure}
 
-	% TODO: beschreiben
+	Abbildung \ref{fig:cartoon_local_local} beruht auf der für Abbildung \ref{fig:cartoon_local} beschriebenen Einbettung. Die Farben sind bezüglich der Haarfarbe. 
+	Es ist deutlich zu erkennen, dass alle drei Verfahren die Gleiche lokale Struktur für dieses CLuster finden. 
 
 	\begin{figure} % Lokale struktur der Punkte in den Verfahren, cluster sehr ähnlich. cmap=nhair_color
 		%\centering
 		\includegraphics[width=400px, height=134px]{Figures/cartoon_local_local}
 		%\decoRule
-		\caption[Cluster des Cartoon Set]{(v.l.n.r) UMAP, t-SNE, TriMap auf dem Cartoon Set, mit $N=\num{10000}, D=\num{360000}$. 
-										blablabla}
+		\caption[Cluster des Cartoon Set]{(v.l.n.r) UMAP, t-SNE, TriMap auf dem Cartoon Set, mit $N=\num{50000}, D=\num{360000}$. 
+										Die Position eines Datenpunktes bezüglich der verschiedenen Verfahren.}
 		\label{fig:cartoon_local_local}
 	\end{figure}
 
-	\begin{figure}
-		%\centering
-		\includegraphics[width=400px, height=278px]{Figures/umap_10k_vs_50k}
-		%\decoRule
-		\caption[UMAP auf 50k und 10k Daten]{TODO: Beschreibung des Bildes}
-		\label{fig:umap_10k_vs_50k}
-	\end{figure}
-
-
+	Wir können festhalten, das die drei Verfahren lokal sehr ähnlich sind, die Wahl eines Verfahrens ist somit von der konkreten Anwendung abhängig, 
+	oder im Falle der Visualisierung vom subjektiven Urteil des Betrachters. Global enthält die Darstellung von t-SNE sehr wenige Informationen. 
+	Das UMAP und TriMap Verfahren erhalten globale Eigenschaften, dabei ist der Begriff \textit{global} allerdings nicht formal gegeben und sollte 
+	genauer untersucht werden. 
 
 %----------------------------------------------------------------------------------------
 
-\section{MNIST} \label{sec:MNIST}
+\section{MNIST} \label{sec:FMNIST}
+	Wir möchten kurz die Einbettungen der Verfahren auf dem MNIST Datensatz zeigen. Dieser besteht aus Bildern der Größe $28 \times 28$, welche 
+	die Ziffern von $0$ bis $9$ darstellen. Dabei ist zu erkennen, dass alle nicht linearen Verfahren $10$ Cluster erkennen. 
+	Das UMAP Verfahren spiegelt die mittels PCA gefundene globale Struktur am besten wieder. Dabei ist auch zu erwähnen, dass TriMap eine gewisse 
+	globale Struktur darstellt, da es das blaue Cluster (Ziffer 1), das pinke, türkise und orange Cluster (Ziffern 7, 4, 9) und die restlichen 
+	Cluster von einander separiert. 
+	Zusätzlich ist zu erkennen, das die Cluster von openTSNE separierter von einander sind, als die vom tSNE Verfahren, dies ist auf die Implementierung 
+	des \code{late-exaggeration} Parameters im openTSNE Code zurückzuführen.
 	% Lokal gut Einbettung vergleichbar mit anderen Verfahren
 	% variiere set_opt_mix
 	% Beispielsweise sollten die Cluster welche die Ziffern 1 und 7 darstellen näher zueinander liegen als die Cluster der Ziffern 1 und 6. 
-%----------------------------------------------------------------------------------------
 
-\section{FMNIST} \label{sec:FMNIST}
-	% Fließender Übergang zwischen Clustern, "Fehler" sind begründet
-
+	\begin{figure} % Lokale struktur der Punkte in den Verfahren. cmap=nhair_color and cmap=nface_color. übergänge in TriMap fließender, tSNE weniger gehäuft/dicht als umap
+		%\centering
+		\includegraphics[width=400px, height=300px]{Figures/FMNIST}
+		%\decoRule
+		\caption[Cluster FMNIST]{(oben v.l.n.r) UMAP, t-SNE, OpenTSNE auf FMNIST, mit $N=\num{70000}, D=\num{784}$. 
+									(unten v.l.n.r) TriMap, GPU UMAP, PCA}
+		\label{fig:FMNIST}
+	\end{figure}
+	
 %----------------------------------------------------------------------------------------
 
 \section{Laufzeitanalyse} \label{sec:runtime}
@@ -344,8 +359,18 @@
 	Die CPU Tests haben wir auf Intel Xeon 6136 CPUs mit 48 Kernen und 384 GB RAM ausgeführt. 
 	Für die Verfahren welche mittels Berechnungen auf einer Graphikkarte verbessert wurden, haben 
 	wir Intel Xeon Gold 6136 CPUs mit 188 GB RAM und Nvidia V100 GPUs genutzt. 
-	Insgesamt haben wir über 200 Experimente gemacht um genauere Aussagen über die Laufzeit der Verfahren 
-	zu treffen und diese in Abhängigkeit der wichtigen Parameter zu setzen.
+	In Tabelle \ref{tab:umap} stellen wir die Laufzeit von UMAP abhängig vom \code{n\_neighbors} 
+	Parameter da. Die Laufzeit des Verfahrens erhöht sich um den Faktor $8x$, wenn der Parameter 
+	von 5 auf 100 erhöht wird. Dies spiegelt die in Abschnitt \ref{sec:profile} gemachte Aussage 
+	wieder, dass das NN-Descent Verfahren zur Nachbarschaftssuche eine Schwachstelle im UMAP Verfahren ist. 
+	Betrachtet man die Laufzeit der GPU Implementierung \cite{GPUUMAP} auf dem FMNIST Datensatz, 
+	so erhöht sich die Laufzeit von 2,63 Sekunden auf 3 Sekunden. 
+	Leider konnten wir die GPU Implementierung nicht auf dem vollen Cartoon Set testen, da die 
+	aktuelle Version den Datensatz in den GPU Arbeitsspeicher lädt. Wir hatten nur $16$ GB GPU RAM 
+	zur Verfügung, dies hat für die hohe Dimension des Cartoon Set nicht ausgereicht hat. 
+	Um dennoch das GPU Verfahren mit höher dimensionalen Daten zu testen, haben wir das Cartoon Set 
+	zu erst mit PCA auf 784 Dimensionen vorverarbeitet, die Laufzeit auf dem vorverarbeiteten Datensatz 
+	variierte zwischen 4 Sekunden und 7,4 Sekunden. 
 
 	\begin{table}
 	\centering
@@ -360,6 +385,10 @@
 	\caption{Laufzeit des UMAP Verfahren mit unterschiedlichen Werten des \code{n\_neighbors} Parameters.}
 	\label{tab:umap}
 	\end{table}
+
+	Natürlich möchten wir die Laufzeit des UMAP Verfahrens auch mit der von anderen Verfahren vergleichen, 
+	dazu haben wir drei Implementierungen des t-SNE Verfahrens betrachtet, das oben beschriebene TriMap 
+	Verfahren und PCA. 
 
 	\begin{table}
 	\centering
@@ -376,5 +405,14 @@
 	\caption{Laufzeit verschiedener Verfahren der Dimensionsreduktion}
 	\label{tab:several}
 	\end{table}
+
+	Wir können somit festhalten, dass die GPU Implementierungen aufgrund ihrer 
+	Laufzeit für Zwecke genutzt werden können, wo bisher nur einfache lineare DR Verfahren 
+	wie PCA genutzt werden konnten. 
+	Die TriMap Implementierung ist das schnellste nicht-lineare CPU DR Verfahren, welches 
+	wir betrachtet haben. Insbesondere skaliert es sehr gut in der Umgebungsdimension, 
+	wobei wir hervor heben möchten, dass es auf dem Cartoon Set mit $N = \num{10000}, D = \num{360000}$ 
+	schneller als PCA war. Somit scheint eine ausführlichere Betrachtung des TriMap Verfahrens 
+	aufgrund seiner Laufzeit und Qualität der Ergebnisse sinnvoll zu sein. 
 
 %----------------------------------------------------------------------------------------

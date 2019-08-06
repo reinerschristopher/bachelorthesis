@@ -100,37 +100,45 @@
 %----------------------------------------------------------------------------------------
 
 %\section{Einleitung}
-	\textit{DREI SÄTZE ÜBER DIE RELEVANZ VON HOCHDIMENSIONALEN DATEN IN DER HEUTIGEN GESELLSCHAFT.} % TODO: Was macht das Thema Dimensionsreduktion relevant?
-	Die Aufgabe effiziente Verfahren zur Datenanalyse zu entwerfen ist somit von hoher Relevanz. 
+	Wer heutzutage eine Zeitung aufschlägt wird mit hoher Wahrscheinlichkeit kontroverse 
+	Artikel über künstliche Intelligenz, Machine Learning, Deep Learning oder Big Data finden. 
+	Diese Themen haben nicht nur Relevanz und Auswirkungen für große Konzerne wie Google, 
+	Facebook oder Amazon, sondern auch für unser alltägliches privates Leben.
+	Jeden Tag werden neue Daten erzeugt und damit die Suche nach effizienten Algorithmen, 
+	die mit großen Datenbeständen umgehen können wichtiger.Algorithmen helfen Muster in 
+	vorhandenen Datenbeständen zu erkennen, Vorhersagen zu treffen oder Daten zu klassifizieren. 
+	Mit mathematischen Modellen können neue Erkenntnisse auf Grundlage dieser Muster gewonnen werden. 
+	Ziel ist es also große Datenmengen in Informationen und diese Informationen in Erkenntnisse zu überführen.
+	Die Aufgabe, effiziente Verfahren zur Datenanalyse zu entwerfen, ist somit von hoher Relevanz. 
 
-	Um einen Überblick der Aufgabenbereiche der Datenanalyse zu erhalten kann man diese in Felder 
+	Um einen Überblick der Aufgabenbereiche der Datenanalyse zu erhalten kann man diese in drei Felder 
 	unterteilen \footnote{\url{https://wirtschaftslexikon.gabler.de/definition/datenanalyse-30331/version-164492}}.
-	Die deskriptive Datenanalyse beschreibt Daten, beispielsweise durch graphische Visualisierung. 
-	Damit ist sie verbunden mit der explorativen Datenanalyse. Diese 
+	Die \textit{deskriptive} Datenanalyse beschreibt Daten, beispielsweise durch graphische Visualisierung. 
+	Damit ist sie verbunden mit der \textit{explorativen} Datenanalyse. Diese 
 	dient zum Entdecken neuer Zusammenhänge, oft werden dazu graphische Methoden genutzt. 
-	Die inferenzielle Datenanalyse nutzt gegebene Stichproben, um auf nicht erhobene Stichproben 
+	Die \textit{inferenzielle} Datenanalyse nutzt gegebene Stichproben, um auf nicht erhobene Stichproben 
 	zu schließen. Dieser Bereich hat in den vergangenen Jahren stark an Bedeutung gewonnen, 
-	insbesondere aufgrund der sehr guten Resultate erzielt durch neuronale Netzwerke. 
+	insbesondere aufgrund der sehr guten Resultate, die durch neuronale Netzwerke erzielt wurden. 
 
 	In dieser Arbeit möchten wir uns mit \textit{Verfahren zur Dimensionsreduktion} beschäftigen. 
 	Diese dienen der deskriptiven Datenanalyse und der explorativen Datenanalyse. Zusätzlich 
-	lassen sie sich dazu nutzen Verfahren zur inferenziellen Datenanalyse zu verbessern. 
+	lassen sie sich dazu nutzen, Verfahren zur inferenziellen Datenanalyse zu verbessern. 
 	Wir werden etwas später auf die Anwendungen zurückkommen. Doch zu erst möchten wir 
 	die Problemstellung formulieren. 
 
 \subsection*{Dimensionsreduktion}
-	Sei $X$ eine Menge an Daten. Dabei betrachten wir von nun an Daten welche uns in Form von 
+	Sei $X$ eine Menge an Daten. Dabei betrachten wir von nun an Daten, welche uns in Form von 
 	$D$-dimensionalen reellen Vektoren geben sind, somit ergibt sich für $N$ Datenpunkte, 
 	$X = \{\xxi\}_{1 \leq i \leq N}$ mit $\xxi \in \R^D$. 
 	Wenn $D > 10$ sprechen wir meist von \textit{hochdimensionalen Daten}.
-	Dabei ist Beschränkung auf Daten, welche als Vektoren beschreiben lassen sinnvoll, da 
+	Dabei ist die Beschränkung auf Daten, welche sich als Vektoren beschreiben lassen, sinnvoll, da % TODO: hier komma?
 	uns die Darstellung einerseits die mathematische Formulierung des Problems erleichtert. 
 	Andererseits können sehr verschiedene Daten in dieser Form angegeben werden. 
-	So kann man ein digitales Bild als Vektor auffassen indem die Dimension der Anzahl 
+	So kann man ein digitales Bild als Vektor auffassen, indem die Dimension der Anzahl 
 	an Pixeln entspricht und die Farbwerte der Pixel die Einträge der Vektoren geben. 
 	Wörter können ebenfalls als Vektoren gegeben werden indem beispielsweise die Dimension der 
 	Gesamtzahl der Wörter entspricht und die Wörter durch Einheitsvektoren darstellt werden. 
-	Wir sehen, das die Anzahl an Dimensionen sehr groß werden kann. Eine moderne Kamera 
+	Wir sehen, dass die Anzahl an Dimensionen sehr groß werden kann. Eine moderne Kamera 
 	macht Bilder mit meist mehr als $1920 \times 1080$ Pixeln, dies entspricht $D = \num{2073600}$. 
 	Die deutsche Sprache hat circa 23 Millionen unterschiedliche Wörter, somit wäre $D = \num{23000000}$. 
 	Wir sprechen von einer \textit{Dimensionsreduktion} von $X$, wenn wir eine \textit{Einbettung} $Y$ angeben, 
@@ -138,7 +146,7 @@
 	sich $X$ und $Y$ \textit{ähnlich} sind. 
 
 	Wir möchten nun zurück auf die Ziele der Datenanalyse kommen. Die Einbettung $Y$ kann dazu 
-	dienen die Daten $X$ zu visualisieren, wenn $d \in {1,2,3}$. Da $X$ und $Y$ ähnlich sind, 
+	dienen, die Daten $X$ zu visualisieren, wenn $d \in {1,2,3}$. Da $X$ und $Y$ ähnlich sind, 
 	können durch die Visualisierung von $Y$ Rückschlüsse auf $X$ gemacht werden. Oft lassen sich 
 	in der Visualisierung sogenannte Cluster erkennen, siehe dazu Abbildung \ref{fig:umap_mnist}. 
 	Neben der Visualisierung kann die Einbettung $Y$ zur Vorverarbeitung genutzt werden, also als 
@@ -160,9 +168,9 @@
 	Eine häufig getroffene Annahme ist, dass die Daten $X$ auf einer niedrigdimensionalen 
 	Struktur liegen. In der Literatur ist diese Annahme als Mannigfaltigkeit-Hypothese 
 	(\textit{engl.: manifold hypothesis}) bekannt \cite{Mitter,Rifai}. Dabei kann sich eine 
-	Mannigfaltigkeit als Raum vorgestellt welcher lokal einem niedrigdimensionalen Raum gleicht. 
-	So ist Beispielsweise der Erdball eine $2$-dimensionale Mannigfaltigkeit, da sie lokal gesehen 
-	flach ist. Die Intuition, welche diese Annahme gerechtfertigt ist somit, dass wir Daten messen, 
+	Mannigfaltigkeit als Raum vorgestellt werden, welcher lokal einem niedrigdimensionalen Raum gleicht. 
+	So ist beispielsweise der Erdball eine $2$-dimensionale Mannigfaltigkeit, da sie lokal gesehen 
+	flach ist. Die Intuition, welche diese Annahme rechtfertigt ist somit, dass wir Daten messen, 
 	welche nicht relevant sind. Beispielsweise ist der Hintergrund in einem Bild von einem Gesicht 
 	bei der Gesichtserkennung nicht relevant. 
 
@@ -176,7 +184,7 @@
 	man \textit{Dimensionsreduktionsverfahren} (kurz: \textit{DR Verfahren}) an. 
 	Dabei gibt es DR Verfahren, welche bei der Einbettung globale Distanzen bevorzugen. 
 	Bekannte Verfahren dabei sind PCA, MDS und Sammon Mapping. Zu den Verfahren, welche 
-	die lokalen Distanzen bevorzugen gehören Isomap, Laplacian Eigenmaps und t-SNE. 
+	die lokalen Distanzen bevorzugen, gehören Isomap, Laplacian Eigenmaps und t-SNE. 
 	Die Begriffe \textit{lokal} und \textit{global} sind dabei nicht fest definiert. 
 	Wir werden später genauer auf einige Verfahren eingehen. 
 
@@ -191,8 +199,8 @@
 	zwischen den Datenpunkten zu bestimmen. Diese Konstruktion liefert uns für jeden Datenpunkt 
 	einen \textit{metrischen Raum}, wobei die \textit{Metriken} zwischen den Räumen a priori 
 	nicht miteinander kompatibel sind. Um dieses Problem zu lösen werden wir für jeden metrischen Raum eine 
-	\textit{unscharfe simpliziale Menge} konstruieren, diese erhält die wichtigen Informationen des 
-	metrischen Raumes. Die simplizialen Mengen können wir miteinander vereinigen. Ähnlich konstruieren wir 
+	\textit{unscharfe simpliziale Menge} konstruieren, welche die wichtigen Informationen des 
+	metrischen Raumes enthält. Die simplizialen Mengen können wir miteinander vereinigen. Ähnlich konstruieren wir 
 	für eine initiale Einbettung $Y$ eine zugehörige simpliziale Menge. Wir werden dann einen Abstandsbegriff 
 	zwischen den simplizialen Mengen nutzen um die Darstellung von $Y$ zu optimieren. 
 
@@ -212,14 +220,14 @@
 	\end{itemize}
 
 \subsection*{Aufbau der Arbeit}
-	In Kapitel \ref{Grundlagen} werden wir die für das UMAP Verfahren benötigten Definitionen und Sätze geben. 
-	Dabei werden wir zuerst auf den Begriff der riemannschen Mannigfaltigkeit hinarbeiten, dieser legt aufgrund 
-	der Mannigfaltigkeit-Hypothese die  Grundlage für weitere Überlegungen. Dann werden \textit{Kategorien} 
-	und wichtige Aussagen der Kategorientheorie. Mithilfe von Kategorien können wir dann \textit{simpliziale Mengen} 
+	In Kapitel \ref{Grundlagen} werden wir die für das UMAP Verfahren benötigten Definitionen und Sätze angeben. 
+	Dabei werden wir zuerst auf den Begriff der riemannschen Mannigfaltigkeit hinarbeiten, welcher aufgrund 
+	der Mannigfaltigkeit-Hypothese die Grundlage für weitere Überlegungen legt. Dann werden \textit{Kategorien} 
+	und wichtige Aussagen der Kategorientheorie vorgestellt. Mithilfe von Kategorien können wir dann \textit{simpliziale Mengen} 
 	einführen, welche die Grundlage für die Repräsentation der Daten legen. Diesen Begriff werden wir auf 
 	\text{unscharfe} simpliziale Mengen erweitern. 
 
-	Die Aussagen werden uns in Kapitel \ref{UMAP} dabei helfen die Theorie des UMAP Verfahrens darzustellen. 
+	Die Aussagen werden uns in Kapitel \ref{UMAP} helfen, die Theorie des UMAP Verfahrens darzustellen. 
 	Diese soll in drei Schritten beschrieben werden, zuerst werden wir die Mannigfaltigkeit approximieren und 
 	eine Familie metrischer Räume konstruieren. Danach werden wir diese metrischen Räume in unscharfe simpliziale 
 	Mengen umwandeln. Dies wird uns eine Repräsentation $\Xrep$ der Daten $X$ liefern. Zuletzt werden wir eine ähnliche 
@@ -228,16 +236,16 @@
 	Theorie als metrischer Raum dargestellt werden, dieser liefert uns die Einbettung von $X$. 
 
 	Kapitel \ref{Implementierung} wird einen Fokus auf die Implementierung des UMAP Verfahren legen. Zunächst soll 
-	die UMAP Theorie angepasst werden um eine effiziente Implementierung zu ermöglichen. Wir werden dann eine 
+	die UMAP Theorie angepasst werden, um eine effiziente Implementierung zu ermöglichen. Wir werden dann eine 
 	Implementierung \cite{cpu} betrachten und die rechenintensiven Subroutinen angeben. Weitere Überlegungen sollen 
 	Alternativen beschreiben. Wir werden diese Kapitel mit einer Übersicht der Hyperparameter des UMAP Verfahrens 
 	abschließen. 
 
 	Das UMAP Verfahren soll in Kapitel \ref{Experimente} mit zwei verwandten Verfahren auf unterschiedlichen 
 	Datensätzen analysiert werden. Dazu werden wir eine kurze Beschreibung des t-SNE und TriMap Verfahren geben. 
-	Mit diesen drei Verfahren werden wir einen Datensatz mit Cartoon Gesichtern analysieren, diese Analyse soll 
-	testen, wie gut die Einbettungen der Verfahren sind. Zusätzlich sollen die Verfahren auf den bekannten 
-	Datensätzen MNIST und FMNIST getestet werden. 
+	Mit diesen drei Verfahren werden wir einen Datensatz mit Cartoon Gesichtern analysieren. Diese Analyse soll 
+	testen, wie gut die Einbettungen der Verfahren sind. Zusätzlich sollen die Verfahren auf dem bekannten 
+	MNIST Datensatz getestet werden. 
 
 	Die Resultate dieser Arbeit sollen in Kapitel \ref{Zusammenfassung} zusammengefasst werden. 
 	Außerdem geben wir in diesem Kapitel Ansätze nennen um das UMAP Verfahren zu verbessern. 
