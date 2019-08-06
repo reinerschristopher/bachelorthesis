@@ -334,7 +334,7 @@
 	% Beispielsweise sollten die Cluster welche die Ziffern 1 und 7 darstellen näher zueinander liegen als die Cluster der Ziffern 1 und 6. 
 %----------------------------------------------------------------------------------------
 
-\section*{FMNIST} \label{sec:FMNIST}
+\section{FMNIST} \label{sec:FMNIST}
 	% Fließender Übergang zwischen Clustern, "Fehler" sind begründet
 
 %----------------------------------------------------------------------------------------
@@ -347,12 +347,34 @@
 	Insgesamt haben wir über 200 Experimente gemacht um genauere Aussagen über die Laufzeit der Verfahren 
 	zu treffen und diese in Abhängigkeit der wichtigen Parameter zu setzen.
 
-	
+	\begin{table}
+	\centering
+	\begin{tabular}{l|llll}
+	\code{n\_neighbors} & MNIST    & FMNIST & Cartoon 10k & Cartoon 50k \\ \hline
+	5    				& 3,7 min  & 4 min  & 7,4 min     & 62 min      \\
+	10   				& 5,3 min  & 6 min  & 11,4 min    & -           \\
+	20   				& 10,6 min & 12 min & 23 min      & -           \\
+	40   				& 25 min   & 24 min & 77 min      & 7 h         \\
+	100  				& 34 min   & 32 min & 86 min      & 8 h        
+	\end{tabular}
+	\caption{Laufzeit des UMAP Verfahren mit unterschiedlichen Werten des \code{n\_neighbors} Parameters.}
+	\label{tab:umap}
+	\end{table}
 
-%----------------------------------------------------------------------------------------
-
-\section{Zusammenfassung der Ergebnisse}
-	Die Ergebnisse haben gezeigt, dass alle drei verwendeten DR Verfahren lokale Strukturen der 
-	Bilddatensätze erkannt haben. 
+	\begin{table}
+	\centering
+	\begin{tabular}{l|lll}
+	           & MNIST    & FMNIST   & Cartoon 10k \\ \hline
+	UMAP       & 25 min   & 23,8 min & 77 min      \\
+	t-SNE      & 2 h      & 130 min  & 17 h        \\
+	openTSNE   & 11,6 min & 12 min   & -           \\
+	TriMap     & 4 min    & 4 min    & 5,4 min     \\
+	Cuda UMAP  & 8 sec    & 7,7 sec  & -           \\
+	Cuda t-SNE & 5 sec    & 5,4 sec  & -           \\
+	PCA        & 1,3 sec  & 1,2 sec  & 9,2 min    
+	\end{tabular}
+	\caption{Laufzeit verschiedener Verfahren der Dimensionsreduktion}
+	\label{tab:several}
+	\end{table}
 
 %----------------------------------------------------------------------------------------
