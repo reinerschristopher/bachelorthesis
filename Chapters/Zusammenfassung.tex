@@ -6,7 +6,7 @@
 %----------------------------------------------------------------------------------------
 
 \section{Zusammenfassung} \label{sec:sum}
-	In dieser Arbeit haben wir eine kurze Einf¸hrung in die Datenanalyse gegeben und 
+	In dieser Arbeit haben wir eine kompakte Einf¸hrung in die Datenanalyse gegeben und 
 	dabei betont, dass Daten, insbesondere Daten hoher Dimensionen eine immer wichtigere 
 	Rolle spielen da sie in groﬂen Mengen gesammelt werden kˆnnen. 
 	Wir haben eine Klasse an Verfahren vorgestellt, welche zu gegebenen hochdimensionalen 
@@ -15,9 +15,17 @@
 	Um das UMAP Verfahren vorzustellen haben wir Aussagen aus unterschiedlichen 
 	mathematischen Teilgebieten kennengelernt. Dabei haben wir einerseits einen 
 	Fokus auf die mathematische Korrektheit gelegt, andererseits mittels Erkl‰rungen 
-	und Beispielen 
+	und Beispielen die Aunschauung hinter den eingef¸hrten Konzepten erl‰utert. 
 
+	Die Theorie der unscharfen topologischen Repr‰sentation wurde eingef¸hrt und 
+	mit Erkl‰rungen erg‰nzt. Es wurde eine Beschreinung der Implementierung 
+	gegeben und diese genutzt um Datens‰tze zu analysieren. Zudem haben 
+	wir die Problemstellung ein Qualit‰tsmaﬂ f¸r Einbettungen zu finden betrachtet 
+	und einen neuen Datensatz ausf¸hrlich analysiert. 
 
+	Dabei hoffen wir, dass wir den Leser f¸r das UMAP Verfahren und die 
+	(topologische) Datenanalyse begeistern konnten und ihn zu weiteren 
+	‹berlegungen motivieren konnten. 
 
 % Problem mit rauschenden Daten: nutze random projections (~siehe Tang)
 
@@ -46,45 +54,47 @@
 %----------------------------------------------------------------------------------------
 
 \section{Ausblick} \label{sec:ausblick}
-% Anwendung auf andere Datens√§tze Beispielsweise Kundendatenbank, als Vorverarbeitung, 
-% Zeitreihenanalyse
+	In den vergangenen Monaten haben wir uns intensiv mit dem UMAP Verfahren 
+	auseinandergesetzt und sind dabei zu einigen ‹berlegungen gekommen. 
 
-% H√∂here Simplizes betrachten (siehe Methoden von TriMap)
+	An dieser Stelle mˆchten wir eine Problematik aufgreifen, welche bei der 
+	Entwicklung des UMAP Verfahren auftritt. In Kapitel \ref{UMAP} wurde die Theorie 
+	des Verfahrens entwickelt. Die dort verwendeten Aussagen um die Theorie des UMAP 
+	Verfahrens mathematisch zu begr¸nden baut auf unsicheren simplizialen Mengen auf. 
+	Die aktuellen praktischen Implementierungen greifen dabei nicht auf diese Mengen 
+	zur¸ck, sondern auf eine (starke) Vereinfachung. 
+	Es sollte genauer untersucht werden, wie \textit{stark} diese Vereinfachung in der 
+	Praxis ist. Im Rahmen dieser Arbeit haben wir zwar versucht Ans‰tze daf¸r zu 
+	entwickeln, sind aber leider aufgrund unserer fehlenden Kenntnisse im Bereich 
+	der Topologie zu keinen wesentlichen Resultaten bekommen. F¸r unsere Ans‰tze haben 
+	wir \cech-Komplexe und VR-Komplexe betrachtet. Diese werden in der topologischen 
+	Datenanalyse an verschiedenen Stellen verwendet. Kurz gesagt, kann man sich unter 
+	dem VR-Komplex den konstruierten Graphen und unter einem \cech-Komplex die unscharfe 
+	topologische Repr‰sentation $\Xrep$ vorstellen, dies ist nicht ganz richtig, da 
+	beide Konstrukte nur Simplizialkomplexe sind und nicht die allgemeinere Form der 
+	simplizialen Mengen darstellen. 
+	Diese Herrangehensweise w¸rde die Theorie der Praxis angleichen. 
+	Umgekehrt kˆnnte man auch die praktische Implementierung auf $n$-Simplizes erweitern. 
+	Ein interessanter Ansatz ist dabei die Wahl der Tripel in \cite{TriMap}. 
 
-% Verfahren zum finden der zugrundeliegenden Dimension, kann variieren (=> variierender 
-% near_neighbor Parameter?)
+	Eine weitere Baustelle ist die quantitative Bewertung von Einbettungen. 
+	Dies stellt, wie wir gesehen haben, eine schwierige Aufgabe dar. 
 
-% UMAP zur Gesichtserkennung (siehe Eigenfaces)
+	Im Rahmen dieser Arbeit haben wir uns auf Bilddaten beschr‰nkt, wir mˆchten den 
+	Leser dazu motivieren das UMAP Verfahren auf anderen Datens‰tzen zu analysieren 
 
-% ‚ÄúProduct quantization for nearest neighbor search‚Äù, Jegou & al., PAMI 2011.
-% Zur Darstellung hochdimensionaler Vektoren
-% This can be seen as a lossy compression technique for high-dimensional vectors, 
-% that allows relatively accurate reconstructions and distance computations in the compressed domain.
+	Wir haben uns nicht mit der Frage nach der intrinsischen Motivation besch‰ftigt, 
+	diese Frage ist keineswegs trivial. Insbesondere spielt die Frage eine Rolle, 
+	wenn UMAP zur Vorverarbeitung von Daten genutzt wird. Dabei kˆnnen wir uns vorstellen, 
+	dass sich die Theorie der simplizialen Mengen als n¸tzlich erweisen kann, da 
+	eine simpliziale Menge im wesentlichen aus unterschiedlich-dimensionalen Simplizes besteht, 
+	somit kˆnnten verschiedene Bereiche des der Daten eine unterschiedliche Dimension annehmen. 
 
-% Betrachten einer Umkehrabbildung
+	Wir mˆchten die Arbeit mit folgendem Zitat abschlieﬂen, 
 
-% Erw√§hne smallvis (und 'schnellere' uwot version) f√ºr SGD ohne sub sampleing
-% Da wir uns in den Experiementen auf die DR mittels schneller Implementierungen f√ºr 
-% gro√üe Datens√§tze fokussiert haben, sind diese beiden Implementierungen nicht erw√§hnt..
-
-% TODO: Beschreibung der L√ºcke in diesem Kapitel oder in UMAP
-
-% Wie kann man Daten besser vorverarbeiten um die Ergebnisse noch zu verbessern?
-
-% OnlineUMAP, daf√ºr online kNN und SGD
-
-% In der Einleitung bereits erw√§hnt nehmen wir an, dass die zu untersuchenden Daten $X \subset \R^D$
-% auf einer $d$-dimensionalen Mannigfaltigkeit $(d \ll D)$ liegen. Ein passendes $d$ zu finden ist nicht offensichtlich.
-% Wir verweisen den Leser auf... %TODO: Quellen f√ºr Sch√§tzung abgeben.
-
-% Genauer untersuchen welche 'topologischen' Informationen bei der Adjunction erhalten bleiben.
-
-% Eine gute Interpretation der Simplizes h√∂herer Ordnungen 
-% zu geben Bedarf weiteren √úberlegungen. % TODO: Kommt der letzte Satz hier hin oder in den Ausblick?
-
-% schw√§chere wahl als log in Gleichung \ref{eq:dlog} (wird in beweisen nicht explizit verendet) um globale abst√§nde zu bevorzugen
-
-% Erweitern auf Fuzzy Knoten, f√ºr schlecht gemessene Daten, ..
+	\vspace*{0.01\textheight}
+	\flushright \noindent \textit{\enquote{The goal is to turn data into information, and information into insight.}} \bigbreak
+	\hfill Carly Fiorina
 
 %----------------------------------------------------------------------------------------
 %----------------------------------------------------------------------------------------
