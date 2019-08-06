@@ -4,23 +4,10 @@
 
 %----------------------------------------------------------------------------------------
 
-%Define math commands used in this chapter
-
-
-%----------------------------------------------------------------------------------------
-
 % N O T I Z E N
-% Cite Numba 24
+   % Cite Numba 24
 
-% TODO: Bem: Fehler in Kapitel 3 von UMAP wij sollten gewichte der Matrix B sein.
-
-% \begin{align}
-%    \sum_{i=1}^n \exp\left(\frac{-(\text{knn-dists}_i - \rho)}{\sigma}\right) = \log_2(n)
-% \end{align}
-
-% TODO: Daniel 
-% Fallen in 4.9 alle Terme in der Summe weg für kl \neq mi ? Dann würde ich verstehen warum man auf 4.12 kommt. 
-% Das würde ich dann aber noch kurz erwähnen. Und entweder in 4.11 oder 4.12 sind die Vorzeichen falsch glaub ich.
+   % TODO: Bem: Fehler in Kapitel 3 von UMAP wij sollten gewichte der Matrix B sein.
 
 %----------------------------------------------------------------------------------------
 %----------------------------------------------------------------------------------------
@@ -48,7 +35,6 @@
 
 %----------------------------------------------------------------------------------------
 
-% TODO: !!!!!!! Kontroliere ob \mu(a) = \vij ist oder = den nicht symetrischen Werten. (dann ändere V und definiere \fij = sym(\vij))
 \section{Numerische Formulierung des UMAP Verfahrens} \label{seq:numerische_formulierung}
    Um weitere Überlegungen zu vereinfachen und die praktische Implementierung zu beschreiben, werden wir nun die Notation anpassen.
 
@@ -236,11 +222,14 @@
    von Gradientenverfahren. Diese werden unter anderem für das trainieren neuronaler Netzwerke bei der Backpropgation genutzt. 
    In \cite{SGDGPU} werden verschiedene Implementierungen verglichen.
 
+   Für das UMAP Verfahren wird eine modifizierte Version des stochastischen Gradientenverfahrens angewendet. Diese möchten wir kurz beschreiben. 
    Um den Rechenaufwand im Gradientenverfahren zu verringern, wird der Gradient in zwei Summanden aufgeteilt. Dabei wird folgende Beobachtung 
    genutzt:
    Für Kanten $\{i,j\}$ mit einem hohen Zugehörigkeitsgrad $(\wX \approx 1)$ ist der Term $(1-\wX) \log(1-\wY)$ aus Gleichung (\ref{eq:loss}) 
    nahe Null, deshalb ist es sinnvoll nur den Gradienten des Terms $\wX \log(\wY)$ zu betrachten. Für Kanten mit $\wX \approx 0)$ sollte 
    hingegen der Gradient des Terms $(1-\wX) \log(1-\wY)$ betrachtet werden. 
+   Die Idee dieser Optimierung stammt aus \cite{Mikolov} und dort zum finden eines Kontext für ein gegebenes Wort verwendet. Es wird eine 
+   Beschleunigung der Optimierung um den Faktor $2x - 10x$ erzielt. 
    Für das UMAP Verfahren wird deswegen folgende Implementierung vorgeschlagen:
 
    \begin{algorithm}
@@ -287,47 +276,10 @@
 
    wobei der $\epsilon$-Parameter eine Division mit Null vermeidet.
 
+   Dies vervollständigt die Angabe des UMAP Verfahrens in der Praxis. Die genannten Hyperparameter werden wir in Abschnitt \ref{seq:hyper} betrachten.
 
-
-
-   % Das UMAP Verfahren nutzt für die Optimierung der Zielfunktion die \textit{negative sampling} Methode aus dem Bereich 
-   % der Worteinbettungen \cite{Mikolov}. Wir werden diese Methode vorstellen und begründen warum sich die Argumentation aus dem 
-   % Bereich der Worteinbettungen auf die Dimensionsreduktion übertragen lässt.
-   % Dann vervollständigen Algorithmus \ref{algorithm:umap} um die Subroutine \textsc{OptimiereEinbettung}.
-   
-   % % Optimiert Suchrichtung des Gradienten da wichtige Beispiele betrachtet werden. 
-   % \subsection*{Negative Sampling}
-   %    Die erste uns bekannte Quelle des negative sampling ist Mikolov et. al \cite{Mikolov}. Das Methode wird 
-   %    für die Problemstellung entwickelt um für ein Paar $(w, c)$ eines Wortes $w$ und eines dazugehörigen Kontextes $c$ 
-   %    eine Vektorrepräsentation zu finden. Dafür ist uns eine Sprache $W$ und eine Kontextmenge $C$ gegeben, wobei für 
-   %    $w \in W$ die Menge $C(w)$ alle zu w passenden Kontexte angibt. Eine sinnvolle Repräsentation der Worte \enquote{Numerik}, 
-   %    \enquote{Garcke}, \enquote{Algebraische Topologie}, \enquote{Scholze} wäre beispielsweise 
-   %    $vec(\text{Algebraische Topologie}) - vec(\text{Scholze}) + vec(\text{Numerik}) = vec(\text{Garcke})$
-
-   % \subsection*{Optimierung des UMAP Gradienten}
-   %    Damit können wir Algorithmus \ref{algorithm:umap} vervollständigen.
-
-   %    \begin{algorithm}
-   %    \caption{OptimiereEinbettung}
-   %    \label{algorithm:optimize}
-   %    \begin{algorithmic}[1]
-   %    \Function{OptimiereEinbettung}{$Y, V, W, \text{n-epochs}$}
-   %       \State $\alpha \gets 1.0$
-   %       \For{$e \gets 1,\dots,\text{n-epochs}$}
-   %          \State $x \gets \dots$ % TODO: ergänze
-   %       \EndFor
-   %       \State $\alpha \gets 1.0 - e/\text{n-epochs}$
-   %       \State \textbf{return} $Y$
-   %    \EndFunction
-   %    \end{algorithmic}
-   %    \end{algorithm}
-
-   %    In den uns bekannten Implementierungen wird der Gradient in Zeile REF?? außerhalb des Intervalls 
-   %    $[-4,4]$ auf $-4$ bzw. $4$ gesetzt, um die Auswirkung von schlechten Kanten zu reduzieren \cite{Goodfellow}. % TODO: Referenz
-
-
-   %    Für dünn-besetzte Datensätze $X$ könnte man beispielsweise das AdaGrad Verfahren betrachten, 
-   %    dieses zeigte in der Praxis sehr gute Ergebnisse für dünn-besetzte Daten. % TODO: Quellen
+%    Für dünn-besetzte Datensätze $X$ könnte man beispielsweise das AdaGrad Verfahren betrachten, 
+%    dieses zeigte in der Praxis sehr gute Ergebnisse für dünn-besetzte Daten. % TODO: Quellen
 
 %----------------------------------------------------------------------------------------
 
@@ -378,7 +330,11 @@
 
       Der RAM der meisten GPUs ist stark begrenzt. Um dennoch mit großen Datensätzen zu arbeiten werden komprimierte 
       Darstellungen der Vektoren genutzt. % TODO: Referenzen einfügen, aus FAISS
-      Für FAISS werden \enquote{product quantization codes} genutzt. % TODO: referenz und kurze Beschreibung 
+      Für FAISS werden \textit{product quantization codes} genutzt. 
+      Die Idee dieser Repräsentation ist, dass der hochdimensionale Raum in das Kartesische Produkt niedrigdimensionaler 
+      Teilräume zerlegt wird. Ein Vektor im Suchraum wir dann durch kurze Sequenzen aus Indizes der Teilräume beschrieben. 
+      Die euklidische Distanz zweier Datenpunkte kann anhand der Sequenzen errechnet werden, für eine genauere Beschreibung siehe \cite{FAISS2}. 
+      Somit kann eine Datenstruktur verwaltet werden, welche eine schnelle Berechnung der euklidischen Distanzen ermöglicht.  
 
       Vorteile der FAISS Datenstruktur sind die effiziente Implementierung auf GPUs und das sowohl exakte Ergebnisse 
       sowie Approximationen für die nächsten Nachbarn angegeben werden können. Die Rückgabe approximativer 
@@ -393,37 +349,40 @@
 
    \begin{itemize}
       \item \code{n\_neighbors}:
-            beschreibender Text
-        % The size of local neighborhood (in terms of number of neighboring
-        % sample points) used for manifold approximation. Larger values
-        % result in more global views of the manifold, while smaller
-        % values result in more local data being preserved. In general
-        % values should be in the range 2 to 100.
-      \item $\code{metric}$
-         Text
+            Die Größe der lokalen Nachbarschaft. Größere Werte erzielen eine globalere Ansicht der Daten. 
+            Eine kleine Wahl des Parameters stellt hingegen lokale Distanzen besser dar. 
+            Zusätzlich ist die Wahl des Parameters abhängig von der Anzahl der Daten. Dabei kann 
+            man festhalten, je größer $N$, desto größer sollte auch \code{n\_neighbors} gewählt sein. 
       \item $\code{n-epochs}$
-         Text
+         Die Anzahl der Iterationen im SGD. Je größer die Wahl des Parameters, desto besser sollte 
+         die Minimierung sein. Allerdings wird hier kein globales Minimum garantiert. Jedoch liefert 
+         die Initiale Einbettung beruhend auf der spektralen Einbettung einen guten Startwert für die Optimierung. 
+         Die Wahl der Schrittgröße im Gradientenverfahren ist antiproportional zu \code{n-epochs} gewählt und wird in 
+         jeder Iteration verringert. Dies hat sich in der Praxis als sinnvolle Wahl der Schrittgröße erwiesen um nicht 
+         zu schnell in lokalen Minima festzustecken. 
       \item \code{set\_op\_mix\_ratio}
-        % Interpolate between (fuzzy) union and intersection as the set operation
-        % used to combine local fuzzy simplicial sets to obtain a global fuzzy
-        % simplicial sets. Both fuzzy set operations use the product t-norm.
-        % The value of this parameter should be between 0.0 and 1.0; a value of
-        % 1.0 will use a pure fuzzy union, while 0.0 will use a pure fuzzy
-        % intersection.
-      \item $\code{local\_connectivity}$ 
-         % The local connectivity required -- i.e. the number of nearest
-         % neighbors that should be assumed to be connected at a local level.
-         % The higher this value the more connected the manifold becomes
-         % locally. In practice this should be not more than the local intrinsic
-         % dimension of the manifold.
-      \item \code{repulsion\_strength}
-         % Weighting applied to negative samples in low dimensional embedding
-         % optimization. Values higher than one will result in greater weight
-         % being given to negative samples.
-      \item \code{a, b}:
-            Erwähne wie a und b standardmäßig gewählt werden, zeige Plot von a, b
-            Erwähne \code{min-dist} und \code{spread}
-      \item \code{negative\_sample\_weight}
+        Dieser Parameter gibt an, in welchem Verhältnis eine Vereinigung mittels t-Conorm, oder ein Schnitt mittels Produkt t-Norm 
+        durchgeführt werden soll. In den theoretischen Überlegungen haben wir uns stets auf die Vereinigung beschränkt. 
+        Anschaulich gesehen setzen sich bei der Vereinigung, welche sich für den Fall der $1$-Skelette als Symmetrisierung beschreiben lässt 
+        die größeren Gewichte durch. Somit werden Punkte in eine Zusammenhangkomponente \textit{gezwungen}. 
+        Wenn man im Vergleich dazu den Schnitt, in unserem Fall die Produkt t-Norm, betrachtet werden die kleineren Gewichte bevorzugt. 
+        Somit erhält man mehr Zusammenhangkomponenten. Dabei beschreibt $\code{set\_op\_mix\_ratio}=1$ die vorherigen Überlegungen nur die 
+        Vereinigung zu betrachten, $\code{set\_op\_mix\_ratio}=0$ betrachtet nur den Schnitt, $\code{set\_op\_mix\_ratio}=a$ mit $a \in (0,1)$ 
+        beschreiben das Verhältnis zwischen Vereinigung und Schnitt. Eine kleine Wahl kann beispielsweise dann sinnvoll sein, wenn man 
+        Ausreißer in den Daten vermutet. 
+      \item $\code{min-dist}$ 
+         Kleine Werte des Parameters erzeugen dichtere Strukturen. Größere Distanzen sorgen dafür, das die Distanz zwischen den Punkten in der 
+         Einbettung vergrößert wird. Der Startwert $0,1$ liefert meist gute Ergebnisse. Wenn viele Datenpunkte eingebettet werden sollte \code{min-dist} 
+         entsprechend größer gewählt werden um ein \textit{overplotting} zu vermeiden.  
+
+      % \item \code{repulsion\_strength}
+      %    % Weighting applied to negative samples in low dimensional embedding
+      %    % optimization. Values higher than one will result in greater weight
+      %    % being given to negative samples.
+      % \item \code{a, b}:
+      %       Erwähne wie a und b standardmäßig gewählt werden, zeige Plot von a, b
+      %       Erwähne \code{min-dist} und \code{spread}
+      % \item \code{negative\_sample\_weight}
    \end{itemize}
 
 %----------------------------------------------------------------------------------------      

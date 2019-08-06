@@ -1,8 +1,6 @@
 %!TEX root = ../main.tex
 
-\chapter{Experimente} 
-
-\label{Experimente}
+\chapter{Experimente} \label{Experimente}
 
 %----------------------------------------------------------------------------------------
 
@@ -197,14 +195,11 @@
 
 \section{Cartoon Set} \label{sec:cartoonset}
 	In diesem Abschnitt werden wir den \textit{Cartoon Set} Datensatz analysieren \cite{cartoon}. 
-	Dabei werden wir:
+	Dabei werden wir,
 	\begin{itemize}
-		\item sehen, dass UMAP eine vergleichbare Laufzeit mit der von FIT-SNE hat
-		\item das Verhalten der niedrigdimensionalen Darstellung unter verschiedenen 
-			  Hyperparametern betrachten
-		\item eine exemplarische Beschreibung der Hyperparameter geben
-		\item UMAP mit anderen Dimensionsreduktionsverfahren vergleichen
-		\item sehen, dass UMAP zugrundeliegende Mannigfaltigkeiten erkennt und darstellt
+		\item die Einbettungen von UMAP mit denen von t-SNE und TriMap visuell bewerten,
+		\item und die drei Verfahren auf globale und lokale Strukturen vergleichen, 
+		\item an einigen Stellen verdeutlichen wie schwierig die Bewertung der Qualität der Einbettung ist.
 	\end{itemize}
 
 	%-----------------------------------
@@ -231,7 +226,10 @@
 	Die ursprüngliche Größe eines Bildes betrug $500 \times 500$ Pixel mit vier Farbkanälen 
 	(CYMK-Darstellung der Farben). Aufgrund des großen Randes haben wir uns dazu entschieden die Größe der 
 	Bilder auf $300 \times 300$ ohne nennenswerten Informationsverlust zu verringern. Somit beträgt die Dimension 
-	des Cartoon Set $D = \num{360000}$ und die Anzahl an Beispielen $N$ variiert zwischen $\num{10000}$ und $\num{100000}$.
+	des Cartoon Set $D = \num{360000}$ und die Anzahl an Beispielen $N$ variiert zwischen $\num{10000}$ und $\num{100000}$. 
+	An dieser Stelle ist die sehr hohe Umgebungsdimension hervorzuheben. Typischerweise werden Daten mit einer 
+	Umgebungsdimension $D > \num{10000}$ mit PCA auf eine Dimension in den Bereich $D' \in [100,1000]$ vorverarbeitet. 
+	Später werden wir sehen, dass diese Vorverarbeitung bezogen auf unsere Bilddaten keine großen Nachteile birgt.  
 
 	Wir haben uns für diesen Datensatz entschieden um UMAP auf Daten mit einer komplexeren Struktur zu testen 
 	als dies in \cite{UMAP} gemacht wird. Dabei ist auch zu beachten, dass aufgrund der 16 Labels aus 
@@ -252,9 +250,21 @@
 
 	%-----------------------------------
 
+	% Globale Struktur sehr gut erhalten und lokale auch, wenig abhängig von Parametern
 	\subsection*{Qualitative Analyse der Ergebnisse}
-		% Globale Struktur sehr gut erhalten und lokale auch, wenig abhängig von Parametern
-
+	Wir werden nun die Einbettungen bewerten. 
+	Abbildung \ref{fig:pca_cartoon} zeigt eine Einbettung des Cartoon Set mittels PCA. Dies dient als Startwert unserer Analyse. 
+	Im linken Plot sind dabei zwei Linien eingezeichnet. Diese verdeutlichen, dass mittels PCA die Gesichter in 3 Klassen eingeteilt werden können. 
+	Die Farben des Punkte in diesem Plot stellen die Frisurtypen dar. 
+	Die oberen blauen und roten Punkte stellen Gesichter mit wenigen Haaren dar, die Punkte eingeschlossen von den beiden Linien stellen Gesichter 
+	mit mittellangen und die unteren Punkte Gesichter mit langen Haaren dar. Ebenfalls in Abbildung \ref{fig:pca_cartoon} sind exemplarisch einige 
+	Gesichter mit ihrer zugehörigen Lage in der Einbettung zu sehen. Der mittlere Plot visualisiert die Gleiche Einbettung, es wurden nur andere labels 
+	für die Daten genutzt. Die Farben repräsentieren die Gesichtsfarben, dabei entspricht gelb hellen Hauttypen, lila sehr dunklen und türkis/grün den restlichen 
+	Hauttypen. Ähnlich werden im rechten Plot die Farben der Punkte entsprechend ihrer Haarfarben gewählt, wobei der Verlauf von gelb über grün nach lila den Verlauf 
+	schwarzen über braunen nach blonden/grauen Haarfarben entspricht. Wir werden diese Farbwahl in den anderen Plots beibehalten. Auch hier ist eine Struktur zu 
+	erkennen, auffällig ist dabei, dass die linearen Strukturen vom oberen Drittel schlechter sind als die im unteren Drittel. Dies können wir dadurch erklären, 
+	dass sich längere Haartypen leichter unterscheiden lassen als beispielsweise die Unterscheidung zwischen keinen und sehr wenig kurzen Haaren. 
+	Wir können an dieser Stelle unsere Annahme bestätigen, dass das Cartoon Set eine zugrundeliegende Struktur besitzt, welche unsere Intuition widerspiegelt. 
 
 	\begin{figure} % PCA als Startwert, global sind hair, face_color und hair_color, nicht faicial_hair und glasses
 		%\centering
@@ -265,15 +275,26 @@
 		\label{fig:pca_cartoon}
 	\end{figure}
 
+	In Abbildung \ref{fig:cartoon_cluster} betrachten wir Einbettungen von UMAP, t-SNE und TriMap. Durch das einzeichnen der Cluster möchten wir untersuchen, 
+	wie gut die Verfahren eine \textit{globale} Struktur erhalten. Die Ergebnisse der Einbettungen unterscheiden sich stark von der PCA Einbettung. 
+	Alle drei Verfahren erkennen die globale Einteilung der Daten in verschiedene Frisurtypen. Dabei unterscheiden sie zusätzlich zu PCA innerhalb der drei Klassen, 
+	kurze, mittellange und lange, in feinere Klassen. Diese entsprechen den verschiedenen labels der Frisurtypen, wie man an den Farben der Cluster erkennen kann. 
+	Dabei scheint UMAP die globale Struktur auf den ersten Blick am besten zu erkennen, da die langen und kurzen Haartypen global große Abstände aufweisen. Allerdings 
+	kann auch argumentiert werden, dass TriMap die globale Struktur am besten darstellt, da das gelbe und blaue Cluster zwar durch Haartypen mittellanger Haare getrennt 
+	sind aber die Distanzen zwischen den Clustern eher fließend sind, analog zu PCA. 
+	Dies weist auf die Schwierigkeit hin ein Maß der globalen Qualität einer Einbettung zu definieren.
+
 	\begin{figure} % Globale struktur der Punkte in den Verfahren. cmap=nhair
 		%\centering
 		\includegraphics[width=400px, height=131px]{Figures/cartoon_cluster}
 		%\decoRule
 		\caption[Cluster des Cartoon Set]{(v.l.n.r) UMAP, t-SNE, TriMap auf dem Cartoon Set, mit $N=\num{10000}, D=\num{360000}$. 
-										Dabei entsprechen die Punkte des blauen Gebiets dem oberen Drittel der PCA Einbettung, 
-										das gelbe Gebiet dem unteren Drittel der PCA Einbettung und die Punkte außerhalb eines Gebietes dem mittleren Teil der PCA Einbettung}
+										Dabei entsprechen die Punkte des gelben Gebiets dem oberen Drittel der PCA Einbettung, 
+										das blaue Gebiet dem unteren Drittel der PCA Einbettung und die Punkte außerhalb eines Gebietes dem mittleren Teil der PCA Einbettung}
 		\label{fig:cartoon_cluster}
 	\end{figure}
+
+	% TODO: beschreiben
 
 	\begin{figure} % Lokale struktur der Punkte in den Verfahren. cmap=nhair_color and cmap=nface_color. übergänge in TriMap fließender, tSNE weniger gehäuft/dicht als umap
 		%\centering
@@ -283,6 +304,8 @@
 										blablabla}
 		\label{fig:cartoon_local}
 	\end{figure}
+
+	% TODO: beschreiben
 
 	\begin{figure} % Lokale struktur der Punkte in den Verfahren, cluster sehr ähnlich. cmap=nhair_color
 		%\centering
@@ -321,8 +344,10 @@
 	Die CPU Tests haben wir auf Intel Xeon 6136 CPUs mit 48 Kernen und 384 GB RAM ausgeführt. 
 	Für die Verfahren welche mittels Berechnungen auf einer Graphikkarte verbessert wurden, haben 
 	wir Intel Xeon Gold 6136 CPUs mit 188 GB RAM und Nvidia V100 GPUs genutzt. 
-	Insgesamt haben wir über 100 Experimente gemacht um genauere Aussagen über die Laufzeit der Verfahren 
+	Insgesamt haben wir über 200 Experimente gemacht um genauere Aussagen über die Laufzeit der Verfahren 
 	zu treffen und diese in Abhängigkeit der wichtigen Parameter zu setzen.
+
+	
 
 %----------------------------------------------------------------------------------------
 

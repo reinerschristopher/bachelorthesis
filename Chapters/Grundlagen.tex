@@ -4,28 +4,6 @@
 
 %----------------------------------------------------------------------------------------
 
-%Define math commands used in this chapter
-	\renewcommand{\C}{\mathscr{C}}  % Symbol for a category C
-	\newcommand{\D}{\mathscr{D}}  % Symbol for a category D
-	\renewcommand{\N}{\mathbb{N}}  % Symbol for natural numbers
-	\newcommand{\M}{\mathcal{M}}  % Symbol for Manifold M
-	\newcommand{\cech}{\u{C}ech}  % Symbol for Cech complex
-	\newcommand{\Set}{\mathbf{Set}}  % Symbol for category of sets
-	\newcommand{\sSet}{\mathbf{sSet}}  % Symbol for category of sets
-	\newcommand{\Top}{\mathbf{Top}}  % Symbol for category of sets
-	\newcommand{\sFuzz}{\mathbf{sFuzz}}  % Symbol for fuzzy set category
-	\newcommand{\EPMet}{\mathbf{EPMet}}  % Symbol for category of extended pseudo metric spaces
-	\renewcommand{\hom}{\mathsf{Hom}}  % Symbol for morphisms
-	\newcommand{\fReal}{\mathsf{FinReal}}  % Symbol for Real functor
-	\newcommand{\fSing}{\mathsf{FinSing}}  % Symbol for Sing functor
-	\newcommand{\fsFuzz}{\mathbf{Fin\text{-}sFuzz}}  % Symbol for finite fuzzy set category
-	\newcommand{\fEPMet}{\mathbf{Fin\text{-}EPMet}}  % Symbol for category of finite extended pseudo metric spaces
-	\newcommand*{\Scale}[2][4]{\scalebox{#1}{\ensuremath{#2}}}
-	\newcommand{\tConorm}{\Scale[1.5]{\bot}^N_{i=1}}  % Symbol for t-Conorm
-	% Alternatives for t-Conorms: $\bot_{\{1 \leq i \leq N\}}$ $\underset{i=1}{\overset{N}{\bot}}$ $\bot^N_{i=1}$
-
-%----------------------------------------------------------------------------------------
-
 % N O T I Z E N
 	% Zusammenfassen der bisherigen Konstruktion und das man einen Schritt weiter geht
 	% Ausblicke auf das was man später mit einer Definition macht
@@ -41,7 +19,7 @@
 	Das UMAP Verfahren entstammt dem Gebiet der topologischen Datenanalyse. Die Theorie für das Verfahren 
 	nutzt Grundlagen aus den Bereichen der (algebraischen) Topologie, Kategorientheorie und Mengentheorie. 
 	Wir wollen diese nun einführen. Dazu geben wir die wichtigsten Definitionen und Sätze und werden 
-	diese anschaulich erklären und in den Rahmen des UMAP Verfahren fassen. % TODO: ?erwähne appendixA
+	diese anschaulich erklären und in den Rahmen des UMAP Verfahren fassen. 
 
 	Die grundlegenden Definitionen \textit{topologischer und metrischer Räume} in Abschnitt \ref{seq:top} 
 	werden uns helfen \textit{(riemannsche) Mannigfaltigkeiten} einzuführen. Der Begriff der Mannigfaltigkeit 
@@ -192,14 +170,11 @@
 	% 	$S^n$ ist eine $n$-dimensionale Mannigfaltigkeit im $\R^{n+1}$.
 	% \end{ex}
 
-	% TODO: weiteres Beispiel
-
 	Nun können wir im Fall der Dimensionsreduktion die Vermutung aufstellen, dass unsere Daten $X$ auf einer 
 	$d$--dimensionale Mannigfaltigkeit $\M$ im $\R^D$ liegen. Zusätzlich gehen wir davon aus, dass unsere Daten 
 	einen Abstandsbegriff erlauben. Somit lässt sich die Definition der Mannigfaltigkeit auf die Riemannschen 
 	Mannigfaltigkeiten erweitern.
 
-	% TODO: Definition riemannsche Mannigfaltigkeit, erwähne matrix darstellungs
 	\begin{defn} %[Riemannsche Mannigfaltigkeit]
 		Ein differenzierbares Vetorfeld $X$ auf $\Sigma \subset \R^n$ ist eine Abbildung, welche jedem Punkt $p \in \Sigma$ 
 		einen Vektor $v(p) \in \R^n$ zuordnet. Ist $X$ differenzierbar, so ist $X$ ein differenzierbares Vektorfeld.
@@ -219,13 +194,6 @@
 		Eine bekannte Aussage der Riemannschen Geometrie ist, dass jede differenzierbare Mannigfaltigkeit eine riemannsche Metrik 
 		besitzt. Somit ist die Definition der riemannschen Mannigfaltigkeit keine starke Einschränkung. 
 	\end{rem}
-
-	% TODO: Metrisierbarkeit riemannsche Mannigfaltigkeit
-	% \begin{rem}
-	% 	Eine riemannsche Mannigfaltigkeit ist stets metrisierbar im Sinne, das ...
-	% \end{rem}
-
-	% TODO: Beispiele riemannsche Mannigfaltigkeit
 
 	Nun möchten wir den Begriff der Abstandsfunktion einer Riemannschen Mannigfaltigkeit geben. Dieser wird uns erlauben 
 	die kürzesten Wege auf einer riemannschen Mannigfaltigkeit zu betrachten. 
@@ -321,8 +289,8 @@
 		Meist ist $Ob(\C)$ sogar eine Menge. Dann spricht man formal von einer strikten kleinen Kategorie.
 	\end{rem}
 
-	Wir werden nun einige Beispiele von Kategorien geben. Dabei soll später auf diese Beispiele zurückgegriffen 
-	werden um die Theorie des UMAP Verfahrens weiter aufzubauen. Die Beispiele sollten also als Definitionen aufgefasst werden. % TODO: raus?
+	Wir werden nun einige Beispiele von Kategorien geben, dabei soll später auf diese Beispiele zurückgegriffen 
+	werden, um die Theorie des UMAP Verfahrens weiter aufzubauen. 
 
 	\begin{ex}
 		Die Kategorie der Mengen $\Set$ hat als Objekte Mengen und als Morphismen Funktionen. 
@@ -357,6 +325,7 @@
 		Die \textit{Kategorie der offenen Teilmengen $\mathbf{Op}(X)$} eines topologischen Raumes $(X,\tau)$ hat als 
 		Objekte die offenen Mengen, also $U \subset \tau$ und als Morphismen die Inklusionsabbildungen, also 
 		$f: U \hookrightarrow V$ für $U \subset U \subset \tau$. 
+		\label{ex:catI}
 	\end{ex}
 
 	Wir möchten nun den Begriff des Funktors zwischen zwei Kategorien einführen. Ein Funktor ordnet Objekte einer 
@@ -447,10 +416,13 @@
 	\end{defn}
 
 	\begin{rem}
-		Später werden wir den Begriff des \textit{Limes} verwenden. Eine formale Definition dessen würde den Rahmen dieser Arbeit 
-		überschreiten. Wir verweisen auf \cite{Brandenburg}. Wichtig für weitere Überlegungen ist eine anschauliche Betrachtung des 
-		Limes zum verknüpfen kleinerer Strukturen zu einer Großen. 
+		Eine spezielle Form einer Adjunktion ist der \textit{Limes} Begriff, diesen werden wir später verwenden. Eine formale Definition 
+		dessen würde den Rahmen dieser Arbeit überschreiten. Wir verweisen auf \cite{Brandenburg}. 
+		Wichtig für weitere Überlegungen ist eine anschauliche Betrachtung des Limes zum verknüpfen kleinerer Strukturen zu einer Großen. 
 	\end{rem}
+
+	Die Anschauung einer Adjunktion als leicht abgeschwächte Form der Äquivalenz zweier Kategorien wird für weitere Überlegungen des 
+	UMAP Verfahren eine wichtige Rolle spielen. 
 
 	Wir werden nun das \textit{Yoneda Lemma} nennen. Dieses wir im Allgemeinen dazu genutzt die Struktur der 
 	Kategorie $\Set$ und einfache Begriffe welche auf dieser gegeben sind auf beliebige Kategorien zu übertragen. 
@@ -496,7 +468,10 @@
 		Transformationen der Funktoren.
 	\end{defn}
 
-	% TODO: Begriffe zusammenführen und Zusammenfassung
+	Wir Kategorien eingeführt und einige Beispiele für diese gegeben. Mit der Definition eines Funktors können 
+	wir Zusammenhänge zwischen Kategorien betrachten und mit dem Begriff einer Adjunktion können wir \textit{gute} 
+	Zusammenhänge beschreiben. Das Yoneda Lemma wird sich für Beweise als nützlich erweisen. Die Definition 
+	einer Prägarbe wird im nächsten Abschnitt bei der Definition simplizialer Mengen wichtig sein. 
 
 %----------------------------------------------------------------------------------------
 
@@ -505,7 +480,7 @@
 	benötigen. Diese stellen eine Verallgemeinerung der in der TDA häufig verwendeten \textit{Simplizialkomplexe} 
 	dar. Wir möchten den interessierten Leser an dieser Stelle auf die sehr verständlich und ausführlich gestalteten 
 	Notizen von Friedman \cite{Friedman} verweisen, dort wird der Unterschied zwischen diesen beiden Konstrukten 
-	sehr illustrativ erläutert. % TODO: Appendix mit Zusammenfassung? 
+	sehr illustrativ erläutert. 
 
 	Um simpliziale Mengen einzuführen werden wir die kategorientheoretische Definition verwenden. 
 	Dafür wird die \textit{Simplexkategorie} benötigt. Zuerst werden wir der Vollständigkeit halber die Definition eines 
@@ -557,10 +532,9 @@
 	\end{defn}
 
 	\begin{rem}
-		Simpliziale Mengen sind also Hom-Funktoren (siehe Gleichung (\ref{Hom-Funktor})).
+		Simpliziale Mengen sind also Hom-Funktoren (siehe Gleichung (\ref{Hom-Funktor})). Eine etwas verständlichere 
+		Definition einer simplizialen Menge werden wir in Definition \ref{defn:sSet2} geben. 
 	\end{rem}
-
-	% TODO: Alternative Definition simplizialer Mengen
 
 	\begin{defn}
 		Die Objekte der Kategorie der simplizialen Mengen $\sSet$ sind simpliziale Mengen und ihre Morphismen sind natürliche Transformationen.
@@ -621,6 +595,7 @@
 						\end{cases}
 		\end{aligned}
 		\end{equation}
+		\label{defn:sSet2}
 	\end{defn}
 
 	Diese Definition verdeutlicht die Verbindung von simplizialen Mengen und Simplizialkomplexen. 
@@ -634,19 +609,11 @@
 		\label{eq:colimit}
 	\end{equation}
 
-	wobei der Limes über eine von $X$ bestimmte Indexkategorie genommen wird.
+	wobei der Limes über eine von $X$ bestimmte Indexkategorie genommen wird. 
+	Anschaulich werden die Objekte (hier die $\Delta^n$) in einer passenden Weise \textit{zusammengefügt}, dies bedeutet also, 
+	dass sich eine simpliziale Menge aus den Standardsimplizes zusammensetzt. 
 
 	% TODO: Alternative Definition und Ex 4.7 aus Friedmann
-
-	\begin{rem}
-		Eine mathematische Definition des Limes wird in dieser Arbeit nicht gegeben, da diese einige Vorbereitungen benötigen würde. Wir verweisen den 
-		Leser auf geeignete Literatur, beispielsweise \cite{Brandenburg}.
-		In der englischen Literatur wird der Limes oft als colim geschrieben und der \textit{inverse Limes} als $\lim$.
-	\end{rem}
-
-	Dennoch soll kurz erläutert werden wie der Limes zu verstehen ist. Er ist das duale Konstrukt zum Limes, deshalb operiert er auf der dualen Kategorie. 
-	Anschaulich werden die Objekte (hier die $\Delta^n$) in einer passenden Weise \textit{zusammengefügt}. 
-	In Gleichung (\ref{eq:colimit}) bedeutet dies also, dass sich eine simpliziale Menge aus den Standardsimplizes zusammensetzt.
 
 	\begin{rem}
 		Somit können wir analog zu Simplizialkomplexen das $k$-Skelett einer simplizialen Menge als Menge aller $k$-Simplizes und die Elemente 
@@ -674,9 +641,11 @@
 		\label{thm:adj}
 	\end{thm}
 
-	% TODO: Anschauung der Adjunktion erklären
-
 	Diese Adjunktion werden wir in Kapitel \ref{UMAP} für metrische Räume erweitern. 
+	Dabei erinnern wir daran, dass wir Adjunktionen als abgeschwächte Formen der Äquivalenz illustriert haben. 
+	Somit gibt es einen \textit{guten} Zusammenhang simplizialer Mengen und topologischer Räume. Hier kann argumentiert werden, dass 
+	simpliziale Mengen aufgrund ihrer sehr flexiblen Struktur viele Räume konstruieren können. Umgekehrt ist die Definition eines 
+	topologischen Raumes nicht zu restriktiv, so dass selbst \textit{ausgefallenere} simpliziale Mengen durch topologische Räume modelliert werden können. 
 
 %----------------------------------------------------------------------------------------
 
@@ -762,10 +731,32 @@
 	auf Elementen mit Zugehörigkeitsgrad $0$ unterscheiden. Da wir Elemente mit Zugehörigkeitsgrad $0$ als Elemente interpretieren möchten, welche nicht 
 	zur Menge gehören, ist Goguens Definition problematisch. 
 
-	% TODO: Fortsetzen... Kategorien Definition und Übersetzung
-	% TODO: Kreuzentropie 
+	Die für das UMAP Verfahren verwendete Definition richtet sich nach \cite{Barr}. 
+
+	\begin{defn}
+		Sei $I = ((0,1] \subset \R, \tau = \{(0,a),a \in (0,1]\})$ ein topologischer Raum und $\mathcal{Op}(I)$ die Kategorie der offenen Teilmengen, siehe Beispiel \ref{ex:catI}.
+		Eine \textit{unscharfe Menge} ist eine Prägarbe $\mathcal{P} : \mathcal{Op}(I)^{op} \to \Set$, so dass alle Morphismen $\mathcal{P}(a \leq b)$ Injektionen sind.
+	\end{defn}
+
+	Dabei können wir die Menge $\mathcal{P}((0,a))$ als Menge aller Elemente mit Zugehörigkeitsgrad größer als $a$ betrachten. 
+	Die liefert uns die Kategorie der unscharfen simplizialen Mengen,
+
+	\begin{defn}
+		Die Kategorie $\Fuzz$ der unscharfen Mengen hat als Objekte die Prägarben auf $\mathbf{Op}(I)$ welche unscharfe Mengen sind und als Morphismen die Morphismen von $\mathbf{Op}(I)$. 
+		% Eine unscharfe simpliziale Menge X ist gegeben durch $X:\Delta^n \to \Fuzz$. 
+		Eine unscharfe simpliziale Menge X ist gegeben durch $X: (\Delta \times  \mathbf{Op}(I)) \to \Set$. Dabei schrieben wir $X([n], (0,1)) = \Delta^n_{<a}$
+		Die Kategorie der unscharfen simplizialen Mengen $\sFuzz$ hat als Objekte unscharfe simpliziale Mengen und als Morphismen natürliche Transformationen. 
+	\end{defn}
+
+	Wir können die beiden Definitionen unscharfer Mengen miteinander in Verbindung bringen, indem wir eine Prägarbe $\mathcal{P}$ auf $\mathbf{Op}(I)$ betrachten. Dann erhalten wir 
+	durch $A = \bigcup_{a \in (0,1]}(\mathcal{P}((0,a))$ und $\mu(x) = \sup\{a \in (0,1] | x \in \mathcal{P}((0,a))\}$. % TODO: ( oder [ ?
+
+
+	Um dieses Kapitel abzuschließen werden wir die Kreuzentropie zwischen zwei unscharfen Mengen einführen. Diese soll zum vergleichen der unscharfen simplizialen Mengen Darstellungen dienen. 
+	Seien $(A,\mu), (A, \nu)$ unscharfe Mengen mit gleicher Grundmenge $A$. Dann ist die Kreuzentropie gegeben durch,
+
 	\begin{equation}
-		C_{\text{cross}}((A,\mu), (A, \nu)) \coloneqq \sum_{a \in A} \left(\mu(a)\log\left(\frac{\mu(a)}{\nu(a)}\right) +  \left(1-\mu(a)\right)\log\left(\frac{1-\mu(a)}{1-\nu(a)}\right)  \right)
+		C_{\text{cross}}((A,\mu), (A, \nu)) \coloneqq \sum_{a \in A} \left(\mu(a)\log\left(\frac{\mu(a)}{\nu(a)}\right) +  \left(1-\mu(a)\right)\log\left(\frac{1-\mu(a)}{1-\nu(a)}\right)  \right).
 		\label{eq:crossentropy}
 	\end{equation}
 
