@@ -64,17 +64,17 @@
 	% (siehe https://perso.uclouvain.be/michel.verleysen/papers/iconip13mv.pdf)
 
 	% T E X T B A U S T E I N E
-	% 'UMAP wird für single cell RNA-sequencing genutzt'
+	% 'UMAP wird fÃ¼r single cell RNA-sequencing genutzt'
 	% scRNA hat mehr rauschen als bulkRNA-seq und wird zur Untersuchung der genetischen 
 	% Information (Genexpression) einzelner Zellen genutzt.
 	% 'Dimension ist Anzahl der Freiheitsgerade'
-	% Es gibt Fälle in denen es unmöglich ist die gesamte globale Struktur zu erhalten. 
-	% Betrachet man beispielsweise gleichverteilte Punkte auf einem Kreis und möchte diese 
+	% Es gibt FÃ¤lle in denen es unmÃ¶glich ist die gesamte globale Struktur zu erhalten. 
+	% Betrachet man beispielsweise gleichverteilte Punkte auf einem Kreis und mÃ¶chte diese 
 	% in R einbetten, muss es zwei Punkte geben welche getrennt werden.
 
-	% Sehr anschauliches Beispiel für die Größe des Raums, siehe \cite{Lawrence}, wenn man 
-	% eine Zahl nimmt und jede Nanosekunde ein Beispiel betrachtet würde man 'nie' die 
-	% ursprüngliche 6 sehen.
+	% Sehr anschauliches Beispiel fÃ¼r die GrÃ¶ÃŸe des Raums, siehe \cite{Lawrence}, wenn man 
+	% eine Zahl nimmt und jede Nanosekunde ein Beispiel betrachtet wÃ¼rde man 'nie' die 
+	% ursprÃ¼ngliche 6 sehen.
 
 	% DR zum Aufstellen von Thesen, zb in der Genetik
 	% Wenige unterschiede zwischen UMAP und tSNE
@@ -86,67 +86,67 @@
 	% PCA Overcrowding, da nur linear
 
 	% Einordnung verschiedener DR Algorithmen. (Geometrie, Stochastik, Topologie)
-	% Was ist eine gute Repräsentation der Daten?
-	% Sollte unabhängig von Transformationen weniger wichtiger Eigenschaften sein und 
+	% Was ist eine gute ReprÃ¤sentation der Daten?
+	% Sollte unabhÃ¤ngig von Transformationen weniger wichtiger Eigenschaften sein und 
 	% unterscheidbar bzgl. relevanter Eigenschaften. (evtl. Bengio zitieren)
-	% Früher 'feature engineering' jetzt lernen der wichtigen Eigenschaften (siehe Bengio 2013)
+	% FrÃ¼her 'feature engineering' jetzt lernen der wichtigen Eigenschaften (siehe Bengio 2013)
 	% Welche Formen von Datenanalyse (statistische, geometrische,...)
 
 	% TODO: Betrachte Oudot s.67
 	% TODO: Anwendungen von persistence Oudot s.8
-	% TODO: ergänzend siehe Oudot, Ch.4
+	% TODO: ergÃ¤nzend siehe Oudot, Ch.4
 
 %----------------------------------------------------------------------------------------
 %----------------------------------------------------------------------------------------
 
 %\section{Einleitung}
-	\textit{DREI SÄTZE ÜBER DIE RELEVANZ VON HOCHDIMENSIONALEN DATEN IN DER HEUTIGEN GESELLSCHAFT.} % TODO: Was macht das Thema Dimensionsreduktion relevant?
-	Die Aufgabe effiziente Verfahren zur Datenanalyse zu entwerfen ist somit von hoher Relevanz. 
-
-	Um einen Überblick der Aufgabenbereiche der Datenanalyse zu erhalten kann man diese in Felder 
+	\textit{DREI SÃ„TZE ÃœBER DIE RELEVANZ VON HOCHDIMENSIONALEN DATEN IN DER HEUTIGEN GESELLSCHAFT.} % TODO: Was macht das Thema Dimensionsreduktion relevant?
+	Die Aufgabe, effiziente Verfahren zur Datenanalyse zu entwerfen, ist somit von hoher Relevanz. 
+	%warum gibst den Link nicht als Quelle im Literaturverzeichnis an?
+	Um einen Ãœberblick der Aufgabenbereiche der Datenanalyse zu erhalten, kann man diese in vier Felder 
 	unterteilen \footnote{\url{https://wirtschaftslexikon.gabler.de/definition/datenanalyse-30331/version-164492}}.
 	Die deskriptive Datenanalyse beschreibt Daten, beispielsweise durch graphische Visualisierung. 
 	Damit ist sie verbunden mit der explorativen Datenanalyse. Diese 
-	dient zum Entdecken neuer Zusammenhänge, oft werden dazu graphische Methoden genutzt. 
+	dient zum Entdecken neuer ZusammenhÃ¤nge, oft werden dazu graphische Methoden genutzt. 
 	Die inferenzielle Datenanalyse nutzt gegebene Stichproben, um auf nicht erhobene Stichproben 
-	zu schließen. Dieser Bereich hat in den vergangenen Jahren stark an Bedeutung gewonnen, 
-	insbesondere aufgrund der sehr guten Resultate erzielt durch neuronale Netzwerke. 
+	zu schlieÃŸen. Dieser Bereich hat in den vergangenen Jahren stark an Bedeutung gewonnen, 
+	insbesondere aufgrund der sehr guten Resultate, die durch durch neuronale Netzwerke erzielt wurden. 
 
-	In dieser Arbeit möchten wir uns mit \textit{Verfahren zur Dimensionsreduktion} beschäftigen. 
-	Diese dienen der deskriptiven Datenanalyse und der explorativen Datenanalyse. Zusätzlich 
-	lassen sie sich dazu nutzen Verfahren zur inferenziellen Datenanalyse zu verbessern. 
-	Wir werden etwas später auf die Anwendungen zurückkommen. Doch zu erst möchten wir 
+	In dieser Arbeit mÃ¶chten wir uns mit \textit{Verfahren zur Dimensionsreduktion} beschÃ¤ftigen. 
+	Diese dienen der deskriptiven Datenanalyse und der explorativen Datenanalyse. ZusÃ¤tzlich 
+	lassen sie sich dazu nutzen, Verfahren zur inferenziellen Datenanalyse zu verbessern. 
+	Wir werden etwas spÃ¤ter auf die Anwendungen zurÃ¼ckkommen. Doch zu erst mÃ¶chten wir 
 	die Problemstellung formulieren. 
 
 \subsection*{Dimensionsreduktion}
-	Sei $X$ eine Menge an Daten. Dabei betrachten wir von nun an Daten welche uns in Form von 
-	$D$-dimensionalen reellen Vektoren geben sind, somit ergibt sich für $N$ Datenpunkte, 
+	Sei $X$ eine Menge an Daten. Dabei betrachten wir von nun an Daten, welche uns in Form von 
+	$D$-dimensionalen reellen Vektoren geben sind, somit ergibt sich fÃ¼r $N$ Datenpunkte, 
 	$X = \{\xxi\}_{1 \leq i \leq N}$ mit $\xxi \in \R^D$. 
 	Wenn $D > 10$ sprechen wir meist von \textit{hochdimensionalen Daten}.
-	Dabei ist Beschränkung auf Daten, welche als Vektoren beschreiben lassen sinnvoll, da 
+	Dabei ist die BeschrÃ¤nkung auf Daten, welche sich als Vektoren beschreiben lassen, sinnvoll, da 
 	uns die Darstellung einerseits die mathematische Formulierung des Problems erleichtert. 
-	Andererseits können sehr verschiedene Daten in dieser Form angegeben werden. 
-	So kann man ein digitales Bild als Vektor auffassen indem die Dimension der Anzahl 
-	an Pixeln entspricht und die Farbwerte der Pixel die Einträge der Vektoren geben. 
-	Wörter können ebenfalls als Vektoren gegeben werden indem beispielsweise die Dimension der 
-	Gesamtzahl der Wörter entspricht und die Wörter durch Einheitsvektoren darstellt werden. 
-	Wir sehen, das die Anzahl an Dimensionen sehr groß werden kann. Eine moderne Kamera 
+	Andererseits kÃ¶nnen sehr verschiedene Daten in dieser Form angegeben werden. 
+	So kann man ein digitales Bild als Vektor auffassen, indem die Dimension der Anzahl 
+	an Pixeln entspricht und die Farbwerte der Pixel die EintrÃ¤ge der Vektoren geben. 
+	WÃ¶rter kÃ¶nnen ebenfalls als Vektoren gegeben werden, indem beispielsweise die Dimension der 
+	Gesamtzahl der WÃ¶rter entspricht und die WÃ¶rter durch Einheitsvektoren darstellt werden. 
+	Wir sehen, dass die Anzahl an Dimensionen sehr groÃŸ werden kann. Eine moderne Kamera 
 	macht Bilder mit meist mehr als $1920 \times 1080$ Pixeln, dies entspricht $D = \num{2073600}$. 
-	Die deutsche Sprache hat circa 23 Millionen unterschiedliche Wörter, somit wäre $D = \num{23000000}$. 
+	Die deutsche Sprache hat circa 23 Millionen unterschiedliche WÃ¶rter, somit wÃ¤re $D = \num{23000000}$. 
 	Wir sprechen von einer \textit{Dimensionsreduktion} von $X$, wenn wir eine \textit{Einbettung} $Y$ angeben, 
 	mit $Y = \{\yyi\}_{1 \leq i \leq N}$ und $\yyi \in \R^d$, wobei $d \ll D$, so dass 
-	sich $X$ und $Y$ \textit{ähnlich} sind. 
+	sich $X$ und $Y$ \textit{Ã¤hnlich} sind. 
 
-	Wir möchten nun zurück auf die Ziele der Datenanalyse kommen. Die Einbettung $Y$ kann dazu 
-	dienen die Daten $X$ zu visualisieren, wenn $d \in {1,2,3}$. Da $X$ und $Y$ ähnlich sind, 
-	können durch die Visualisierung von $Y$ Rückschlüsse auf $X$ gemacht werden. Oft lassen sich 
+	Wir mÃ¶chten nun zurÃ¼ck auf die Ziele der Datenanalyse kommen. Die Einbettung $Y$ kann dazu 
+	dienen, die Daten $X$ zu visualisieren, wenn $d \in {1,2,3}$. Da $X$ und $Y$ Ã¤hnlich sind, 
+	kÃ¶nnen durch die Visualisierung von $Y$ RÃ¼ckschlÃ¼sse auf $X$ gemacht werden. Oft lassen sich 
 	in der Visualisierung sogenannte Cluster erkennen, siehe dazu Abbildung \ref{fig:umap_mnist}. 
 	Neben der Visualisierung kann die Einbettung $Y$ zur Vorverarbeitung genutzt werden, also als 
-	Eingabe für einen anderen Algorithmus der Datenanalyse. So werden Dimensionsreduktionen 
-	beispielsweise für die Gesichtserkennung genutzt. 
-	Die Einbettung von $X$ benötigt zudem aufgrund der deutlich kleineren Dimension weniger physischen 
-	Speicherplatz, dieser Aspekt ist zwar nicht entscheidend für die Datenanalyse, dennoch erwähnenswert, 
-	insbesondere dann, wenn nur begrenzt viel Speicher zur Verfügung steht. 
+	Eingabe fÃ¼r einen anderen Algorithmus der Datenanalyse. So werden Dimensionsreduktionen 
+	beispielsweise fÃ¼r die Gesichtserkennung genutzt. 
+	Die Einbettung von $X$ benÃ¶tigt zudem aufgrund der deutlich kleineren Dimension weniger physischen 
+	Speicherplatz, dieser Aspekt ist zwar nicht entscheidend fÃ¼r die Datenanalyse, dennoch erwÃ¤hnenswert, 
+	insbesondere dann, wenn nur begrenzt viel Speicher zur VerfÃ¼gung steht. 
 
 	\begin{figure}
 		\centering
@@ -157,28 +157,28 @@
 		\label{fig:umap_mnist}
 	\end{figure}
 
-	Eine häufig getroffene Annahme ist, dass die Daten $X$ auf einer niedrigdimensionalen 
+	Eine hÃ¤ufig getroffene Annahme ist, dass die Daten $X$ auf einer niedrigdimensionalen 
 	Struktur liegen. In der Literatur ist diese Annahme als Mannigfaltigkeit-Hypothese 
 	(\textit{engl.: manifold hypothesis}) bekannt \cite{Mitter,Rifai}. Dabei kann sich eine 
-	Mannigfaltigkeit als Raum vorgestellt welcher lokal einem niedrigdimensionalen Raum gleicht. 
-	So ist Beispielsweise der Erdball eine $2$-dimensionale Mannigfaltigkeit, da sie lokal gesehen 
-	flach ist. Die Intuition, welche diese Annahme gerechtfertigt ist somit, dass wir Daten messen, 
+	Mannigfaltigkeit als Raum vorgestellt werden, welcher lokal einem niedrigdimensionalen Raum gleicht. 
+	So ist beispielsweise der Erdball eine $2$-dimensionale Mannigfaltigkeit, da sie lokal gesehen 
+	flach ist. Die Intuition, welche diese Annahme rechtfertigt, ist somit, dass wir Daten messen, 
 	welche nicht relevant sind. Beispielsweise ist der Hintergrund in einem Bild von einem Gesicht 
 	bei der Gesichtserkennung nicht relevant. 
 
-	Wir müssen nun den Begriff der \textit{Ähnlichkeit} von $X$ und $Y$ präzisieren und angeben 
-	wie wir $Y$ systematisch finden können. 
-	Dabei lässt sich die Frage nach der \textit{Ähnlichkeit} mathematisch unterschiedlich formulieren. 
+	Wir mÃ¼ssen nun den Begriff der \textit{Ã„hnlichkeit} von $X$ und $Y$ prÃ¤zisieren und angeben, 
+	wie wir $Y$ systematisch finden kÃ¶nnen. 
+	Dabei lÃ¤sst sich die Frage nach der \textit{Ã„hnlichkeit} mathematisch unterschiedlich formulieren. 
 	Wir verweisen den Leser auf \cite{Lee2009,Rieck2015}. 
 
 \subsection*{Verfahren zur Dimensionsreduktion}
-	Um für hochdimensionale Daten $X$ eine niedrigdimensionale Einbettung zu finden, wendet 
+	Um fÃ¼r hochdimensionale Daten $X$ eine niedrigdimensionale Einbettung zu finden, wendet 
 	man \textit{Dimensionsreduktionsverfahren} (kurz: \textit{DR Verfahren}) an. 
 	Dabei gibt es DR Verfahren, welche bei der Einbettung globale Distanzen bevorzugen. 
 	Bekannte Verfahren dabei sind PCA, MDS und Sammon Mapping. Zu den Verfahren, welche 
-	die lokalen Distanzen bevorzugen gehören Isomap, Laplacian Eigenmaps und t-SNE. 
+	die lokalen Distanzen bevorzugen, gehÃ¶ren Isomap, Laplacian Eigenmaps und t-SNE. 
 	Die Begriffe \textit{lokal} und \textit{global} sind dabei nicht fest definiert. 
-	Wir werden später genauer auf einige Verfahren eingehen. 
+	Wir werden spÃ¤ter genauer auf einige Verfahren eingehen. 
 
 \subsection*{UMAP}
 	Der Fokus dieser Arbeit liegt auf der Darstellung und Analyse des UMAP Verfahrens \cite{UMAP}. 
@@ -187,59 +187,59 @@
 	um Daten zu beschreiben. 
 	Das Verfahren nimmt die Mannigfaltigkeit-Hypothese an. Im ersten Schritt des Verfahrens 
 	betrachtet man von jedem Datenpunkt die Distanz zu seinen benachbarten Punkten und nutzt diese 
-	und zusammen mit einer Aussage der Riemannschen Geometrie um lokale Distanzen, auf der Mannigfaltigkeit, 
-	zwischen den Datenpunkten zu bestimmen. Diese Konstruktion liefert uns für jeden Datenpunkt 
-	einen \textit{metrischen Raum}, wobei die \textit{Metriken} zwischen den Räumen a priori 
-	nicht miteinander kompatibel sind. Um dieses Problem zu lösen werden wir für jeden metrischen Raum eine 
-	\textit{unscharfe simpliziale Menge} konstruieren, diese erhält die wichtigen Informationen des 
-	metrischen Raumes. Die simplizialen Mengen können wir miteinander vereinigen. Ähnlich konstruieren wir 
-	für eine initiale Einbettung $Y$ eine zugehörige simpliziale Menge. Wir werden dann einen Abstandsbegriff 
-	zwischen den simplizialen Mengen nutzen um die Darstellung von $Y$ zu optimieren. 
+	zusammen mit einer Aussage der Riemannschen Geometrie, um lokale Distanzen auf der Mannigfaltigkeit 
+	zwischen den Datenpunkten zu bestimmen. Diese Konstruktion liefert uns fÃ¼r jeden Datenpunkt 
+	einen \textit{metrischen Raum}, wobei die \textit{Metriken} zwischen den RÃ¤umen a priori 
+	nicht miteinander kompatibel sind. Um dieses Problem zu lÃ¶sen werden wir fÃ¼r jeden metrischen Raum eine 
+	\textit{unscharfe simpliziale Menge} konstruieren, welche die wichtigen Informationen des 
+	metrischen Raumes enthÃ¤lt. Die simplizialen Mengen kÃ¶nnen wir miteinander vereinigen. Ã„hnlich konstruieren wir 
+	fÃ¼r eine initiale Einbettung $Y$ eine zugehÃ¶rige simpliziale Menge. Wir werden dann einen Abstandsbegriff 
+	zwischen den simplizialen Mengen nutzen, um die Darstellung von $Y$ zu optimieren. 
 
-\subsection*{Eigene Beiträge}
-	Wir möchten an dieser Stelle darauf hinweisen, dass sich die Darstellung der Theorie des UMAP Verfahrens 
-	nach der ursprünglichen Veröffentlichung von McInnes et. al. \cite{UMAP} richtet. Allerdings 
-	wurde diese an vielen Stellen durch anschauliche Erklärungen und Intuitionen ergänzt. 
-	Die von uns gemachten Beiträge sind dabei, 
+\subsection*{Eigene BeitrÃ¤ge}
+	Wir mÃ¶chten an dieser Stelle darauf hinweisen, dass sich die Darstellung der Theorie des UMAP Verfahrens 
+	nach der ursprÃ¼nglichen VerÃ¶ffentlichung von McInnes et. al. \cite{UMAP} richtet. Allerdings 
+	wurde diese an vielen Stellen durch anschauliche ErklÃ¤rungen und Intuitionen ergÃ¤nzt. 
+	Die von uns gemachten BeitrÃ¤ge sind dabei, 
 
 	\begin{itemize}
-		\item eine übersichtliche Zusammenfassung der für das UMAP Verfahren wichtigen Definitionen 
-			  und Sätze mit intuitiven Erläuterungen,  
-		\item eine um Intuitionen ergänzte Darstellung des UMAP Verfahrens, 
-		\item eine Betrachtung der rechenintensiven Schritte der Implementierung und alternative Methoden für diese, 
+		\item eine Ã¼bersichtliche Zusammenfassung der fÃ¼r das UMAP Verfahren wichtigen Definitionen 
+			  und SÃ¤tze mit intuitiven ErlÃ¤uterungen,  
+		\item eine um Intuitionen ergÃ¤nzte Darstellung des UMAP Verfahrens, 
+		\item eine Betrachtung der rechenintensiven Schritte der Implementierung und alternative Methoden fÃ¼r diese, 
 		\item eine Anwendung des UMAP Verfahrens auf einen neuen komplexen Datensatz, 
-		\item Ansätze für weitere Betrachtungen zur Verbesserung des UMAP Verfahrens.
+		\item AnsÃ¤tze fÃ¼r weitere Betrachtungen zur Verbesserung des UMAP Verfahrens.
 	\end{itemize}
 
 \subsection*{Aufbau der Arbeit}
-	In Kapitel \ref{Grundlagen} werden wir die für das UMAP Verfahren benötigten Definitionen und Sätze geben. 
-	Dabei werden wir zuerst auf den Begriff der riemannschen Mannigfaltigkeit hinarbeiten, dieser legt aufgrund 
-	der Mannigfaltigkeit-Hypothese die  Grundlage für weitere Überlegungen. Dann werden \textit{Kategorien} 
-	und wichtige Aussagen der Kategorientheorie. Mithilfe von Kategorien können wir dann \textit{simpliziale Mengen} 
-	einführen, welche die Grundlage für die Repräsentation der Daten legen. Diesen Begriff werden wir auf 
+	In Kapitel \ref{Grundlagen} werden wir die fÃ¼r das UMAP Verfahren benÃ¶tigten Definitionen und SÃ¤tze angeben. 
+	Dabei werden wir zuerst auf den Begriff der riemannschen Mannigfaltigkeit hinarbeiten, welcher aufgrund 
+	der Mannigfaltigkeit-Hypothese die  Grundlage fÃ¼r weitere Ãœberlegungen legt. Dann werden \textit{Kategorien} 
+	und wichtige Aussagen der Kategorientheorie vorgestellt. Mithilfe von Kategorien kÃ¶nnen wir dann \textit{simpliziale Mengen} 
+	einfÃ¼hren, welche die Grundlage fÃ¼r die ReprÃ¤sentation der Daten legen. Diesen Begriff werden wir auf 
 	\text{unscharfe} simpliziale Mengen erweitern. 
 
-	Die Aussagen werden uns in Kapitel \ref{UMAP} dabei helfen die Theorie des UMAP Verfahrens darzustellen. 
+	Die Aussagen werden uns in Kapitel \ref{UMAP} helfen, die Theorie des UMAP Verfahrens darzustellen. 
 	Diese soll in drei Schritten beschrieben werden, zuerst werden wir die Mannigfaltigkeit approximieren und 
-	eine Familie metrischer Räume konstruieren. Danach werden wir diese metrischen Räume in unscharfe simpliziale 
-	Mengen umwandeln. Dies wird uns eine Repräsentation $\Xrep$ der Daten $X$ liefern. Zuletzt werden wir eine ähnliche 
-	Repräsentation $\Yrep$ für $Y$ konstruieren und beschrieben, wie die Repräsentation $\Yrep$ optimiert werden kann, 
-	damit sie $\Xrep$ möglichst ähnlich ist. Das bezüglich $\Xrep$ optimierte $\Yrep$ kann dann mittels der eingeführten 
+	eine Familie metrischer RÃ¤ume konstruieren. Danach werden wir diese metrischen RÃ¤ume in unscharfe simpliziale 
+	Mengen umwandeln. Dies wird uns eine ReprÃ¤sentation $\Xrep$ der Daten $X$ liefern. Zuletzt werden wir eine Ã¤hnliche 
+	ReprÃ¤sentation $\Yrep$ fÃ¼r $Y$ konstruieren und beschrieben, wie die ReprÃ¤sentation $\Yrep$ optimiert werden kann, 
+	damit sie $\Xrep$ mÃ¶glichst Ã¤hnlich ist. Das bezÃ¼glich $\Xrep$ optimierte $\Yrep$ kann dann mittels der eingefÃ¼hrten 
 	Theorie als metrischer Raum dargestellt werden, dieser liefert uns die Einbettung von $X$. 
 
-	Kapitel \ref{Implementierung} wird einen Fokus auf die Implementierung des UMAP Verfahren legen. Zunächst soll 
-	die UMAP Theorie angepasst werden um eine effiziente Implementierung zu ermöglichen. Wir werden dann eine 
-	Implementierung \cite{cpu} betrachten und die rechenintensiven Subroutinen angeben. Weitere Überlegungen sollen 
-	Alternativen beschreiben. Wir werden diese Kapitel mit einer Übersicht der Hyperparameter des UMAP Verfahrens 
-	abschließen. 
+	Kapitel \ref{Implementierung} wird einen Fokus auf die Implementierung des UMAP Verfahren legen. ZunÃ¤chst soll 
+	die UMAP Theorie angepasst werden, um eine effiziente Implementierung zu ermÃ¶glichen. Wir werden dann eine 
+	Implementierung \cite{cpu} betrachten und die rechenintensiven Subroutinen angeben. Weitere Ãœberlegungen sollen 
+	Alternativen beschreiben. Wir werden diese Kapitel mit einer Ãœbersicht der Hyperparameter des UMAP Verfahrens 
+	abschlieÃŸen. 
 
 	Das UMAP Verfahren soll in Kapitel \ref{Experimente} mit zwei verwandten Verfahren auf unterschiedlichen 
-	Datensätzen analysiert werden. Dazu werden wir eine kurze Beschreibung des t-SNE und TriMap Verfahren geben. 
-	Mit diesen drei Verfahren werden wir einen Datensatz mit Cartoon Gesichtern analysieren, diese Analyse soll 
-	testen, wie gut die Einbettungen der Verfahren sind. Zusätzlich sollen die Verfahren auf den bekannten 
-	Datensätzen MNIST und FMNIST getestet werden. 
+	DatensÃ¤tzen analysiert werden. Dazu werden wir eine kurze Beschreibung des t-SNE und TriMap Verfahren geben. 
+	Mit diesen drei Verfahren werden wir einen Datensatz mit Cartoon Gesichtern analysieren. Diese Analyse soll 
+	testen, wie gut die Einbettungen der Verfahren sind. ZusÃ¤tzlich sollen die Verfahren auf den bekannten 
+	DatensÃ¤tzen MNIST und FMNIST getestet werden. 
 
 	Die Resultate dieser Arbeit sollen in Kapitel \ref{Zusammenfassung} zusammengefasst werden. 
-	Außerdem geben wir in diesem Kapitel Ansätze nennen um das UMAP Verfahren zu verbessern. 
+	AuÃŸerdem geben wir in diesem Kapitel AnsÃ¤tze nennen um das UMAP Verfahren zu verbessern. 
 
 %----------------------------------------------------------------------------------------
