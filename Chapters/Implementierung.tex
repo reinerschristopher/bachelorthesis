@@ -374,15 +374,18 @@
          Kleine Werte des Parameters erzeugen dichtere Strukturen. Größere Distanzen sorgen dafür, das die Distanz zwischen den Punkten in der 
          Einbettung vergrößert wird. Der Startwert $0,1$ liefert meist gute Ergebnisse. Wenn viele Datenpunkte eingebettet werden sollte \code{min-dist} 
          entsprechend größer gewählt werden um ein \textit{overplotting} zu vermeiden.  
-
-      % \item \code{repulsion\_strength}
-      %    % Weighting applied to negative samples in low dimensional embedding
-      %    % optimization. Values higher than one will result in greater weight
-      %    % being given to negative samples.
-      % \item \code{a, b}:
-      %       Erwähne wie a und b standardmäßig gewählt werden, zeige Plot von a, b
-      %       Erwähne \code{min-dist} und \code{spread}
-      % \item \code{negative\_sample\_weight}
    \end{itemize}
+
+   Wir haben die Beziehung zwischen \code{min-dist} und \code{n\_neighbors} in Abbildung \ref{fig:mindist}, anhand des MNIST Datensatzes dargestellt. 
+   Dabei ist deutlich zu sehen, das die beiden Parameter Angaben über die Größe der lokalen Eigenschaften angeben. 
+
+   \begin{figure} % Lokale struktur der Punkte in den Verfahren, cluster sehr ähnlich. cmap=nhair_color
+      %\centering
+      \includegraphics[width=400px, height=450px]{Figures/mindist}
+      %\decoRule
+      \caption[mindist]{Darstellung der Parameter \code{min-dist} und \code{n\_neighbors}. Wobei von oben nach unten: \code{min-dist} $= [0.0125,0.05,0.2,0.8]$
+                        und von links nach rechts: \code{n\_neighbors} $= [5, 20, 80, 320]$}
+      \label{fig:mindist}
+   \end{figure}
 
 %----------------------------------------------------------------------------------------      

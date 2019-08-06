@@ -105,14 +105,14 @@
 	Diese Themen haben nicht nur Relevanz und Auswirkungen für große Konzerne wie Google, 
 	Facebook oder Amazon, sondern auch für unser alltägliches privates Leben.
 	Jeden Tag werden neue Daten erzeugt und damit die Suche nach effizienten Algorithmen, 
-	die mit großen Datenbeständen umgehen können wichtiger.Algorithmen helfen Muster in 
+	die mit großen Datenbeständen umgehen können, wichtiger. Algorithmen helfen Muster in 
 	vorhandenen Datenbeständen zu erkennen, Vorhersagen zu treffen oder Daten zu klassifizieren. 
 	Mit mathematischen Modellen können neue Erkenntnisse auf Grundlage dieser Muster gewonnen werden. 
-	Ziel ist es also große Datenmengen in Informationen und diese Informationen in Erkenntnisse zu überführen.
+	Ziel ist es also, große Datenmengen in Informationen und diese Informationen in Erkenntnisse zu überführen.
 	Die Aufgabe, effiziente Verfahren zur Datenanalyse zu entwerfen, ist somit von hoher Relevanz. 
 
 	Um einen Überblick der Aufgabenbereiche der Datenanalyse zu erhalten kann man diese in drei Felder 
-	unterteilen \footnote{\url{https://wirtschaftslexikon.gabler.de/definition/datenanalyse-30331/version-164492}}.
+	unterteilen \cite{wirt}.
 	Die \textit{deskriptive} Datenanalyse beschreibt Daten, beispielsweise durch graphische Visualisierung. 
 	Damit ist sie verbunden mit der \textit{explorativen} Datenanalyse. Diese 
 	dient zum Entdecken neuer Zusammenhänge, oft werden dazu graphische Methoden genutzt. 
@@ -121,39 +121,40 @@
 	insbesondere aufgrund der sehr guten Resultate, die durch neuronale Netzwerke erzielt wurden. 
 
 	In dieser Arbeit möchten wir uns mit \textit{Verfahren zur Dimensionsreduktion} beschäftigen. 
-	Diese dienen der deskriptiven Datenanalyse und der explorativen Datenanalyse. Zusätzlich 
+	Diese dienen der deskriptiven und der explorativen Datenanalyse. Zusätzlich 
 	lassen sie sich dazu nutzen, Verfahren zur inferenziellen Datenanalyse zu verbessern. 
-	Wir werden etwas später auf die Anwendungen zurückkommen. Doch zu erst möchten wir 
+	Wir werden etwas später auf die Anwendungen zurückkommen. Doch zuerst möchten wir 
 	die Problemstellung formulieren. 
 
 \subsection*{Dimensionsreduktion}
 	Sei $X$ eine Menge an Daten. Dabei betrachten wir von nun an Daten, welche uns in Form von 
-	$D$-dimensionalen reellen Vektoren geben sind, somit ergibt sich für $N$ Datenpunkte, 
+	$D$-dimensionalen reellen Vektoren gegeben sind. Somit ergibt sich für $N$ Datenpunkte 
 	$X = \{\xxi\}_{1 \leq i \leq N}$ mit $\xxi \in \R^D$. 
 	Wenn $D > 10$ sprechen wir meist von \textit{hochdimensionalen Daten}.
-	Dabei ist die Beschränkung auf Daten, welche sich als Vektoren beschreiben lassen, sinnvoll, da % TODO: hier komma?
-	uns die Darstellung einerseits die mathematische Formulierung des Problems erleichtert. 
-	Andererseits können sehr verschiedene Daten in dieser Form angegeben werden. 
+	Dabei ist die Beschränkung auf Daten sinnvoll, welche sich als Vektoren beschreiben lassen,  
+	da uns die Darstellung die mathematische Formulierung des Problems erleichtert. 
+	Außerdem können sehr verschiedene Daten in dieser Form angegeben werden. 
 	So kann man ein digitales Bild als Vektor auffassen, indem die Dimension der Anzahl 
-	an Pixeln entspricht und die Farbwerte der Pixel die Einträge der Vektoren geben. 
-	Wörter können ebenfalls als Vektoren gegeben werden indem beispielsweise die Dimension der 
+	an Pixeln entspricht und die Farbwerte der Pixel die Einträge der Vektoren bestimmen. 
+	Wörter können ebenfalls als Vektor angegeben werden, indem beispielsweise die Dimension der 
 	Gesamtzahl der Wörter entspricht und die Wörter durch Einheitsvektoren darstellt werden. 
 	Wir sehen, dass die Anzahl an Dimensionen sehr groß werden kann. Eine moderne Kamera 
 	macht Bilder mit meist mehr als $1920 \times 1080$ Pixeln, dies entspricht $D = \num{2073600}$. 
 	Die deutsche Sprache hat circa 23 Millionen unterschiedliche Wörter, somit wäre $D = \num{23000000}$. 
+	
 	Wir sprechen von einer \textit{Dimensionsreduktion} von $X$, wenn wir eine \textit{Einbettung} $Y$ angeben, 
 	mit $Y = \{\yyi\}_{1 \leq i \leq N}$ und $\yyi \in \R^d$, wobei $d \ll D$, so dass 
 	sich $X$ und $Y$ \textit{ähnlich} sind. 
 
-	Wir möchten nun zurück auf die Ziele der Datenanalyse kommen. Die Einbettung $Y$ kann dazu 
+	Nun möchten wir zurück auf die Ziele der Datenanalyse kommen. Die Einbettung $Y$ kann dazu 
 	dienen, die Daten $X$ zu visualisieren, wenn $d \in {1,2,3}$. Da $X$ und $Y$ ähnlich sind, 
 	können durch die Visualisierung von $Y$ Rückschlüsse auf $X$ gemacht werden. Oft lassen sich 
 	in der Visualisierung sogenannte Cluster erkennen, siehe dazu Abbildung \ref{fig:umap_mnist}. 
 	Neben der Visualisierung kann die Einbettung $Y$ zur Vorverarbeitung genutzt werden, also als 
 	Eingabe für einen anderen Algorithmus der Datenanalyse. So werden Dimensionsreduktionen 
-	beispielsweise für die Gesichtserkennung genutzt. 
+	beispielsweise in Algorithmen für Gesichtserkennung genutzt. 
 	Die Einbettung von $X$ benötigt zudem aufgrund der deutlich kleineren Dimension weniger physischen 
-	Speicherplatz, dieser Aspekt ist zwar nicht entscheidend für die Datenanalyse, dennoch erwähnenswert, 
+	Speicherplatz. Dieser Aspekt ist zwar nicht entscheidend für die Datenanalyse, dennoch erwähnenswert, 
 	insbesondere dann, wenn nur begrenzt viel Speicher zur Verfügung steht. 
 
 	\begin{figure}
@@ -167,14 +168,14 @@
 
 	Eine häufig getroffene Annahme ist, dass die Daten $X$ auf einer niedrigdimensionalen 
 	Struktur liegen. In der Literatur ist diese Annahme als Mannigfaltigkeit-Hypothese 
-	(\textit{engl.: manifold hypothesis}) bekannt \cite{Mitter,Rifai}. Dabei kann sich eine 
-	Mannigfaltigkeit als Raum vorgestellt werden, welcher lokal einem niedrigdimensionalen Raum gleicht. 
+	(\textit{engl.: manifold hypothesis}) bekannt \cite{Mitter,Rifai}. Dabei kann eine 
+	Mannigfaltigkeit als Raum betrachtet werden, welcher lokal einem niedrigdimensionalen Raum gleicht. 
 	So ist beispielsweise der Erdball eine $2$-dimensionale Mannigfaltigkeit, da sie lokal gesehen 
-	flach ist. Die Intuition, welche diese Annahme rechtfertigt ist somit, dass wir Daten messen, 
-	welche nicht relevant sind. Beispielsweise ist der Hintergrund in einem Bild von einem Gesicht 
+	flach ist. Intuitiv wird diese Annahme dadurch gerechtfertigt, dass wir Daten messen, 
+	welche nicht relevant sind. Beispielsweise ist der Hintergrund eines Bildes von einem Gesicht 
 	bei der Gesichtserkennung nicht relevant. 
 
-	Wir müssen nun den Begriff der \textit{Ähnlichkeit} von $X$ und $Y$ präzisieren und angeben 
+	Wir müssen nun den Begriff der \textit{Ähnlichkeit} von $X$ und $Y$ präzisieren und angeben,  
 	wie wir $Y$ systematisch finden können. 
 	Dabei lässt sich die Frage nach der \textit{Ähnlichkeit} mathematisch unterschiedlich formulieren. 
 	Wir verweisen den Leser auf \cite{Lee2009,Rieck2015}. 
@@ -195,14 +196,14 @@
 	um Daten zu beschreiben. 
 	Das Verfahren nimmt die Mannigfaltigkeit-Hypothese an. Im ersten Schritt des Verfahrens 
 	betrachtet man von jedem Datenpunkt die Distanz zu seinen benachbarten Punkten und nutzt diese 
-	und zusammen mit einer Aussage der Riemannschen Geometrie um lokale Distanzen, auf der Mannigfaltigkeit, 
+	zusammen mit einer Aussage der Riemannschen Geometrie, um lokale Distanzen auf der Mannigfaltigkeit 
 	zwischen den Datenpunkten zu bestimmen. Diese Konstruktion liefert uns für jeden Datenpunkt 
 	einen \textit{metrischen Raum}, wobei die \textit{Metriken} zwischen den Räumen a priori 
 	nicht miteinander kompatibel sind. Um dieses Problem zu lösen werden wir für jeden metrischen Raum eine 
 	\textit{unscharfe simpliziale Menge} konstruieren, welche die wichtigen Informationen des 
 	metrischen Raumes enthält. Die simplizialen Mengen können wir miteinander vereinigen. Ähnlich konstruieren wir 
 	für eine initiale Einbettung $Y$ eine zugehörige simpliziale Menge. Wir werden dann einen Abstandsbegriff 
-	zwischen den simplizialen Mengen nutzen um die Darstellung von $Y$ zu optimieren. 
+	zwischen den simplizialen Mengen nutzen, um die Darstellung von $Y$ zu optimieren. 
 
 \subsection*{Eigene Beiträge}
 	Wir möchten an dieser Stelle darauf hinweisen, dass sich die Darstellung der Theorie des UMAP Verfahrens 
@@ -213,7 +214,7 @@
 	\begin{itemize}
 		\item eine übersichtliche Zusammenfassung der für das UMAP Verfahren wichtigen Definitionen 
 			  und Sätze mit intuitiven Erläuterungen,  
-		\item eine um Intuitionen ergänzte Darstellung des UMAP Verfahrens, 
+		\item eine ausführliche Darstellung des UMAP Verfahrens, 
 		\item eine Betrachtung der rechenintensiven Schritte der Implementierung und alternative Methoden für diese, 
 		\item eine Anwendung des UMAP Verfahrens auf einen neuen komplexen Datensatz, 
 		\item Ansätze für weitere Betrachtungen zur Verbesserung des UMAP Verfahrens.
@@ -228,12 +229,12 @@
 	\text{unscharfe} simpliziale Mengen erweitern. 
 
 	Die Aussagen werden uns in Kapitel \ref{UMAP} helfen, die Theorie des UMAP Verfahrens darzustellen. 
-	Diese soll in drei Schritten beschrieben werden, zuerst werden wir die Mannigfaltigkeit approximieren und 
+	Diese soll in drei Schritten beschrieben werden. Zuerst werden wir die Mannigfaltigkeit approximieren und 
 	eine Familie metrischer Räume konstruieren. Danach werden wir diese metrischen Räume in unscharfe simpliziale 
 	Mengen umwandeln. Dies wird uns eine Repräsentation $\Xrep$ der Daten $X$ liefern. Zuletzt werden wir eine ähnliche 
 	Repräsentation $\Yrep$ für $Y$ konstruieren und beschrieben, wie die Repräsentation $\Yrep$ optimiert werden kann, 
 	damit sie $\Xrep$ möglichst ähnlich ist. Das bezüglich $\Xrep$ optimierte $\Yrep$ kann dann mittels der eingeführten 
-	Theorie als metrischer Raum dargestellt werden, dieser liefert uns die Einbettung von $X$. 
+	Theorie als metrischer Raum dargestellt werden, der uns die Einbettung von $X$ liefert. 
 
 	Kapitel \ref{Implementierung} wird einen Fokus auf die Implementierung des UMAP Verfahren legen. Zunächst soll 
 	die UMAP Theorie angepasst werden, um eine effiziente Implementierung zu ermöglichen. Wir werden dann eine 
@@ -247,7 +248,7 @@
 	testen, wie gut die Einbettungen der Verfahren sind. Zusätzlich sollen die Verfahren auf dem bekannten 
 	MNIST Datensatz getestet werden. 
 
-	Die Resultate dieser Arbeit sollen in Kapitel \ref{Zusammenfassung} zusammengefasst werden. 
-	Außerdem geben wir in diesem Kapitel Ansätze nennen um das UMAP Verfahren zu verbessern. 
+	Die Resultate dieser Arbeit werden in Kapitel \ref{Zusammenfassung} zusammengefasst. 
+	Außerdem formulieren wir in diesem Kapitel Ansätze, um das UMAP Verfahren zu verbessern. 
 
 %----------------------------------------------------------------------------------------

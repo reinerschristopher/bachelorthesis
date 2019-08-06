@@ -6,25 +6,26 @@
 %----------------------------------------------------------------------------------------
 
 \section{Zusammenfassung} \label{sec:sum}
+
 	In dieser Arbeit haben wir eine kompakte Einführung in die Datenanalyse gegeben und 
-	dabei betont, dass Daten, insbesondere Daten hoher Dimensionen eine immer wichtigere 
-	Rolle spielen da sie in großen Mengen gesammelt werden können. 
+	dabei betont, dass Daten, insbesondere Daten hoher Dimensionen, eine immer wichtigere 
+	Rolle spielen, da sie in großen Mengen gesammelt werden können. 
 	Wir haben eine Klasse an Verfahren vorgestellt, welche zu gegebenen hochdimensionalen 
 	Daten eine Einbettung in einem niedrigdimensionalen Raum finden. 
 	
-	Um das UMAP Verfahren vorzustellen haben wir Aussagen aus unterschiedlichen 
+	Um das UMAP Verfahren vorzustellen, haben wir Aussagen aus unterschiedlichen 
 	mathematischen Teilgebieten kennengelernt. Dabei haben wir einerseits einen 
 	Fokus auf die mathematische Korrektheit gelegt, andererseits mittels Erklärungen 
-	und Beispielen die Aunschauung hinter den eingeführten Konzepten erläutert. 
+	und Beispielen die Anschauung hinter den eingeführten Konzepten erläutert. 
 
 	Die Theorie der unscharfen topologischen Repräsentation wurde eingeführt und 
-	mit Erklärungen ergänzt. Es wurde eine Beschreinung der Implementierung 
-	gegeben und diese genutzt um Datensätze zu analysieren. Zudem haben 
-	wir die Problemstellung ein Qualitätsmaß für Einbettungen zu finden betrachtet 
+	mit Erklärungen ergänzt. Es wurde eine Beschreibung der Implementierung 
+	gegeben und diese anschließend genutzt, um Datensätze zu analysieren. Zudem haben 
+	wir die Problemstellung betrachtet, ein Qualitätsmaß für Einbettungen zu finden,
 	und einen neuen Datensatz ausführlich analysiert. 
 
 	Dabei hoffen wir, dass wir den Leser für das UMAP Verfahren und die 
-	(topologische) Datenanalyse begeistern konnten und ihn zu weiteren 
+	(topologische) Datenanalyse begeistern und ihn zu weiteren 
 	Überlegungen motivieren konnten. 
 
 % Problem mit rauschenden Daten: nutze random projections (~siehe Tang)
@@ -55,40 +56,40 @@
 
 \section{Ausblick} \label{sec:ausblick}
 	In den vergangenen Monaten haben wir uns intensiv mit dem UMAP Verfahren 
-	auseinandergesetzt und sind dabei zu einigen Überlegungen gekommen. 
+	auseinandergesetzt. Einige weiterführende Überlegungen sollen nun vorgestellt werden.  
 
-	An dieser Stelle möchten wir eine Problematik aufgreifen, welche bei der 
+	Zunächst möchten wir eine Problematik aufgreifen, welche bei der 
 	Entwicklung des UMAP Verfahren auftritt. In Kapitel \ref{UMAP} wurde die Theorie 
-	des Verfahrens entwickelt. Die dort verwendeten Aussagen um die Theorie des UMAP 
-	Verfahrens mathematisch zu begründen baut auf unsicheren simplizialen Mengen auf. 
+	des Verfahrens entwickelt. Die dort verwendeten Aussagen, um die Theorie des UMAP 
+	Verfahrens mathematisch zu begründen, bauen auf unsicheren simplizialen Mengen auf. 
 	Die aktuellen praktischen Implementierungen greifen dabei nicht auf diese Mengen 
 	zurück, sondern auf eine (starke) Vereinfachung. 
 	Es sollte genauer untersucht werden, wie \textit{stark} diese Vereinfachung in der 
-	Praxis ist. Im Rahmen dieser Arbeit haben wir zwar versucht Ansätze dafür zu 
-	entwickeln, sind aber leider aufgrund unserer fehlenden Kenntnisse im Bereich 
-	der Topologie zu keinen wesentlichen Resultaten bekommen. Für unsere Ansätze haben 
+	Praxis ist. In dieser Arbeit haben wir begonnen, Ansätze dafür zu 
+	entwickeln, aber die dafür notwendigen Kenntnisse der Topologie hätten den 
+	Rahmen dieser Arbeit gesprengt. Für unsere Ansätze haben 
 	wir \cech-Komplexe und VR-Komplexe betrachtet. Diese werden in der topologischen 
 	Datenanalyse an verschiedenen Stellen verwendet. Kurz gesagt, kann man sich unter 
 	dem VR-Komplex den konstruierten Graphen und unter einem \cech-Komplex die unscharfe 
 	topologische Repräsentation $\Xrep$ vorstellen, dies ist nicht ganz richtig, da 
 	beide Konstrukte nur Simplizialkomplexe sind und nicht die allgemeinere Form der 
 	simplizialen Mengen darstellen. 
-	Diese Herrangehensweise würde die Theorie der Praxis angleichen. 
+	Diese Herangehensweise würde die Theorie der Praxis angleichen. 
 	Umgekehrt könnte man auch die praktische Implementierung auf $n$-Simplizes erweitern. 
 	Ein interessanter Ansatz ist dabei die Wahl der Tripel in \cite{TriMap}. 
 
-	Eine weitere Baustelle ist die quantitative Bewertung von Einbettungen. 
-	Dies stellt, wie wir gesehen haben, eine schwierige Aufgabe dar. 
+	Eine weitere Problematik ist die quantitative Bewertung von Einbettungen. 
+	Wie wir gesehen haben stellt diese eine schwierige Aufgabe dar. 
 
-	Im Rahmen dieser Arbeit haben wir uns auf Bilddaten beschränkt, wir möchten den 
-	Leser dazu motivieren das UMAP Verfahren auf anderen Datensätzen zu analysieren 
+	Im Rahmen dieser Arbeit haben wir uns auf Bilddaten beschränkt. Wir möchten den 
+	Leser dazu motivieren, das UMAP Verfahren auf anderen Datensätzen zu analysieren. 
 
-	Wir haben uns nicht mit der Frage nach der intrinsischen Motivation beschäftigt, 
+	Wir haben uns nicht mit der Frage nach der intrinsischen Dimension beschäftigt, doch 
 	diese Frage ist keineswegs trivial. Insbesondere spielt die Frage eine Rolle, 
 	wenn UMAP zur Vorverarbeitung von Daten genutzt wird. Dabei können wir uns vorstellen, 
-	dass sich die Theorie der simplizialen Mengen als nützlich erweisen kann, da 
-	eine simpliziale Menge im wesentlichen aus unterschiedlich-dimensionalen Simplizes besteht, 
-	somit könnten verschiedene Bereiche des der Daten eine unterschiedliche Dimension annehmen. 
+	dass sich die Theorie der simplizialen Mengen dafür als nützlich erweisen kann, da 
+	eine simpliziale Menge im Wesentlichen aus unterschiedlich-dimensionalen Simplizes besteht.  
+	Somit könnten verschiedene Bereiche der Daten eine unterschiedliche Dimension annehmen. 
 
 	Wir möchten die Arbeit mit folgendem Zitat abschließen, 
 
